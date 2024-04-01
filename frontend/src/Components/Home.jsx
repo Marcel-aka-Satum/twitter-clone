@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
-    <div className="grid grid-cols-3 w-screen h-screen justify-center gap-1">
-      <div className="flex flex-col ml-[40.33%] bg-purple-500 justify-between">
+    <div className="grid grid-cols-3 w-screen h-screen justify-center">
+      <div className="flex flex-col ml-[40.33%] justify-between">
         <div className="flex flex-col items-center justify-center text-white h-[50%] gap-3">
           <Link to="/" className="flex items-center mb-4">
             <i className="fas fa-home fa-2x mr-2"></i>
@@ -46,41 +46,44 @@ export default function Home() {
           </Link>
         </div>
       </div>
-      <div className="bg-green-500 p-4">
-        <div className="flex justify-between mb-4">
-          <span className="font-bold text-lg">For you</span>
-          <span className="font-bold text-lg">Following</span>
+      <div className="border border-gray-500">
+        <div className="flex items-center justify-center mb-4 text-gray-500 ">
+          <span className="font-bold flex-1 text-lg ">For you</span>
+          <span className="font-bold flex-1 text-lg">Following</span>
         </div>
-        <div className="border-t border-b py-2 mb-4">
-          <textarea
-            className="w-full h-20 p-2"
-            placeholder="What's happening?"
-          ></textarea>
+        <div className="grid grid-cols-3 border border-gray-500 py-2 mb-4 w-full">
+          <div className="user-avatar text-red-500">avatar</div>
+          <div className="post-message-input row-span-2">
+            <textarea
+              className="h-20 col-span-2 w-full"
+              placeholder="What's happening?"
+            ></textarea>
+          </div>
         </div>
         <div className="space-y-4">
           {/* Replace this with your posts */}
-          <div className="border-t border-b py-2">
+          {/* <div className="border-t border-b py-2">
             <p>Post 1</p>
           </div>
           <div className="border-t border-b py-2">
             <p>Post 2</p>
-          </div>
+          </div> */}
         </div>
       </div>
-      <div className="flex flex-col space-y-4 bg-blue-500 mr-[40.33%] p-4">
+      <div className="flex flex-col space-y-4  mr-[40.33%] p-4">
         <input
           className="p-2 border rounded"
           type="text"
           placeholder="Search Twitter"
         />
-        <div className="bg-gray-200 p-2 rounded">
+        <div className="bg-gray-400 p-2 rounded">
           <h2 className="font-bold">Subscribe to Premium</h2>
           <p>
             Subscribe to unlock new features and if eligible, receive a share of
             ads revenue.
           </p>
         </div>
-        <div className="bg-gray-200 p-2 rounded">
+        <div className="bg-gray-400 p-2 rounded">
           <h2 className="font-bold">You might like</h2>
           <ul>
             <li>User 1</li>
@@ -88,7 +91,7 @@ export default function Home() {
             <li>User 3</li>
           </ul>
         </div>
-        <div className="bg-gray-200 p-2 rounded">
+        <div className="bg-gray-400 p-2 rounded">
           <h2 className="font-bold">Trends for you</h2>
           <ul>
             <li>Trend 1</li>

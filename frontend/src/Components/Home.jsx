@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 export default function Home() {
   return (
     <div className="grid grid-cols-3 w-screen h-screen justify-center">
+      {/*left navbar */}
       <div className="flex flex-col ml-[40.33%] justify-between">
         <div className="flex flex-col items-center justify-center text-white h-[50%] gap-3">
           <Link to="/" className="flex items-center mb-4">
@@ -46,18 +47,22 @@ export default function Home() {
           </Link>
         </div>
       </div>
+      {/*middle homepage */}
       <div className="border border-gray-500">
         <div className="flex items-center justify-center mb-4 text-gray-500 ">
           <span className="font-bold flex-1 text-lg ">For you</span>
           <span className="font-bold flex-1 text-lg">Following</span>
         </div>
         <div className="grid grid-cols-3 border border-gray-500 py-2 mb-4 w-full">
-          <div className="user-avatar text-red-500">avatar</div>
-          <div className="post-message-input row-span-2">
-            <textarea
-              className="h-20 col-span-2 w-full"
-              placeholder="What's happening?"
-            ></textarea>
+          <div className="user-avatar col-span-1 text-red-500">avatar</div>
+          <div className="grid grid-col-2 post-message-input col-span-2">
+            <div>
+              <textarea
+                className="h-20 col-span-2 w-full"
+                placeholder="What's happening?"
+              ></textarea>
+            </div>
+            <div className="files-under-post text-red-500">aaaaa</div>
           </div>
         </div>
         <div className="space-y-4">
@@ -70,6 +75,7 @@ export default function Home() {
           </div> */}
         </div>
       </div>
+      {/*right side */}
       <div className="flex flex-col space-y-4  mr-[40.33%] p-4">
         <input
           className="p-2 border rounded"

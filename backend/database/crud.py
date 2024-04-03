@@ -20,7 +20,7 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 
 def get_user_posts(db: Session, user: models.User) -> list[models.Post]:
-    return db.query(models.Post).filter(models.Post.owner_id == user.id).all()
+    return user.posts
 
 
 from passlib.context import CryptContext
@@ -47,7 +47,11 @@ def create_user(db: Session, user: schemas.UserInDB):
 
 
 def create_post(db: Session, post: schemas.Post):
-    db_post = models.Post(id=post.id, message=post.message, owner_id=post.owner_id)
+    user = db.query(models.User).filter(models.User.id == post.owner_id).first()
+    db_post = models.Post(
+        id=post.id, message=post.message, owner_id=post.owner_id, user=user
+    )
+    user.posts.append(db_post)
     db.add(db_post)
     db.commit()
     db.refresh(db_post)

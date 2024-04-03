@@ -12,8 +12,13 @@ class User(Base):
     email: str = Column(String, unique=True, index=True)
     hashed_password: str = Column(String)
     is_active: bool = Column(Boolean, default=True)
+    likes: Mapped[list["Post"]] = relationship(
+        "Post", uselist=True, back_populates="liked_by"
+    )
 
-    posts: Mapped[list["Post"]] = relationship("Post", back_populates="user", uselist=True)
+    posts: Mapped[list["Post"]] = relationship(
+        "Post", back_populates="user", uselist=True
+    )
 
 
 class Post(Base):
@@ -22,7 +27,7 @@ class Post(Base):
     id: int = Column(Integer, primary_key=True, index=True)
     message: str = Column(String, primary_key=True)
     owner_id: int = Column(Integer, ForeignKey("users.id"))
-
+    liked_by: Mapped[list[User]] = relationship(
+        "User", uselist=True, back_populates="likes"
+    )
     user: Mapped[User] = relationship("User", back_populates="posts", uselist=False)
-
-    

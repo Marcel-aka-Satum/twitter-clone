@@ -1,35 +1,25 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
-class ItemBase(BaseModel):
-    title: str
-    description: str | None = None
-
-
-class ItemCreate(ItemBase):
-    pass
-
-
-class Item(ItemBase):
+class User(BaseModel):
     id: int
-    owner_id: int
+    username: str
+    email: str
+    is_active: bool
 
     class Config:
         orm_mode = True
 
 
-class UserBase(BaseModel):
-    email: str
-
-
-class UserCreate(UserBase):
+class UserInDB(User):
     password: str
 
 
-class User(UserBase):
-    id: int
-    is_active: bool
-    items: list[Item] = []
+class TokenData(BaseModel):
+    username: Optional[str] = None
 
-    class Config:
-        orm_mode = True
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

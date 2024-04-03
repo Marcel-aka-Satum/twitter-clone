@@ -13,7 +13,7 @@ class User(Base):
     hashed_password: str = Column(String)
     is_active: bool = Column(Boolean, default=True)
 
-    posts: list["Post"] = relationship("Post", back_populates="owner")
+    posts = relationship("Post", back_populates="owner")
 
 
 class Post(Base):
@@ -22,4 +22,4 @@ class Post(Base):
     id: int = Column(Integer, primary_key=True, index=True)
     message: str = Column(String, primary_key=True)
     owner_id: int = Column(Integer, ForeignKey("users.id"))
-    owner: list["User"] = relationship("User", back_populates="posts")
+    owner = relationship("User", back_populates="posts")

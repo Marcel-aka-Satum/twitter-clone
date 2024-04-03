@@ -122,3 +122,10 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
+@app.post("/post", response_model=schemas.Post)
+def create_post(post: schemas.Post , db: Session = Depends(get_db)):
+    db_post = crud.create_post(db, post)
+
+    return db_post
+

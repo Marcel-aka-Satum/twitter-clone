@@ -11,6 +11,11 @@ class User(BaseModel):
     class Config:
         orm_mode = True
 
+class Post(BaseModel):
+    id: int
+    message: str
+    owner_id: int
+
 
 class UserInDB(User):
     password: str

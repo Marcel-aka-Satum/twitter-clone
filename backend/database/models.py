@@ -27,6 +27,8 @@ class Post(Base):
     id: int = Column(Integer, primary_key=True, index=True)
     message: str = Column(String, primary_key=True)
     owner_id: int = Column(Integer, ForeignKey("users.id"))
+    likes: int = Column(Integer)
+    
     liked_by: Mapped[list[User]] = relationship(
         "User", uselist=True, back_populates="likes"
     )

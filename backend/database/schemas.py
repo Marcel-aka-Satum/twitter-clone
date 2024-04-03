@@ -16,6 +16,7 @@ class Post(BaseModel):
     id: int
     message: str
     owner_id: int
+    likes: int
 
     class Config:
         orm_mode = True

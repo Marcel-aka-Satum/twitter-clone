@@ -19,8 +19,8 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).offset(skip).limit(limit).all()
 
 
-def get_user_posts(db: Session, user_id: int):
-    return db.query(models.Post).filter(models.Post.owner_id == user_id).all()
+def get_user_posts(db: Session, user: models.User) -> list[models.Post]:
+    return db.query(models.Post).filter(models.Post.owner_id == user.id).all()
 
 
 from passlib.context import CryptContext

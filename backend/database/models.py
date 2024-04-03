@@ -1,5 +1,5 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 
 from .database import Base
 
@@ -13,7 +13,7 @@ class User(Base):
     hashed_password: str = Column(String)
     is_active: bool = Column(Boolean, default=True)
 
-    posts = relationship("Post", back_populates="owner")
+    posts: Mapped[list["Post"]] = relationship("Post", back_populates="user", uselist=True)
 
 
 class Post(Base):
@@ -22,4 +22,7 @@ class Post(Base):
     id: int = Column(Integer, primary_key=True, index=True)
     message: str = Column(String, primary_key=True)
     owner_id: int = Column(Integer, ForeignKey("users.id"))
-    owner = relationship("User", back_populates="posts")
+
+    user: Mapped[User] = relationship("User", back_populates="posts", uselist=False)
+
+    

@@ -11,10 +11,18 @@ class User(BaseModel):
     class Config:
         orm_mode = True
 
+
 class Post(BaseModel):
     id: int
     message: str
     owner_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class testId(BaseModel):
+    posts: list[Post]
 
 
 class UserInDB(User):

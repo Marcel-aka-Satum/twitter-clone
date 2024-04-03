@@ -123,9 +123,18 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
+
 @app.post("/post", response_model=schemas.Post)
-def create_post(post: schemas.Post , db: Session = Depends(get_db)):
+def create_post(post: schemas.Post, db: Session = Depends(get_db)):
     db_post = crud.create_post(db, post)
 
     return db_post
 
+
+@app.get("/users/post/{user_id}", response_model=schemas.testId)
+def get_posts(user_id: int, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_id(db, user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    user_posts = crud.get_user_posts(db, user_id)
+    return schemas.testId(posts=user_posts)

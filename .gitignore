@@ -2,3 +2,4 @@ backend/database/__pycache__/
 backend/__pycache__/
 .venv/
 .vscode/
+backend/__pycache__/main.cpython-310.pyc

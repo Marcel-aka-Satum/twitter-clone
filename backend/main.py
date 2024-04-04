@@ -118,7 +118,31 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
 @app.get("/users/{user_id}", response_model=schemas.User)
 def read_user(user_id: int, db: Session = Depends(get_db)):
-    db_user = crud.get_user(db, user_id=user_id)
+    db_user = crud.get_user_by_id(db, user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
+
+@app.post("/post", response_model=schemas.Post)
+def create_post(post: schemas.Post, db: Session = Depends(get_db)):
+    db_post = crud.create_post(db, post)
+
+    return db_post
+
+
+@app.get("/users/post/{user_id}")
+def get_posts(user_id: int, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_id(db, user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    user_posts = crud.get_user_posts(db, db_user)
+    return user_posts
+
+@app.post("/like")
+def like_a_post(post: schemas.Post, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_id(db, post.owner_id)
+    crud.like_post(db, post)
+    db_user.likes.append(post)
+
+    return True

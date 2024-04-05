@@ -18,5 +18,5 @@ def get_posts(user_id: int, db: Session = Depends(get_db)):
     db_user = get_user_by_id(db, user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
-    user_posts = crud.get_user_posts(db, db_user)
-    return schemas.PostList(posts=user_posts)
+    user_posts = crud.get_user_posts(db_user)
+    return {"posts": user_posts}

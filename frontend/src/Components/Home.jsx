@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Home() {
+
+  const [message, setMessage] = useState("")
+
   return (
     <div className="grid grid-cols-3 w-screen h-screen justify-center">
       {/*left navbar */}
@@ -60,9 +63,13 @@ export default function Home() {
               <textarea
                 className="h-20 col-span-2 w-full"
                 placeholder="What's happening?"
+                onChange={(e) => setMessage(e.target.value)}
               ></textarea>
             </div>
-            <div className="files-under-post text-red-500">aaaaa</div>
+            <div className="files-under-post text-red-500">
+              <button className="post-button text-white bg-blue-500 rounded"> Post </button>
+            </div>
+            
           </div>
         </div>
         <div className="space-y-4">

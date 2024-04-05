@@ -15,17 +15,16 @@ def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
 
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.User).offset(skip).limit(limit).all()
+def get_users(db: Session):
+    return db.query(models.User).all()
 
 
 def create_user(db: Session, user: schemas.UserInDB):
-    hashed_password = get_password_hash(user.password)
+    hashed_password = get_password_hash(user.password)  # hash the psswd
     db_user = models.User(
         email=user.email,
         hashed_password=hashed_password,
         username=user.username,
-        is_active=user.is_active,
     )
     db.add(db_user)
     db.commit()

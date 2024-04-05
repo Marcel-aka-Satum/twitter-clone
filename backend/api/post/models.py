@@ -7,8 +7,8 @@ from ..user.models import User
 class Post(Base):
     __tablename__ = "posts"
 
-    id: int = Column(Integer, primary_key=True)
-    message: str = Column(String, primary_key=True)
+    id: int = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    message: str = Column(String)
     owner_id: int = Column(Integer, ForeignKey("users.id"))
     liked_by: Mapped[list[User]] = relationship(
         "User", uselist=True, back_populates="likes"

@@ -7,7 +7,7 @@ from ..user.crud import get_user_by_id
 router = APIRouter()
 
 
-@router.post("/post", response_model=schemas.PostOut)
+@router.post("/post", response_model=schemas.Post)
 def create_post(post: schemas.Post, db: Session = Depends(get_db)):
     db_post = crud.create_post(db, post)
     return db_post

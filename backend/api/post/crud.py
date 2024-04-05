@@ -10,7 +10,9 @@ def get_user_posts(user: User) -> list[models.Post]:
 def create_post(db: Session, post: schemas.Post):
     user = db.query(User).filter(User.id == post.owner_id).first()
     db_post = models.Post(
-        id=post.id, message=post.message, owner_id=post.owner_id, user=user
+        message=post.message,
+        owner_id=post.owner_id, 
+        user=user
     )
     user.posts.append(db_post)
     db.add(db_post)

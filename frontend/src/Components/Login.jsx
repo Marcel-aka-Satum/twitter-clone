@@ -10,11 +10,14 @@ const Login = () => {
     formData.append("username", username);
     formData.append("password", password);
 
-    fetch("http://localhost:8000/api/v1/token", {
+    const response = fetch("http://localhost:8000/api/v1/token", {
       method: "POST",
       withCredentials: true,
       body: formData,
-    });
+    })
+    if(response.status === 200){
+        localStorage["USER_ID"] = response.data.user_id
+    }
   };
 
   return (

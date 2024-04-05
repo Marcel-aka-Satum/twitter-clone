@@ -7,9 +7,18 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleRegister = () => {
-    fetch("localhost:8000/api/v1/users", {
+    fetch("http://localhost:8000/api/v1/users", {
       method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: username,
+        email: email,
+        password: password
+      })
     });
+    window.location.reload()
   };
 
   return (

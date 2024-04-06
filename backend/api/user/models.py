@@ -18,3 +18,10 @@ class User(Base):
     posts: Mapped[list["Post"]] = relationship(
         "Post", back_populates="user", uselist=True
     )
+
+    def as_dict(self):
+        return {
+            c.name: getattr(self, c.name)
+            for c in self.__table__.columns
+            if c.name != "hashed_password"
+        }

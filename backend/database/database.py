@@ -10,7 +10,7 @@ DB_PSSWD = os.getenv("DB_PSSWD")
 DB_HOST = os.getenv("DB_HOST")
 DB_NAME = os.getenv("DB_NAME")
 
-SQLALCHEMY_DATABASE_URL = "postgresql://{DB_USER}:{DB_PSSWD}@{DB_HOST}/{DB_NAME}"  # change this to your own database url
+SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PSSWD}@{DB_HOST}/{DB_NAME}"  # change this to your own database url
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

@@ -4,6 +4,8 @@ from database.database import create_all_tables
 from api.user.routes import router as user_router
 from api.post.routes import router as post_router
 from auth.routes import router as auth_router
+from fastapi import Request
+import time
 
 create_all_tables()
 app = FastAPI()
@@ -18,6 +20,7 @@ origins = [
     "http://localhost:3000",
 ]
 
+# middlewares
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -27,10 +30,7 @@ app.add_middleware(
 )
 
 
-import time
-from fastapi import Request
-
-
+# Add your custom middleware function
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
     start_time = time.time()

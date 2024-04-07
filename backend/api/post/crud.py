@@ -8,11 +8,14 @@ def get_user_posts(user: User) -> list[models.Post]:
 
 
 def create_post(db: Session, post: schemas.Post):
-    user = db.query(User).filter(User.id == post.owner_id).first()
+    user = (
+        db.query(User).filter(User.id == post.owner_id).first()
+    )  # we have function for that change it later to it DRY!
     db_post = models.Post(
         message=post.message,
-        owner_id=post.owner_id, 
-        user=user
+        owner_id=post.owner_id,
+        user=user,
+        created_on=post.created_on,
     )
     user.posts.append(db_post)
     db.add(db_post)

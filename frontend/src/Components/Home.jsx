@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Post } from "./import";
 
 export default function Home() {
   const [message, setMessage] = useState("");
+  const [userPosts, setUserPosts] = useState([]);
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
-
   const handleSubmit = () => {
     const date = new Date().toISOString();
     const data = {
@@ -27,6 +28,16 @@ export default function Home() {
       })
       .catch((error) => console.error("Error:", error));
   };
+
+  // useEffect(() => {
+  //   console.log("fetching posts");
+  //   fetch(`http://localhost:8000/api/v1/users/post/${userDataLocalStorage.id}`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setUserPosts(data["posts"]);
+  //     })
+  //     .catch((error) => console.error("Error fetching posts:", error));
+  // }, []);
 
   return (
     <div className="grid grid-cols-3 w-screen h-screen justify-center">
@@ -102,14 +113,12 @@ export default function Home() {
         </div>
         <div className="space-y-4">
           {/* Replace this with your posts */}
-          {/* <div className="border-t border-b py-2">
-            <p>Post 1</p>
-          </div>
-          <div className="border-t border-b py-2">
-            <p>Post 2</p>
-          </div> */}
+          <Post />
+          <Post />
+          <Post />
         </div>
       </div>
+
       {/*right side */}
       <div className="flex flex-col space-y-4  mr-[40.33%] p-4">
         <input

@@ -10,7 +10,7 @@ const Login = () => {
     formData.append("username", username);
     formData.append("password", password);
 
-    const responseApi = fetch("http://localhost:8000/api/v1/token", {
+    fetch("http://localhost:8000/api/v1/token", {
       method: "POST",
       credentials: "include",
       body: formData,
@@ -18,6 +18,7 @@ const Login = () => {
       .then((response) => response.json())
       .then((data) => {
         localStorage.setItem("user", JSON.stringify(data.user.user));
+        window.location.href = "/";
       })
       .catch((error) => console.error("Error:", error));
   };

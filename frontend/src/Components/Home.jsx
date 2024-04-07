@@ -2,8 +2,31 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Home() {
+  const [message, setMessage] = useState("");
+  let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
 
-  const [message, setMessage] = useState("")
+  const handleSubmit = () => {
+    const date = new Date().toISOString();
+    const data = {
+      message: message,
+      owner_id: userDataLocalStorage.id,
+      created_on: date,
+    };
+
+    fetch("http://localhost:8000/api/v1/post", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => console.error("Error:", error));
+  };
 
   return (
     <div className="grid grid-cols-3 w-screen h-screen justify-center">
@@ -67,9 +90,14 @@ export default function Home() {
               ></textarea>
             </div>
             <div className="files-under-post text-red-500">
-              <button className="post-button text-white bg-blue-500 rounded"> Post </button>
+              <button
+                className="post-button text-white bg-blue-500 rounded"
+                onClick={handleSubmit}
+              >
+                {" "}
+                Post{" "}
+              </button>
             </div>
-            
           </div>
         </div>
         <div className="space-y-4">

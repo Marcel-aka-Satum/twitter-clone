@@ -5,6 +5,7 @@ export default function Post(props) {
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
+    if (owner_id === undefined) return;
     fetch(`http://localhost:8000/api/v1/users/${owner_id}`, {
       method: "GET",
     })

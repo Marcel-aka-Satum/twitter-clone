@@ -7,9 +7,11 @@ class User(Base):
     __tablename__ = "users"
 
     id: int = Column(Integer, primary_key=True)
+    nickname: str = Column(String, unique=False)
     username: str = Column(String, unique=True, index=True)
     email: str = Column(String, unique=True, index=True)
     hashed_password: str = Column(String)
+    avatar: str = Column(String, unique=False)
     is_active: bool = Column(Boolean, default=True)
     likes: Mapped[list["Post"]] = relationship(
         "Post", uselist=True, back_populates="liked_by"
@@ -19,6 +21,7 @@ class User(Base):
         "Post", back_populates="user", uselist=True
     )
 
+    # Serializer to get user in json without hashed_psswd attr
     def as_dict(self):
         return {
             c.name: getattr(self, c.name)

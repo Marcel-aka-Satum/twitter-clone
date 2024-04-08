@@ -1,6 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-export default function Post() {
+export default function Post(props) {
+  const owner_id = props.owner_id;
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    fetch(`http://localhost:8000/api/v1/users/${owner_id}`, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => setUserData(data))
+      .catch((error) => console.error("Error:", error));
+  }, [owner_id]);
+
   return (
     <div className="flex items-start space-x-4 p-4 border-b border-gray-500">
       <div className="flex-shrink-0">
@@ -11,15 +23,13 @@ export default function Post() {
       <div className="flex-grow">
         <div className="flex justify-between">
           <div>
-            <span className="font-bold text-red-500">Username</span>
-            <span className="text-gray-500 ml-2">@username</span>
+            <span className="font-bold text-red-500">{userData.username}</span>
+            {/**this is gonna be a nickname */}
+            <span className="text-gray-500 ml-2">{userData.username}</span>
           </div>
-          <div className="text-gray-500">4h</div>
+          <div className="text-gray-500">{props.timePosted}</div>
         </div>
-        <p className="mt-2 text-red-500">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl
-          eros, pulvinar facilisis justo mollis, auctor consequat urna.
-        </p>
+        <p className="mt-2 text-red-500">{props.message}</p>
       </div>
     </div>
   );

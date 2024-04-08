@@ -113,9 +113,7 @@ export default function Home() {
         </div>
         <div className="space-y-4">
           {/* Replace this with your posts */}
-          <Post />
-          <Post />
-          <Post />
+          <Post message="hello" created_on="5mins ago" owner_id={1} />
         </div>
       </div>
 

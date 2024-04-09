@@ -36,8 +36,8 @@ export default function Post(props) {
   }, []);
 
   const toggleOptions = () => {
-    setShowOptions(!showOptions)
-  }
+    setShowOptions(!showOptions);
+  };
 
   return (
     <div className="flex items-start space-x-4 p-4 border-b border-gray-500">
@@ -46,28 +46,27 @@ export default function Post(props) {
           <UserAvatarIcon />
         </div>
       </div>
-      <div className="flex-grow">
-        <div className="flex flex-row">
-          <div className="text-gray-500 ml-1">
+      <div className="flex flex-col flex-grow">
+        <div className="flex flex-row text-gray-500 ml-1 justify-between">
+          <div>
             <span className="font-bold text-red-500">{userData.username}</span>
             {/**this is gonna be a nickname */}
             <span className="text-gray-500 ml-2">@{userData.username}</span>
-          
             {" ~ " + formatTimePosted(props.timePosted)}
-
-            <button onClick={() => setShowOptions(toggleOptions)}>
-              <span className="ml-5">...</span>
-            </button>
-
-            {showOptions && (
-              <span>
-                delete Post
-              </span>
-            )}
-
           </div>
+
+          <button onClick={() => setShowOptions(toggleOptions)}>
+            <span>...</span>
+          </button>
         </div>
-        <p className="mt-2 text-red-500">{props.message}</p>
+        {showOptions && (
+          <div className="bg-gray-300 text-black p-2 rounded">Delete Post</div>
+        )}
+
+        <div>
+          <p className="mt-2 text-red-500">{props.message}</p>
+        </div>
+        <div className="text-red-500">nav1 nav2 nav3</div>
       </div>
     </div>
   );

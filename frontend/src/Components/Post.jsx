@@ -25,6 +25,20 @@ export default function Post(props) {
     }
   }
 
+  const handleClickOutside = (event) => {
+    setShowOptions(false);
+  };
+
+  useEffect(() => {
+    // Add the event listener when the component mounts
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   useEffect(() => {
     if (owner_id === undefined) return;
     fetch(`http://localhost:8000/api/v1/users/${owner_id}`, {
@@ -36,47 +50,50 @@ export default function Post(props) {
   }, []);
 
   const handleDelete = () => {
-    
-  }
-
-  const toggleOptions = () => {
-    setShowOptions(!showOptions);
+    console.log("delete");
   };
 
   return (
     <>
-    <div className="flex items-start space-x-4 p-4 border-b border-gray-500">
-      <div className="flex-shrink-0">
-        <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white text-2xl">
-          <UserAvatarIcon />
-        </div>
-      </div>
-      <div className="flex flex-col flex-grow">
-        <div className="flex flex-row text-gray-500 ml-1 justify-between relative">
-          <div>
-            <span className="font-bold text-red-500">{userData.username}</span>
-            {/**this is gonna be a nickname */}
-            <span className="text-gray-500 ml-2">@{userData.username}</span>
-            {" ~ " + formatTimePosted(props.timePosted)}
+      <div className="flex items-start space-x-4 p-4 border-b border-gray-500">
+        <div className="flex-shrink-0">
+          <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white text-2xl">
+            <UserAvatarIcon />
           </div>
+        </div>
+        <div className="flex flex-col flex-grow">
+          <div className="flex flex-row text-gray-500 ml-1 justify-between relative">
+            <div>
+              <span className="font-bold text-red-500">
+                {userData.username}
+              </span>
+              {/**this is gonna be a nickname */}
+              <span className="text-gray-500 ml-2">@{userData.username}</span>
+              {" ~ " + formatTimePosted(props.timePosted)}
+            </div>
 
-          <button onClick={() => setShowOptions(toggleOptions)}>
-            <span>...</span>
-          </button>
-          {showOptions && (
+            <button
+              onClick={(event) => {
+                event.stopPropagation();
+                setShowOptions(!showOptions);
+              }}
+            >
+              <span>...</span>
+            </button>
+
+            {showOptions && (
               <div className="bg-gray-300 text-black p-2 absolute rounded right-5">
-                Delete Post
+                <button onClick={handleDelete}>Delete Post</button>
               </div>
             )}
+          </div>
 
+          <div>
+            <p className="mt-2 text-red-500">{props.message}</p>
+          </div>
+          <div className="text-red-500">nav1 nav2 nav3</div>
         </div>
-
-        <div>
-          <p className="mt-2 text-red-500">{props.message}</p>
-        </div>
-        <div className="text-red-500">nav1 nav2 nav3</div>
       </div>
-    </div>
     </>
   );
 }

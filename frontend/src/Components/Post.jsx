@@ -35,11 +35,16 @@ export default function Post(props) {
       .catch((error) => console.error("Error:", error));
   }, []);
 
+  const handleDelete = () => {
+    
+  }
+
   const toggleOptions = () => {
     setShowOptions(!showOptions);
   };
 
   return (
+    <>
     <div className="flex items-start space-x-4 p-4 border-b border-gray-500">
       <div className="flex-shrink-0">
         <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white text-2xl">
@@ -47,7 +52,7 @@ export default function Post(props) {
         </div>
       </div>
       <div className="flex flex-col flex-grow">
-        <div className="flex flex-row text-gray-500 ml-1 justify-between">
+        <div className="flex flex-row text-gray-500 ml-1 justify-between relative">
           <div>
             <span className="font-bold text-red-500">{userData.username}</span>
             {/**this is gonna be a nickname */}
@@ -58,10 +63,13 @@ export default function Post(props) {
           <button onClick={() => setShowOptions(toggleOptions)}>
             <span>...</span>
           </button>
+          {showOptions && (
+              <div className="bg-gray-300 text-black p-2 absolute rounded right-5">
+                Delete Post
+              </div>
+            )}
+
         </div>
-        {showOptions && (
-          <div className="bg-gray-300 text-black p-2 rounded">Delete Post</div>
-        )}
 
         <div>
           <p className="mt-2 text-red-500">{props.message}</p>
@@ -69,5 +77,6 @@ export default function Post(props) {
         <div className="text-red-500">nav1 nav2 nav3</div>
       </div>
     </div>
+    </>
   );
 }

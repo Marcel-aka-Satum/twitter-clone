@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { UserAvatarIcon } from "./import";
 import { formatDistanceToNow, parseISO, format } from "date-fns";
 
@@ -6,6 +6,7 @@ export default function Post(props) {
   const owner_id = props.owner_id;
   const [userData, setUserData] = useState({});
   const [showOptions, setShowOptions] = useState(false);
+  const buttonRef = useRef(null);
 
   function formatTimePosted(timePosted) {
     const date = parseISO(timePosted);
@@ -26,7 +27,9 @@ export default function Post(props) {
   }
 
   const handleClickOutside = (event) => {
-    setShowOptions(false);
+    if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+      setShowOptions(false);
+    }
   };
 
   useEffect(() => {
@@ -52,7 +55,7 @@ export default function Post(props) {
   const handleDelete = () => {
     console.log("delete");
   };
-
+  console.log(showOptions);
   return (
     <>
       <div className="flex items-start space-x-4 p-4 border-b border-gray-500">
@@ -73,6 +76,7 @@ export default function Post(props) {
             </div>
 
             <button
+              ref={buttonRef}
               onClick={(event) => {
                 event.stopPropagation();
                 setShowOptions(!showOptions);

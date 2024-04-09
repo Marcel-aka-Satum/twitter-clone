@@ -5,6 +5,7 @@ import { formatDistanceToNow, parseISO, format } from "date-fns";
 export default function Post(props) {
   const owner_id = props.owner_id;
   const [userData, setUserData] = useState({});
+  const [showOptions, setShowOptions] = useState(false);
 
   function formatTimePosted(timePosted) {
     const date = parseISO(timePosted);
@@ -34,6 +35,10 @@ export default function Post(props) {
       .catch((error) => console.error("Error:", error));
   }, []);
 
+  const toggleOptions = () => {
+    setShowOptions(!showOptions)
+  }
+
   return (
     <div className="flex items-start space-x-4 p-4 border-b border-gray-500">
       <div className="flex-shrink-0">
@@ -42,14 +47,24 @@ export default function Post(props) {
         </div>
       </div>
       <div className="flex-grow">
-        <div className="flex justify-between">
-          <div>
+        <div className="flex flex-row">
+          <div className="text-gray-500 ml-1">
             <span className="font-bold text-red-500">{userData.username}</span>
             {/**this is gonna be a nickname */}
             <span className="text-gray-500 ml-2">@{userData.username}</span>
-          </div>
-          <div className="text-gray-500">
-            {formatTimePosted(props.timePosted)}
+          
+            {" ~ " + formatTimePosted(props.timePosted)}
+
+            <button onClick={() => setShowOptions(toggleOptions)}>
+              <span className="ml-5">...</span>
+            </button>
+
+            {showOptions && (
+              <span>
+                delete Post
+              </span>
+            )}
+
           </div>
         </div>
         <p className="mt-2 text-red-500">{props.message}</p>

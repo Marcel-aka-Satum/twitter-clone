@@ -23,11 +23,12 @@ export default function Home() {
       body: JSON.stringify(data),
     })
       .then((response) => response.json())
-      .then((data) => {
-        setUserPosts([...userPosts, data]);
+      .then((responseData) => {
+        setUserPosts([...userPosts, responseData]);
       })
       .catch((error) => console.error("Error:", error));
   };
+  console.log(userPosts);
 
   useEffect(() => {
     if (userDataLocalStorage) {
@@ -120,8 +121,9 @@ export default function Home() {
             userPosts.map((post) => (
               <Post
                 key={post.id}
-                timePosted={post.timePosted}
+                timePosted={post.created_on}
                 message={post.message}
+                owner_id={post.owner_id}
               />
             ))}
         </div>

@@ -15,8 +15,11 @@ def create_post(post: schemas.Post, db: Session = Depends(get_db)):
 
 
 @router.delete("/post")
-def delete_post(post: schemas.PostOut, db: Session = Depends(get_db)):
-    return crud.delete_post(db, post_id=post.id)
+def delete_post(post_id: int, db: Session = Depends(get_db)):
+    response = crud.delete_post(db, post_id=post_id)
+    if not response:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return response
 
 
 @router.get("/users/post/{user_id}", response_model=schemas.PostList)

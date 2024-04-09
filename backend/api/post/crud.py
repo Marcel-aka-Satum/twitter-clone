@@ -31,10 +31,10 @@ def create_post(db: Session, post: schemas.Post):
 def delete_post(db: Session, post_id: int):
     post = db.query(models.Post).filter(models.Post.id == post_id).first()
     if post is None:
-        return {"error": "Post not found"}
+        return False
     try:
         db.delete(post)
         db.commit()
-        return {"success": f"Post {post_id} successfully deleted"}
+        return True
     except Exception as e:
         return {"error": str(e)}

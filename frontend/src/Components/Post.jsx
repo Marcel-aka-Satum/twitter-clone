@@ -26,36 +26,30 @@ export default function Post(props) {
     }
   }
 
-  const handleClickOutside = (event) => {
-    if (buttonRef.current && !buttonRef.current.contains(event.target)) {
-      setShowOptions(false);
-    }
-  };
-
-  useEffect(() => {
-    // Add the event listener when the component mounts
-    document.addEventListener("mousedown", handleClickOutside);
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   useEffect(() => {
     if (owner_id === undefined) return;
     fetch(`http://localhost:8000/api/v1/users/${owner_id}`, {
       method: "GET",
     })
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((data) => setUserData(data))
       .catch((error) => console.error("Error:", error));
   }, []);
 
   const handleDelete = () => {
-    console.log("delete");
+    fetch(`http://localhost:8000/api/v1/post/${props.post_id}`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      if (response.status === 200) {
+        props.onDelete(props.post_id);
+      }
+    });
   };
-  console.log(showOptions);
+
   return (
     <>
       <div className="flex items-start space-x-4 p-4 border-b border-gray-500">
@@ -77,8 +71,7 @@ export default function Post(props) {
 
             <button
               ref={buttonRef}
-              onClick={(event) => {
-                event.stopPropagation();
+              onClick={() => {
                 setShowOptions(!showOptions);
               }}
             >
@@ -87,7 +80,9 @@ export default function Post(props) {
 
             {showOptions && (
               <div className="bg-gray-300 text-black p-2 absolute rounded right-5">
-                <button onClick={handleDelete}>Delete Post</button>
+                <button id="showboxOptionButton" onClick={handleDelete}>
+                  Delete Post
+                </button>
               </div>
             )}
           </div>

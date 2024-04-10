@@ -6,6 +6,11 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [userPosts, setUserPosts] = useState([]);
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
+
+  const handlePostDelete = (postId) => {
+    setUserPosts(userPosts.filter((post) => post.id !== postId));
+  };
+
   const handleSubmit = () => {
     const date = new Date().toISOString();
     const data = {
@@ -25,6 +30,7 @@ export default function Home() {
       .then((response) => response.json())
       .then((responseData) => {
         setUserPosts([...userPosts, responseData]);
+        setMessage(""); // Clear the textarea
       })
       .catch((error) => console.error("Error:", error));
   };
@@ -97,6 +103,7 @@ export default function Home() {
           <div className="grid grid-col-2 post-message-input col-span-2">
             <div>
               <textarea
+                value={message}
                 className="h-20 col-span-2 w-full"
                 placeholder="What's happening?"
                 onChange={(e) => setMessage(e.target.value)}
@@ -119,9 +126,11 @@ export default function Home() {
             userPosts.map((post) => (
               <Post
                 key={post.id}
+                post_id={post.id}
                 timePosted={post.created_on}
                 message={post.message}
                 owner_id={post.owner_id}
+                onDelete={handlePostDelete}
               />
             ))}
         </div>

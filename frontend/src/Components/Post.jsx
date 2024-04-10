@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { UserAvatarIcon } from "./import";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faComment,
+  faRetweet,
+  faHeart,
+  faChartBar,
+  faBookmark,
+  faShareSquare,
+} from "@fortawesome/free-solid-svg-icons";
 import { formatDistanceToNow, parseISO, format } from "date-fns";
 
 export default function Post(props) {
@@ -26,39 +35,33 @@ export default function Post(props) {
     }
   }
 
-  const handleClickOutside = (event) => {
-    if (buttonRef.current && !buttonRef.current.contains(event.target)) {
-      setShowOptions(false);
-    }
-  };
-
-  useEffect(() => {
-    // Add the event listener when the component mounts
-    document.addEventListener("mousedown", handleClickOutside);
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   useEffect(() => {
     if (owner_id === undefined) return;
     fetch(`http://localhost:8000/api/v1/users/${owner_id}`, {
       method: "GET",
     })
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((data) => setUserData(data))
       .catch((error) => console.error("Error:", error));
   }, []);
 
   const handleDelete = () => {
-    console.log("delete");
+    fetch(`http://localhost:8000/api/v1/post/${props.post_id}`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      if (response.status === 200) {
+        props.onDelete(props.post_id);
+      }
+    });
   };
-  console.log(showOptions);
+
   return (
     <>
-      <div className="flex items-start space-x-4 p-4 border-b border-gray-500">
+      <div className="flex items-start space-x-3 p-3 border-b border-gray-500">
         <div className="flex-shrink-0">
           <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white text-2xl">
             <UserAvatarIcon />
@@ -77,8 +80,7 @@ export default function Post(props) {
 
             <button
               ref={buttonRef}
-              onClick={(event) => {
-                event.stopPropagation();
+              onClick={() => {
                 setShowOptions(!showOptions);
               }}
             >
@@ -87,7 +89,9 @@ export default function Post(props) {
 
             {showOptions && (
               <div className="bg-gray-300 text-black p-2 absolute rounded right-5">
-                <button onClick={handleDelete}>Delete Post</button>
+                <button id="showboxOptionButton" onClick={handleDelete}>
+                  Delete Post
+                </button>
               </div>
             )}
           </div>
@@ -95,7 +99,22 @@ export default function Post(props) {
           <div>
             <p className="mt-2 text-red-500">{props.message}</p>
           </div>
-          <div className="text-red-500">nav1 nav2 nav3</div>
+          <div className="flex flex-row gap-32 text-red-500 mt-2">
+            <FontAwesomeIcon icon={faComment} className="cursor-pointer" />
+            <FontAwesomeIcon icon={faRetweet} className="cursor-pointer" />
+            <FontAwesomeIcon icon={faHeart} className="cursor-pointer" />
+            <FontAwesomeIcon icon={faChartBar} className="cursor-pointer" />
+            <div className="gap-4">
+              <FontAwesomeIcon
+                icon={faBookmark}
+                className="cursor-pointer mr-4"
+              />
+              <FontAwesomeIcon
+                icon={faShareSquare}
+                className="cursor-pointer"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </>

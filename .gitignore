@@ -4,3 +4,4 @@
 **/.env
 **/images
 backend/__pycache__/main.cpython-310.pyc
+frontend/package-lock.json

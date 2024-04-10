@@ -16,4 +16,4 @@ class PostOut(Post):
 
 
 class PostList(BaseModel):
-    posts: list[Post]
+    posts: list[PostOut]

@@ -7,6 +7,10 @@ def get_user_posts(user: User) -> list[models.Post]:
     return user.posts
 
 
+def get_post_likes(post: models.Post):
+    return len(post.liked_by)
+
+
 def create_post(db: Session, post: schemas.Post):
     user = (
         db.query(User).filter(User.id == post.owner_id).first()
@@ -24,5 +28,13 @@ def create_post(db: Session, post: schemas.Post):
     return db_post
 
 
-def get_post_likes(post: models.Post):
-    return len(post.liked_by)
+def delete_post(db: Session, post_id: int):
+    post = db.query(models.Post).filter(models.Post.id == post_id).first()
+    if post is None:
+        return False
+    try:
+        db.delete(post)
+        db.commit()
+        return True
+    except Exception as e:
+        return {"error": str(e)}

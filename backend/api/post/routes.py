@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException, APIRouter
 from database.database import get_db
 from ..user.crud import get_user_by_id
+from . import models
 
 router = APIRouter()
 
@@ -11,6 +12,14 @@ router = APIRouter()
 def create_post(post: schemas.Post, db: Session = Depends(get_db)):
     db_post = crud.create_post(db, post)
     return db_post
+
+
+@router.delete("/post")
+def delete_post(post_id: int, db: Session = Depends(get_db)):
+    response = crud.delete_post(db, post_id=post_id)
+    if not response:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return response
 
 
 @router.get("/users/post/{user_id}", response_model=schemas.PostList)

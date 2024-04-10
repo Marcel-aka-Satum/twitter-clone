@@ -23,21 +23,23 @@ export default function Home() {
       body: JSON.stringify(data),
     })
       .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
+      .then((responseData) => {
+        setUserPosts([...userPosts, responseData]);
       })
       .catch((error) => console.error("Error:", error));
   };
-
-  // useEffect(() => {
-  //   console.log("fetching posts");
-  //   fetch(`http://localhost:8000/api/v1/users/post/${userDataLocalStorage.id}`)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setUserPosts(data["posts"]);
-  //     })
-  //     .catch((error) => console.error("Error fetching posts:", error));
-  // }, []);
+  useEffect(() => {
+    if (userDataLocalStorage) {
+      fetch(
+        `http://localhost:8000/api/v1/users/post/${userDataLocalStorage.id}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setUserPosts(data["posts"]);
+        })
+        .catch((error) => console.error("Error fetching posts:", error));
+    }
+  }, []);
 
   return (
     <div className="grid grid-cols-3 w-screen h-screen justify-center">
@@ -113,7 +115,15 @@ export default function Home() {
         </div>
         <div className="space-y-4">
           {/* Replace this with your posts */}
-          <Post message="hello" created_on="5mins ago" owner_id={1} />
+          {userPosts &&
+            userPosts.map((post) => (
+              <Post
+                key={post.id}
+                timePosted={post.created_on}
+                message={post.message}
+                owner_id={post.owner_id}
+              />
+            ))}
         </div>
       </div>
 

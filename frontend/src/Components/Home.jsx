@@ -55,13 +55,14 @@ export default function Home() {
           <span className="font-bold flex-1 text-lg ">For you</span>
           <span className="font-bold flex-1 text-lg">Following</span>
         </div>
-        <div className="grid grid-cols-3 border border-gray-500 py-2 mb-4 w-full">
-          <div className="user-avatar col-span-1 text-red-500">avatar</div>
-          <div className="grid grid-col-2 post-message-input col-span-2">
+
+        <div className="flex flex-row border border-gray-500 py-2 mb-4 w-full">
+          <div className="user-avatar text-red-500">avatar</div>
+          <div className="flex flex-col flex-grow">
             <div>
               <textarea
                 value={message}
-                className="h-20 col-span-2 w-full"
+                className="h-20  w-full"
                 placeholder="What's happening?"
                 onChange={(e) => setMessage(e.target.value)}
               ></textarea>
@@ -77,6 +78,7 @@ export default function Home() {
             </div>
           </div>
         </div>
+
         <div className="space-y-4">
           {/* Replace this with your posts */}
           {userPosts &&

@@ -29,6 +29,7 @@ export const userSlice = createSlice({
       })
 
       .addCase(createPost.fulfilled, (state, action) => {
+        console.log("payload: " + action.payload);
         state.posts = [...state.posts, action.payload];
       })
 
@@ -70,7 +71,7 @@ export const registerAsync = createAsyncThunk(
 );
 
 export const createPost = createAsyncThunk("user/createPost", async (data) => {
-  fetch("http://localhost:8000/api/v1/post", {
+  const response = await fetch("http://localhost:8000/api/v1/post", {
     method: "POST",
     credentials: "include",
     headers: {
@@ -78,6 +79,8 @@ export const createPost = createAsyncThunk("user/createPost", async (data) => {
     },
     body: JSON.stringify(data),
   });
+  const payloadData = await response.json();
+  return payloadData;
 });
 
 export const fetchUserPosts = createAsyncThunk(

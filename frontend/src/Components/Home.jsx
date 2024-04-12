@@ -5,14 +5,13 @@ import { createPost, fetchUserPosts } from "../features/User/userSlice";
 
 export default function Home() {
   const [message, setMessage] = useState("");
-  const [userPosts, setUserPosts] = useState([]);
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
   const user = useSelector((state) => state.user);
   console.log(user.posts);
   const dispatch = useDispatch();
 
   const handlePostDelete = (postId) => {
-    setUserPosts(userPosts.filter((post) => post.id !== postId));
+    //setUserPosts(userPosts.filter((post) => post.id !== postId));
   };
 
   const handleSubmit = () => {
@@ -66,8 +65,8 @@ export default function Home() {
 
         <div className="space-y-4">
           {/* Replace this with your posts */}
-          {userPosts &&
-            userPosts.map((post) => (
+          {user.posts.posts &&
+            user.posts.posts.map((post) => (
               <Post
                 key={post.id}
                 post_id={post.id}

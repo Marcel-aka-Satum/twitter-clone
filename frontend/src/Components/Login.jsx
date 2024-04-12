@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setName } from "../features/User/userSlice";
 
 const Login = () => {
   const [username, setUsername] = useState("");

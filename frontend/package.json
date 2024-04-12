@@ -5,6 +5,7 @@
     "@fortawesome/fontawesome-free": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@reduxjs/toolkit": "^2.2.3",
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
     "@testing-library/user-event": "latest",
@@ -15,6 +16,7 @@
     "postcss-loader": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "react-redux": "^9.1.0",
     "react-scripts": "latest",
     "web-vitals": "latest"
   },

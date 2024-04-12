@@ -7,7 +7,6 @@ export default function Home() {
   const [message, setMessage] = useState("");
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
   const user = useSelector((state) => state.user);
-  console.log(user.posts);
   const dispatch = useDispatch();
 
   const handlePostDelete = (postId) => {
@@ -65,8 +64,8 @@ export default function Home() {
 
         <div className="space-y-4">
           {/* Replace this with your posts */}
-          {user.posts.posts &&
-            user.posts.posts.map((post) => (
+          {user.posts &&
+            user.posts.map((post) => (
               <Post
                 key={post.id}
                 post_id={post.id}

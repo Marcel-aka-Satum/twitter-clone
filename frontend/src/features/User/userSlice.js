@@ -29,12 +29,11 @@ export const userSlice = createSlice({
       })
 
       .addCase(createPost.fulfilled, (state, action) => {
-        console.log("payload: " + action.payload);
         state.posts = [...state.posts, action.payload];
       })
 
       .addCase(fetchUserPosts.fulfilled, (state, action) => {
-        state.posts = action.payload;
+        state.posts = action.payload.posts;
       });
   },
 });

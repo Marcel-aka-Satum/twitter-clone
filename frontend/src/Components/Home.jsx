@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Post, LeftNavbar, RightNavbar } from "./import";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function Home() {
   const [message, setMessage] = useState("");
   const [userPosts, setUserPosts] = useState([]);
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
+  const user = useSelector((state) => state.user);
+
+  console.log(user)
 
   const handlePostDelete = (postId) => {
     setUserPosts(userPosts.filter((post) => post.id !== postId));

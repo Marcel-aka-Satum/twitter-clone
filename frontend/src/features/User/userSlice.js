@@ -9,7 +9,8 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loginAsync.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.user = JSON.stringify(action.payload);
+        //window.location.href = "/";
       })
       .addCase(loginAsync.rejected, (state, action) => {
         state.user = action.payload;
@@ -20,18 +21,13 @@ export const userSlice = createSlice({
 export const loginAsync = createAsyncThunk(
   "user/loginAsync",
   async (formData) => {
-    const response = fetch("http://localhost:8000/api/v1/token", {
+    const response = await fetch("http://localhost:8000/api/v1/token", {
       method: "POST",
       credentials: "include",
       body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        localStorage.setItem("user", JSON.stringify(data.user.user));
-        window.location.href = "/";
-      })
-      .catch((error) => console.error("Error:", error));
-    return response.data.user.user;
+    });
+    const data = await response.json();
+    return data.user.user;
   }
 );
 

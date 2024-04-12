@@ -67,7 +67,6 @@ export default function Home() {
         </div>
 
         <div className="space-y-4">
-          {/* Replace this with your posts */}
           {posts &&
             posts.map((post) => (
               <Post

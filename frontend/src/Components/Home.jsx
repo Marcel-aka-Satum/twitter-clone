@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Post, LeftNavbar, RightNavbar } from "./import";
 import { useSelector, useDispatch } from "react-redux";
-import { createPost, fetchUserPosts } from "../features/User/userSlice";
+import {
+  createPost,
+  deleteUserPost,
+  fetchUserPosts,
+} from "../features/User/userSlice";
 
 export default function Home() {
   const [message, setMessage] = useState("");
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
-  const user = useSelector((state) => state.user);
+  const posts = useSelector((state) => state.user.posts);
   const dispatch = useDispatch();
 
-  const handlePostDelete = (postId) => {
-    //setUserPosts(userPosts.filter((post) => post.id !== postId));
+  const handleDelete = (post_id) => {
+    dispatch(deleteUserPost(post_id));
   };
 
   const handleSubmit = () => {
@@ -64,15 +68,15 @@ export default function Home() {
 
         <div className="space-y-4">
           {/* Replace this with your posts */}
-          {user.posts &&
-            user.posts.map((post) => (
+          {posts &&
+            posts.map((post) => (
               <Post
                 key={post.id}
                 post_id={post.id}
                 timePosted={post.created_on}
                 message={post.message}
                 owner_id={post.owner_id}
-                onDelete={handlePostDelete}
+                onDelete={() => handleDelete(post.id)}
               />
             ))}
         </div>

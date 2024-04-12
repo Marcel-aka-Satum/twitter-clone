@@ -10,15 +10,15 @@ const Register = () => {
     fetch("http://localhost:8000/api/v1/users", {
       method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         username: username,
         email: email,
-        password: password
-      })
+        password: password,
+      }),
     });
-    window.location.reload()
+    window.location.reload();
   };
 
   return (

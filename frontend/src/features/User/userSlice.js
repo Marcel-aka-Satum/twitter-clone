@@ -4,12 +4,14 @@ export const userSlice = createSlice({
   name: "user",
   initialState: {
     user: {},
+    posts: [],
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(loginAsync.fulfilled, (state, action) => {
+        localStorage.setItem("user", JSON.stringify(action.payload));
         window.location.href = "/";
         state.error = null;
       })
@@ -17,13 +19,21 @@ export const userSlice = createSlice({
         state.error = action.error.message;
       })
 
-      .addCase(registerAsync.fulfilled, (state, action) => {
+      .addCase(registerAsync.fulfilled, (state) => {
         window.location.href = "/";
         state.error = null;
       })
 
       .addCase(registerAsync.rejected, (state, action) => {
         state.error = action.error.message;
+      })
+
+      .addCase(createPost.fulfilled, (state, action) => {
+        state.posts = [...state.posts, action.payload];
+      })
+
+      .addCase(fetchUserPosts.fulfilled, (state, action) => {
+        state.posts = action.payload;
       });
   },
 });
@@ -56,7 +66,28 @@ export const registerAsync = createAsyncThunk(
         password: password,
       }),
     });
-    return;
+  }
+);
+
+export const createPost = createAsyncThunk("user/createPost", async (data) => {
+  fetch("http://localhost:8000/api/v1/post", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+});
+
+export const fetchUserPosts = createAsyncThunk(
+  "user/fetchUserPosts",
+  async (user_id) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/users/post/${user_id}`
+    );
+    const data = await response.json();
+    return data;
   }
 );
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from 'react-redux' 
+import { useDispatch, useSelector } from "react-redux";
 import { registerAsync } from "../features/User/userSlice";
 
 const Register = () => {
@@ -8,10 +8,12 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handleRegister = () => {
-    dispatch(registerAsync({username: username, email: email, password: password}));
+    dispatch(
+      registerAsync({ username: username, email: email, password: password })
+    );
   };
 
   return (

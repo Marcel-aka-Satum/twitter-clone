@@ -1,6 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Post, LeftNavbar, RightNavbar } from "./import";
 import { useSelector, useDispatch } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faImage,
+  faSmile,
+  faClock,
+  faTimesCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import {
   createPost,
   deleteUserPost,
@@ -12,6 +19,9 @@ export default function Home() {
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
   const posts = useSelector((state) => state.user.posts);
   const dispatch = useDispatch();
+  const [isHovered, setIsHovered] = useState(false);
+  const [isHoveredSmile, setIsHoveredSmile] = useState(false);
+  const [isHoveredSchedule, setIsHoveredSchedule] = useState(false);
 
   const handleDelete = (post_id) => {
     dispatch(deleteUserPost(post_id));
@@ -33,11 +43,19 @@ export default function Home() {
     }
   }, []);
 
+  const fileInputRef = useRef();
+
+  const handleFileUpload = () => {
+    fileInputRef.current.click();
+  };
+
   return (
     <div className="grid grid-cols-3 w-screen h-screen justify-center">
-      <LeftNavbar />
+      <div className="grid-item-1 ">
+        <LeftNavbar />
+      </div>
       {/*middle homepage */}
-      <div className="border border-gray-500">
+      <div className="grid-item-2 border border-gray-500 ">
         <div className="flex items-center justify-center mb-4 text-gray-500 ">
           <span className="font-bold flex-1 text-lg ">For you</span>
           <span className="font-bold flex-1 text-lg">Following</span>
@@ -45,23 +63,57 @@ export default function Home() {
 
         <div className="flex flex-row border border-gray-500 py-2 mb-4 w-full">
           <div className="user-avatar text-red-500">avatar</div>
-          <div className="flex flex-col flex-grow">
-            <div>
+          <div className="grow">
+            <div className=" bg-black text-white p-4">
               <textarea
+                className="w-full h-32 bg-gray-800 text-white p-2 mb-4"
                 value={message}
-                className="h-20  w-full"
-                placeholder="What's happening?"
-                onChange={(e) => setMessage(e.target.value)}
-              ></textarea>
-            </div>
-            <div className="files-under-post text-red-500">
-              <button
-                className="post-button text-white bg-blue-500 rounded"
-                onClick={handleSubmit}
-              >
-                {" "}
-                Post{" "}
-              </button>
+                onChange={(e) => {
+                  setMessage(e.target.value);
+                }}
+              />
+              <div className="flex items-center justify-between">
+                <div className="flex space-x-4 gap-12">
+                  <FontAwesomeIcon
+                    icon={faImage}
+                    className={`text-blue-500 cursor-pointer ${
+                      isHovered ? "border-2 border-blue-500 rounded" : ""
+                    }`}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    onClick={handleFileUpload}
+                  />
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                  />
+                  <FontAwesomeIcon
+                    icon={faSmile}
+                    className={`text-blue-500 cursor-pointer ${
+                      isHoveredSmile ? "border-2 border-blue-500 rounded" : ""
+                    }`}
+                    onMouseEnter={() => setIsHoveredSmile(true)}
+                    onMouseLeave={() => setIsHoveredSmile(false)}
+                  />
+                  <FontAwesomeIcon
+                    icon={faClock}
+                    className={`text-blue-500 cursor-pointer ${
+                      isHoveredSchedule
+                        ? "border-2 border-blue-500 rounded"
+                        : ""
+                    }`}
+                    onMouseEnter={() => setIsHoveredSchedule(true)}
+                    onMouseLeave={() => setIsHoveredSchedule(false)}
+                  />
+                </div>
+                <button
+                  className="bg-blue-500 rounded-full text-white  px-4 py-2"
+                  onClick={handleSubmit}
+                >
+                  POST
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -80,7 +132,10 @@ export default function Home() {
             ))}
         </div>
       </div>
-      <RightNavbar />
+
+      <div className="grid-item-3">
+        <RightNavbar />
+      </div>
     </div>
   );
 }

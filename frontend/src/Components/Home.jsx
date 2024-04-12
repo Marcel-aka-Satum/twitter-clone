@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Post, LeftNavbar, RightNavbar } from "./import";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  createPost,
+  deleteUserPost,
+  fetchUserPosts,
+} from "../features/User/userSlice";
 
 export default function Home() {
   const [message, setMessage] = useState("");
-  const [userPosts, setUserPosts] = useState([]);
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
+  const posts = useSelector((state) => state.user.posts);
+  const dispatch = useDispatch();
 
-  const handlePostDelete = (postId) => {
-    setUserPosts(userPosts.filter((post) => post.id !== postId));
+  const handleDelete = (post_id) => {
+    dispatch(deleteUserPost(post_id));
   };
 
   const handleSubmit = () => {
@@ -17,32 +24,12 @@ export default function Home() {
       owner_id: userDataLocalStorage.id,
       created_on: date,
     };
-
-    fetch("http://localhost:8000/api/v1/post", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((responseData) => {
-        setUserPosts([...userPosts, responseData]);
-        setMessage(""); // Clear the textarea
-      })
-      .catch((error) => console.error("Error:", error));
+    dispatch(createPost(data));
   };
+
   useEffect(() => {
     if (userDataLocalStorage) {
-      fetch(
-        `http://localhost:8000/api/v1/users/post/${userDataLocalStorage.id}`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          setUserPosts(data["posts"]);
-        })
-        .catch((error) => console.error("Error fetching posts:", error));
+      dispatch(fetchUserPosts(userDataLocalStorage.id));
     }
   }, []);
 
@@ -81,15 +68,15 @@ export default function Home() {
 
         <div className="space-y-4">
           {/* Replace this with your posts */}
-          {userPosts &&
-            userPosts.map((post) => (
+          {posts &&
+            posts.map((post) => (
               <Post
                 key={post.id}
                 post_id={post.id}
                 timePosted={post.created_on}
                 message={post.message}
                 owner_id={post.owner_id}
-                onDelete={handlePostDelete}
+                onDelete={() => handleDelete(post.id)}
               />
             ))}
         </div>

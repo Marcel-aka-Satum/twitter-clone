@@ -1,28 +1,19 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setName } from "../features/User/userSlice";
+import { loginAsync } from "../features/User/userSlice";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
 
   const handleLogin = (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("username", username);
     formData.append("password", password);
-
-    fetch("http://localhost:8000/api/v1/token", {
-      method: "POST",
-      credentials: "include",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        localStorage.setItem("user", JSON.stringify(data.user.user));
-        window.location.href = "/";
-      })
-      .catch((error) => console.error("Error:", error));
+    dispatch(loginAsync(formData));
   };
 
   return (

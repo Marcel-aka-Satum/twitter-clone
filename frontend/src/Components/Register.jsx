@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { registerAsync } from "../features/User/userSlice";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -6,19 +8,12 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const dispatch = useDispatch();
+
   const handleRegister = () => {
-    fetch("http://localhost:8000/api/v1/users", {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: username,
-        email: email,
-        password: password
-      })
-    });
-    window.location.reload()
+    dispatch(
+      registerAsync({ username: username, email: email, password: password })
+    );
   };
 
   return (

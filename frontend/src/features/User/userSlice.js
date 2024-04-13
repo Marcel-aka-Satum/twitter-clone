@@ -35,10 +35,8 @@ export const userSlice = createSlice({
       .addCase(fetchUserPosts.fulfilled, (state, action) => {
         state.posts = action.payload.posts;
       })
-      //setUserPosts(userPosts.filter((post) => post.id !== postId));
       .addCase(deleteUserPost.fulfilled, (state, action) => {
-        console.log(action);
-        state.posts = state.posts.filter((post) => post.id !== action.post_id);
+        state.posts = state.posts.filter((post) => post.id !== action.payload);
       });
   },
 });
@@ -101,20 +99,17 @@ export const fetchUserPosts = createAsyncThunk(
 export const deleteUserPost = createAsyncThunk(
   "user/deleteUserPost",
   async (post_id) => {
-    const response = await fetch(
-      `http://localhost:8000/api/v1/post/${post_id}`,
-      {
-        method: "DELETE",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.json();
+    fetch(`http://localhost:8000/api/v1/post/${post_id}`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return post_id;
   }
 );
 
-export const { setName } = userSlice.actions;
+export const {} = userSlice.actions;
 
 export default userSlice.reducer;

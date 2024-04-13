@@ -45,20 +45,6 @@ export default function Post(props) {
       .catch((error) => console.error("Error:", error));
   }, []);
 
-  const handleDelete = () => {
-    fetch(`http://localhost:8000/api/v1/post/${props.post_id}`, {
-      method: "DELETE",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((response) => {
-      if (response.status === 200) {
-        props.onDelete(props.post_id);
-      }
-    });
-  };
-
   return (
     <>
       <div className="flex items-start space-x-3 p-3 border-b border-gray-500">
@@ -89,7 +75,10 @@ export default function Post(props) {
 
             {showOptions && (
               <div className="bg-gray-300 text-black p-2 absolute rounded right-5">
-                <button id="showboxOptionButton" onClick={handleDelete}>
+                <button
+                  id="showboxOptionButton"
+                  onClick={() => props.onDelete(props.post_id)}
+                >
                   Delete Post
                 </button>
               </div>

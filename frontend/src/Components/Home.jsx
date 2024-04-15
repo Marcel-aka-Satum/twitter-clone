@@ -1,13 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Post, LeftNavbar, RightNavbar } from "./import";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faImage,
-  faSmile,
-  faClock,
-  faTimesCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faImage, faSmile, faClock } from "@fortawesome/free-solid-svg-icons";
 import {
   createPost,
   deleteUserPost,
@@ -15,10 +10,10 @@ import {
 } from "../features/User/userSlice";
 
 export default function Home() {
-  const [message, setMessage] = useState("");
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
   const posts = useSelector((state) => state.user.posts);
   const dispatch = useDispatch();
+  const [message, setMessage] = useState("");
   const [isHovered, setIsHovered] = useState(false);
   const [isHoveredSmile, setIsHoveredSmile] = useState(false);
   const [isHoveredSchedule, setIsHoveredSchedule] = useState(false);
@@ -29,12 +24,11 @@ export default function Home() {
 
   const handleSubmit = () => {
     const date = new Date().toISOString();
-    const data = {
-      message: message,
-      owner_id: userDataLocalStorage.id,
-      created_on: date,
-    };
-    dispatch(createPost(data));
+    const formData = new FormData();
+    formData.append("message", message);
+    formData.append("owner_id", userDataLocalStorage.id);
+    formData.append("created_on", date);
+    dispatch(createPost(formData));
   };
 
   useEffect(() => {
@@ -43,10 +37,8 @@ export default function Home() {
     }
   }, []);
 
-  const fileInputRef = useRef();
-
-  const handleFileUpload = () => {
-    fileInputRef.current.click();
+  const handleFileUpload = (event) => {
+    console.log(event.target.files);
   };
 
   return (
@@ -74,20 +66,22 @@ export default function Home() {
               />
               <div className="flex items-center justify-between">
                 <div className="flex space-x-4 gap-12">
-                  <FontAwesomeIcon
-                    icon={faImage}
-                    className={`text-blue-500 cursor-pointer ${
-                      isHovered ? "border-2 border-blue-500 rounded" : ""
-                    }`}
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
-                    onClick={handleFileUpload}
-                  />
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    style={{ display: "none" }}
-                  />
+                  <label>
+                    <FontAwesomeIcon
+                      icon={faImage}
+                      className={`text-blue-500 cursor-pointer ${
+                        isHovered ? "border-2 border-blue-500 rounded" : ""
+                      }`}
+                      onMouseEnter={() => setIsHovered(true)}
+                      onMouseLeave={() => setIsHovered(false)}
+                    />
+                    <input
+                      type="file"
+                      onChange={handleFileUpload}
+                      multiple
+                      style={{ display: "none" }}
+                    />
+                  </label>
                   <FontAwesomeIcon
                     icon={faSmile}
                     className={`text-blue-500 cursor-pointer ${

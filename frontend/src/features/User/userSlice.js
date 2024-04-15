@@ -29,11 +29,19 @@ export const userSlice = createSlice({
       })
 
       .addCase(createPost.fulfilled, (state, action) => {
+        console.log("fulfilled");
+        console.log(action.payload);
         state.posts = [...state.posts, action.payload];
       })
-
+      .addCase(createPost.rejected, (state, action) => {
+        state.error = action.error.message;
+        console.log("could not create a post");
+      })
       .addCase(fetchUserPosts.fulfilled, (state, action) => {
         state.posts = action.payload.posts;
+      })
+      .addCase(fetchUserPosts.rejected, (state, action) => {
+        state.error = action.error.message;
       })
       .addCase(deleteUserPost.fulfilled, (state, action) => {
         state.posts = state.posts.filter((post) => post.id !== action.payload);
@@ -49,6 +57,11 @@ export const loginAsync = createAsyncThunk(
       credentials: "include",
       body: formData,
     });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     const data = await response.json();
     return data.user.user;
   }
@@ -76,10 +89,7 @@ export const createPost = createAsyncThunk("user/createPost", async (data) => {
   const response = await fetch("http://localhost:8000/api/v1/post", {
     method: "POST",
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
+    body: data,
   });
   const payloadData = await response.json();
   return payloadData;

@@ -1,16 +1,23 @@
 from . import schemas, crud
 from sqlalchemy.orm import Session
-from fastapi import Depends, HTTPException, APIRouter
+from fastapi import Depends, HTTPException, APIRouter, UploadFile, File, Form
 from database.database import get_db
 from ..user.crud import get_user_by_id
-from . import models
+import json
+from typing import Optional, List
 
 router = APIRouter()
 
 
 @router.post("/post", response_model=schemas.PostOut)
-def create_post(post: schemas.Post, db: Session = Depends(get_db)):
-    db_post = crud.create_post(db, post)
+async def create_post(
+    message: str = Form(),
+    owner_id: str = Form(),
+    created_on: str = Form(),
+    files: List[UploadFile] = File(None),
+    db: Session = Depends(get_db),
+):
+    db_post = await crud.create_post(db, message, owner_id, created_on, files)
     return db_post
 
 

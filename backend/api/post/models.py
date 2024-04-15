@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, ARRAY
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship, Mapped
 from database.database import Base
@@ -12,6 +12,7 @@ class Post(Base):
     message: str = Column(String)
     created_on = Column(DateTime(timezone=True), server_default=func.now())
     owner_id: int = Column(Integer, ForeignKey("users.id"))
+    files = Column(ARRAY(String))
     liked_by: Mapped[list[User]] = relationship(
         "User", uselist=True, back_populates="likes"
     )

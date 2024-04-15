@@ -18,6 +18,9 @@ export default function Post(props) {
   const buttonRef = useRef(null);
 
   function formatTimePosted(timePosted) {
+    if (!timePosted) {
+      return;
+    }
     const date = parseISO(timePosted);
     const now = new Date();
     const oneDayAgo = new Date(

@@ -29,13 +29,10 @@ export const userSlice = createSlice({
       })
 
       .addCase(createPost.fulfilled, (state, action) => {
-        console.log("fulfilled");
-        console.log(action.payload);
         state.posts = [...state.posts, action.payload];
       })
       .addCase(createPost.rejected, (state, action) => {
         state.error = action.error.message;
-        console.log("could not create a post");
       })
       .addCase(fetchUserPosts.fulfilled, (state, action) => {
         state.posts = action.payload.posts;

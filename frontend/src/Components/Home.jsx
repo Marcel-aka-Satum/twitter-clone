@@ -17,6 +17,7 @@ export default function Home() {
   const [isHovered, setIsHovered] = useState(false);
   const [isHoveredSmile, setIsHoveredSmile] = useState(false);
   const [isHoveredSchedule, setIsHoveredSchedule] = useState(false);
+  const [uploadFiles, setUploadFiles] = useState([]);
 
   const handleDelete = (post_id) => {
     dispatch(deleteUserPost(post_id));
@@ -28,6 +29,11 @@ export default function Home() {
     formData.append("message", message);
     formData.append("owner_id", userDataLocalStorage.id);
     formData.append("created_on", date);
+    if (uploadFiles) {
+      uploadFiles.forEach((file, index) => {
+        formData.append("files", file);
+      });
+    }
     dispatch(createPost(formData));
   };
 
@@ -38,7 +44,11 @@ export default function Home() {
   }, []);
 
   const handleFileUpload = (event) => {
-    console.log(event.target.files);
+    const newFilesArr = [];
+    for (let i = 0; i < event.target.files.length; i++) {
+      newFilesArr.push(event.target.files[i]);
+    }
+    setUploadFiles(newFilesArr);
   };
 
   return (

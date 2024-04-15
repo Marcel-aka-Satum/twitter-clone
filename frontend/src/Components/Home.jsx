@@ -51,6 +51,11 @@ export default function Home() {
     setUploadFiles(newFilesArr);
   };
 
+  const deleteFromUserPosts = (index) => {
+    const newUploadFiles = uploadFiles.filter((file, i) => i !== index);
+    setUploadFiles(newUploadFiles);
+  };
+
   return (
     <div className="grid grid-cols-3 w-screen h-screen justify-center">
       <div className="grid-item-1 ">
@@ -74,6 +79,20 @@ export default function Home() {
                   setMessage(e.target.value);
                 }}
               />
+              {uploadFiles &&
+                uploadFiles.map((file, index) => (
+                  <>
+                    <p className="text-blue-500" key={index}>
+                      {file.name}
+                      <button
+                        className="ml-4 text-white"
+                        onClick={() => deleteFromUserPosts(index)}
+                      >
+                        X
+                      </button>
+                    </p>
+                  </>
+                ))}
               <div className="flex items-center justify-between">
                 <div className="flex space-x-4 gap-12">
                   <label>

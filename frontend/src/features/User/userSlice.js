@@ -112,7 +112,12 @@ export const deleteUserPost = createAsyncThunk(
       headers: {
         "Content-Type": "application/json",
       },
-    });
+    })
+      .then((response) => {})
+      .then((data) => {})
+      .catch((error) => {
+        console.error("Error:", error);
+      });
     return post_id;
   }
 );

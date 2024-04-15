@@ -5,6 +5,7 @@ from database.database import get_db
 from ..user.crud import get_user_by_id
 import json
 from typing import Optional, List
+import os
 
 router = APIRouter()
 
@@ -24,9 +25,19 @@ async def create_post(
 @router.delete("/post/{post_id}")
 def delete_post(post_id: int, db: Session = Depends(get_db)):
     response = crud.delete_post(db, post_id=post_id)
-    if not response:
+    if not response[0]:
         raise HTTPException(status_code=404, detail="Post not found")
-    return response
+    # Delete post's related images from /images folder
+    image_folder = f"images\\{response[1]['owner_id']}\\{post_id}"
+    for filename in os.listdir(image_folder):
+        file_path = os.path.join(image_folder, filename)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+
+    # Remove the directory if it exists
+    if os.path.exists(f"images\\{response[1]['owner_id']}\\{post_id}"):
+        os.rmdir(f"images\\{response[1]['owner_id']}\\{post_id}")
+    return response[0]
 
 
 @router.get("/users/post/{user_id}", response_model=schemas.PostList)

@@ -32,7 +32,10 @@ async def create_post(
         db.add(db_post)
         db.commit()
         db.refresh(db_post)
+        if files is None:
+            return db_post
 
+        # Save images to the images folder
         arrListNames = []
         for file in files:
             file_location = f"images/{owner_id}/{db_post.id}/{file.filename}"
@@ -52,10 +55,11 @@ async def create_post(
 def delete_post(db: Session, post_id: int):
     post = db.query(models.Post).filter(models.Post.id == post_id).first()
     if post is None:
-        return False
+        return False, {"NOT FOUND": "Post not found"}
     try:
+        owner_id = post.owner_id
         db.delete(post)
         db.commit()
-        return True
+        return True, {"owner_id": owner_id}
     except Exception as e:
-        return {"error": str(e)}
+        return False, {"error": str(e)}

@@ -42,6 +42,9 @@ async def create_post(
             with open(file_location, "wb+") as file_object:
                 file_object.write(await file.read())
 
+        db_post.files = arrListNames
+        db.commit()
+        db.refresh(db_post)
         return db_post
     return {"error": "User does not exist cannot make a post"}
 

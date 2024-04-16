@@ -9,6 +9,7 @@ import uvicorn
 import time
 from fastapi.staticfiles import StaticFiles
 
+
 create_all_tables()
 app = FastAPI()
 

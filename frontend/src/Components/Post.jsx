@@ -40,7 +40,7 @@ export default function Post(props) {
 
   useEffect(() => {
     if (owner_id === undefined) return;
-    fetch(`http://localhost:8000/api/v1/users/${owner_id}`, {
+    fetch(`http://localhost:8000/api/v1/user/${owner_id}`, {
       method: "GET",
     })
       .then((res) => res.json())
@@ -52,8 +52,8 @@ export default function Post(props) {
     <>
       <div className="flex items-start space-x-3 p-3 border-b border-gray-500">
         <div className="flex-shrink-0">
-          <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white text-2xl">
-            <UserAvatarIcon />
+          <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-2xl">
+            <UserAvatarIcon avatarUrl={props.avatarUrl} />
           </div>
         </div>
         <div className="flex flex-col flex-grow">

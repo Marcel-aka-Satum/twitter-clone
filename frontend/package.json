@@ -15,6 +15,7 @@
     "postcss-flexbugs-fixes": "latest",
     "postcss-loader": "latest",
     "react": "latest",
+    "react-avatar-editor": "^13.0.2",
     "react-dom": "latest",
     "react-redux": "^9.1.0",
     "react-scripts": "latest",

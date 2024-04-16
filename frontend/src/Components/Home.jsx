@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Post, LeftNavbar, RightNavbar } from "./import";
+import { Post, LeftNavbar, RightNavbar, UserAvatarIcon } from "./import";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faSmile, faClock } from "@fortawesome/free-solid-svg-icons";
@@ -7,6 +7,7 @@ import {
   createPost,
   deleteUserPost,
   fetchUserPosts,
+  fetchUser,
 } from "../features/User/userSlice";
 
 export default function Home() {
@@ -18,7 +19,6 @@ export default function Home() {
   const [isHoveredSmile, setIsHoveredSmile] = useState(false);
   const [isHoveredSchedule, setIsHoveredSchedule] = useState(false);
   const [uploadFiles, setUploadFiles] = useState([]);
-
   const handleDelete = (post_id) => {
     dispatch(deleteUserPost(post_id));
   };
@@ -41,6 +41,7 @@ export default function Home() {
 
   useEffect(() => {
     if (userDataLocalStorage) {
+      dispatch(fetchUser(userDataLocalStorage.id));
       dispatch(fetchUserPosts(userDataLocalStorage.id));
     }
   }, []);
@@ -57,7 +58,6 @@ export default function Home() {
     const newUploadFiles = uploadFiles.filter((file, i) => i !== index);
     setUploadFiles(newUploadFiles);
   };
-
   return (
     <div className="grid grid-cols-3 w-screen h-screen justify-center">
       <div className="grid-item-1 ">
@@ -71,7 +71,9 @@ export default function Home() {
         </div>
 
         <div className="flex flex-row border border-gray-500 py-2 mb-4 w-full">
-          <div className="user-avatar text-red-500">avatar</div>
+          <div className="user-avatar mr-4">
+            <UserAvatarIcon avatarUrl={userDataLocalStorage.avatar} />
+          </div>
           <div className="grow">
             <div className=" bg-black text-white p-4">
               <textarea
@@ -153,6 +155,7 @@ export default function Home() {
                 message={post.message}
                 owner_id={post.owner_id}
                 files={post.files}
+                avatarUrl={userDataLocalStorage.avatar}
                 onDelete={() => handleDelete(post.id)}
               />
             ))}

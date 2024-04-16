@@ -39,7 +39,7 @@ def delete_post(post_id: int, db: Session = Depends(get_db)):
     return response[0]
 
 
-@router.get("/users/post/{user_id}", response_model=schemas.PostList)
+@router.get("/user/post/{user_id}", response_model=schemas.PostList)
 def get_posts(user_id: int, db: Session = Depends(get_db)):
     db_user = get_user_by_id(db, user_id)
     if db_user is None:

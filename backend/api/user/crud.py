@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 from auth.auth import get_password_hash
 from . import models, schemas
+import os
+import base64
 
 
 def get_user(db: Session, username: str):
@@ -25,6 +27,7 @@ def create_user(db: Session, user: schemas.UserInDB):
         email=user.email,
         hashed_password=hashed_password,
         username=user.username,
+        avatar="static/images/defaultAvatar.png",
     )
     db.add(db_user)
     db.commit()
@@ -44,7 +47,14 @@ def update_user(db: Session, user_db: models.User, user_info: schemas.UserPatch)
     if user_info.password:
         user_db.hashed_password = get_password_hash(user_info.password)
     if user_info.avatar:
-        user_db.avatar = user_info.avatar
+        base64_image = user_info.avatar.split(",")[1]
+        image_data = base64.b64decode(base64_image)
+        directory = f"static/images/{user_db.id}/avatar/"
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        with open(f"static/images/{user_db.id}/avatar/avatar.jpg", "wb") as file:
+            file.write(image_data)
+        user_db.avatar = f"static/images/{user_db.id}/avatar/avatar.jpg"
     db.commit()
     db.refresh(user_db)
     return user_db

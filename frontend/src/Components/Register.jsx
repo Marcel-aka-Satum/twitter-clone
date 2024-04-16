@@ -10,7 +10,8 @@ const Register = () => {
 
   const dispatch = useDispatch();
 
-  const handleRegister = () => {
+  const handleRegister = (e) => {
+    e.preventDefault();
     dispatch(
       registerAsync({ username: username, email: email, password: password })
     );
@@ -21,7 +22,7 @@ const Register = () => {
       <div className="bg-[#989696] h-screen flex justify-center items-center">
         <div className="container bg-white flex flex-col w-96 p-8 rounded h-3/7 justify-between items-center">
           <h2 className="text-black font-bold">Make an account</h2>
-          <form className="flex-col items-center">
+          <form className="flex-col items-center" onSubmit={handleRegister}>
             <input
               className="p-3 border rounded mt-2 w-full"
               type="text"
@@ -50,10 +51,7 @@ const Register = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
 
-            <button
-              className="bg-white text-blue-500 p-2 border rounded mt-5"
-              onClick={handleRegister}
-            >
+            <button className="bg-white text-blue-500 p-2 border rounded mt-5">
               Register
             </button>
           </form>

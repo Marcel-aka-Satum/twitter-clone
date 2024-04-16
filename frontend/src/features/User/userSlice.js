@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const userSlice = createSlice({
   name: "user",
   initialState: {
-    user: {},
+    user: null,
     posts: [],
     error: null,
   },
@@ -45,8 +45,21 @@ export const userSlice = createSlice({
       })
       .addCase(patchUser.fulfilled, (state, action) => {
         state.user = action.payload;
+        localStorage.setItem("user", JSON.stringify(action.payload));
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.user = action.payload;
       });
   },
+});
+
+export const fetchUser = createAsyncThunk("user/fetchUser", async (user_id) => {
+  const response = await fetch(`http://localhost:8000/api/v1/user/${user_id}`, {
+    method: "GET",
+    credentials: "include",
+  });
+  const data = await response.json();
+  return data.user;
 });
 
 export const loginAsync = createAsyncThunk(
@@ -70,7 +83,7 @@ export const loginAsync = createAsyncThunk(
 export const registerAsync = createAsyncThunk(
   "user/registerAscync",
   async ({ username, email, password }) => {
-    await fetch("http://localhost:8000/api/v1/users", {
+    await fetch("http://localhost:8000/api/v1/user", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -99,7 +112,7 @@ export const fetchUserPosts = createAsyncThunk(
   "user/fetchUserPosts",
   async (user_id) => {
     const response = await fetch(
-      `http://localhost:8000/api/v1/users/post/${user_id}`
+      `http://localhost:8000/api/v1/user/post/${user_id}`
     );
     const data = await response.json();
     return data;

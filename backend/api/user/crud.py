@@ -30,3 +30,19 @@ def create_user(db: Session, user: schemas.UserInDB):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def update_user(db: Session, user_db: models.User, user_info: schemas.UserPatch):
+    if user_info.email:
+        user_db.email = user_info.email
+    if user_info.username:
+        user_db.username = user_info.username
+    if user_info.nickname:
+        user_db.nickname = user_info.nickname
+    if user_info.password:
+        user_db.hashed_password = get_password_hash(user_info.password)
+    if user_info.avatar:
+        user_db.avatar = user_info.avatar
+    db.commit()
+    db.refresh(user_db)
+    return user_db

@@ -89,6 +89,26 @@ export default function Post(props) {
           </div>
 
           <div>
+            {props.files && (
+              <div className="flex flex-row gap-2">
+                {props.files.map((file, index) => {
+                  const fileExtension = file.split(".").pop();
+                  if (fileExtension) {
+                    // for now u can only upload images later videos
+                    return (
+                      <img
+                        key={index}
+                        src={"http://localhost:8000/" + file}
+                        alt="post"
+                        className="w-36 h-36 object-cover"
+                      />
+                    );
+                  } else {
+                    // Handle other file types here (e.g., videos).
+                  }
+                })}
+              </div>
+            )}
             <p className="mt-2 text-red-500">{props.message}</p>
           </div>
           <div className="flex flex-row gap-32 text-red-500 mt-2">

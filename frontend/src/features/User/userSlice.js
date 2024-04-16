@@ -19,8 +19,8 @@ export const userSlice = createSlice({
         state.error = action.error.message;
       })
 
-      .addCase(registerAsync.fulfilled, (state) => {
-        window.location.href = "/";
+      .addCase(registerAsync.fulfilled, (state, action) => {
+        window.location.href = "/login";
         state.error = null;
       })
 

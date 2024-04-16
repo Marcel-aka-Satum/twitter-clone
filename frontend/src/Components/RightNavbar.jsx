@@ -2,7 +2,7 @@ import React from "react";
 
 export default function RightNavbar() {
   return (
-    <div className="flex flex-col space-y-4  mr-[40.33%] p-4">
+    <div className="flex flex-col space-y-4  mr-[40.33%] p-4 overflow-auto min-w-[300px]">
       <input
         className="p-2 border rounded"
         type="text"

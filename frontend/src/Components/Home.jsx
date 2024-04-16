@@ -34,6 +34,8 @@ export default function Home() {
         formData.append("files", file);
       });
     }
+    setMessage("");
+    setUploadFiles([]);
     dispatch(createPost(formData));
   };
 
@@ -62,7 +64,7 @@ export default function Home() {
         <LeftNavbar />
       </div>
       {/*middle homepage */}
-      <div className="grid-item-2 border border-gray-500 ">
+      <div className="grid-item-2 border border-gray-500 overflow-auto min-w-[300px]">
         <div className="flex items-center justify-center mb-4 text-gray-500 ">
           <span className="font-bold flex-1 text-lg ">For you</span>
           <span className="font-bold flex-1 text-lg">Following</span>
@@ -150,6 +152,7 @@ export default function Home() {
                 timePosted={post.created_on}
                 message={post.message}
                 owner_id={post.owner_id}
+                files={post.files}
                 onDelete={() => handleDelete(post.id)}
               />
             ))}

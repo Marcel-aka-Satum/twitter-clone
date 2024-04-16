@@ -7,11 +7,12 @@ from auth.routes import router as auth_router
 from fastapi import Request
 import uvicorn
 import time
+from fastapi.staticfiles import StaticFiles
 
 create_all_tables()
 app = FastAPI()
 
-
+app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(user_router, prefix="/api/v1")
 app.include_router(post_router, prefix="/api/v1")
 app.include_router(auth_router, prefix="/api/v1")

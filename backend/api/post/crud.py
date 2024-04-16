@@ -38,7 +38,7 @@ async def create_post(
         # Save images to the images folder
         arrListNames = []
         for file in files:
-            file_location = f"images/{owner_id}/{db_post.id}/{file.filename}"
+            file_location = f"static/images/{owner_id}/{db_post.id}/{file.filename}"
             arrListNames.append(file_location)
             # Create directory if it doesn't exist
             os.makedirs(os.path.dirname(file_location), exist_ok=True)

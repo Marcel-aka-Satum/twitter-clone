@@ -8,12 +8,10 @@ from fastapi import Request
 import uvicorn
 import time
 from fastapi.staticfiles import StaticFiles
-import os
 
 create_all_tables()
 app = FastAPI()
 
-print(os.getcwd())
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(user_router, prefix="/api/v1")
 app.include_router(post_router, prefix="/api/v1")

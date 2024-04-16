@@ -152,6 +152,7 @@ export default function Home() {
                 timePosted={post.created_on}
                 message={post.message}
                 owner_id={post.owner_id}
+                files={post.files}
                 onDelete={() => handleDelete(post.id)}
               />
             ))}

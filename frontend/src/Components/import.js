@@ -6,6 +6,7 @@ import Post from "./Post";
 import UserAvatarIcon from "./UserAvatarIcon";
 import LeftNavbar from "./LeftNavbar";
 import RightNavbar from "./RightNavbar";
+import Settings from "./Settings";
 
 export {
   Home,
@@ -16,4 +17,5 @@ export {
   UserAvatarIcon,
   LeftNavbar,
   RightNavbar,
+  Settings,
 };

@@ -13,6 +13,8 @@ class User(BaseModel):
 
 class UserOut(User):
     id: int
+    nickname: Optional[str]
+    avatar: Optional[str]
 
 
 class UserPatch(BaseModel):

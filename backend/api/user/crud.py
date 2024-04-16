@@ -33,6 +33,8 @@ def create_user(db: Session, user: schemas.UserInDB):
 
 
 def update_user(db: Session, user_db: models.User, user_info: schemas.UserPatch):
+    print("hahaha")
+    print(user_info)
     if user_info.email:
         user_db.email = user_info.email
     if user_info.username:

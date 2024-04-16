@@ -23,11 +23,10 @@ def read_users(db: Session = Depends(get_db)):
     return users
 
 
-@router.patch("/user/{user_id}", response_model=schemas.User)
-def update_user(
-    user_id: int, db: Session = Depends(get_db), user: schemas.UserPatch = None
-):
+@router.patch("/user/{user_id}", response_model=schemas.UserOut)
+def update_user(user: schemas.UserPatch, user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_id(db, user_id)
+    print(user)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return crud.update_user(db=db, user_db=db_user, user_info=user)

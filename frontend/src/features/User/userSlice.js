@@ -42,6 +42,9 @@ export const userSlice = createSlice({
       })
       .addCase(deleteUserPost.fulfilled, (state, action) => {
         state.posts = state.posts.filter((post) => post.id !== action.payload);
+      })
+      .addCase(patchUser.fulfilled, (state, action) => {
+        state.user = action.payload;
       });
   },
 });
@@ -119,6 +122,25 @@ export const deleteUserPost = createAsyncThunk(
         console.error("Error:", error);
       });
     return post_id;
+  }
+);
+
+export const patchUser = createAsyncThunk(
+  "user/patchUser",
+  async ({ user_id, data }) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/user/${user_id}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    const payloadData = await response.json();
+    return payloadData;
   }
 );
 

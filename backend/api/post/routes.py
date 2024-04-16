@@ -3,8 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException, APIRouter, UploadFile, File, Form
 from database.database import get_db
 from ..user.crud import get_user_by_id
-import json
-from typing import Optional, List
+from typing import List
 import os
 
 router = APIRouter()

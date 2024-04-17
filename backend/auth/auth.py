@@ -17,6 +17,15 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
+def check_user(db, username, user_id):
+    user = crud.get_user(db, username)
+    if not user:
+        return False
+    if user.id != user_id:
+        return False
+    return user
+
+
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 

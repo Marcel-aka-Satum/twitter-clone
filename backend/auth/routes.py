@@ -1,14 +1,39 @@
 from . import schemas
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi import Depends, HTTPException, status, APIRouter, Response
+from fastapi import Depends, HTTPException, status, APIRouter, Response, Request
 from sqlalchemy.orm import Session
 from database.database import get_db
-from auth.auth import authenticate_user, create_access_token
+from auth.auth import authenticate_user, create_access_token, check_user
 from datetime import timedelta
 from auth.auth import ACCESS_TOKEN_EXPIRE_MINUTES
+import jwt
+from jwt import DecodeError
 
 
 router = APIRouter()
+
+
+@router.get("/validate", response_model=schemas.Validate)
+async def validate_token(request: Request, db: Session = Depends(get_db)):
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(status_code=401, detail="Token is missing")
+    try:
+        decoded_token = jwt.decode(
+            token,
+            "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",  # SECRET_KEY
+            algorithms=["HS256"],  # ALGORITHM
+        )
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token invalid")
+    except DecodeError:
+        raise HTTPException(status_code=401, detail="Token is not a valid JWT")
+    username = decoded_token.get("username")
+    user_id = decoded_token.get("user_id")
+    db_user = check_user(db, username, user_id)
+    if not db_user:
+        raise HTTPException(status_code=401, detail="Invalid user")
+    return {"authenticated": True, "user_id": user_id, "username": username}
 
 
 @router.post("/token", response_model=schemas.TokenOut)
@@ -29,7 +54,7 @@ async def login_for_access_token(
         data={"username": user.username, "user_id": user.id},
         expires_delta=access_token_expires,
     )
-    response.set_cookie(key="acces_token", value=access_token, httponly=True)
+    response.set_cookie(key="access_token", value=access_token, httponly=True)
     return {
         "access_token": access_token,
         "token_type": "bearer",

@@ -13,3 +13,9 @@ class Token(BaseModel):
 
 class TokenOut(Token):
     user: dict
+
+
+class Validate(BaseModel):
+    authenticated: bool
+    user_id: int
+    username: str

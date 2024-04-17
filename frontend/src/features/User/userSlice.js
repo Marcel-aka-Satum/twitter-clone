@@ -4,6 +4,7 @@ export const userSlice = createSlice({
   name: "user",
   initialState: {
     user: null,
+    authenticated: false,
     posts: [],
     error: null,
   },
@@ -49,6 +50,13 @@ export const userSlice = createSlice({
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.user = action.payload;
+      })
+      .addCase(validateUser.fulfilled, (state, action) => {
+        console.log("auth succesfull");
+        state.authenticated = true;
+      })
+      .addCase(validateUser.rejected, (state, action) => {
+        state.authenticated = false;
       });
   },
 });
@@ -156,6 +164,18 @@ export const patchUser = createAsyncThunk(
     return payloadData;
   }
 );
+
+export const validateUser = createAsyncThunk("user/validateUser", async () => {
+  const response = await fetch("http://localhost:8000/api/v1/validate", {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      Cookie: document.cookie,
+    },
+  });
+  const data = await response.json();
+  return data;
+});
 
 export const {} = userSlice.actions;
 

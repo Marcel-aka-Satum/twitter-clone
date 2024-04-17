@@ -7,6 +7,7 @@ import UserAvatarIcon from "./UserAvatarIcon";
 import LeftNavbar from "./LeftNavbar";
 import RightNavbar from "./RightNavbar";
 import Settings from "./Settings";
+import ProtectedRoute from "./ProtectedRoute";
 
 export {
   Home,
@@ -18,4 +19,5 @@ export {
   LeftNavbar,
   RightNavbar,
   Settings,
+  ProtectedRoute,
 };

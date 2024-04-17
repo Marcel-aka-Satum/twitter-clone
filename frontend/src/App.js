@@ -1,12 +1,21 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home, Register, Login, User, Settings } from "./Components/import";
+import {
+  Home,
+  Register,
+  Login,
+  User,
+  Settings,
+  ProtectedRoute,
+} from "./Components/import";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<Home />} />
+        </Route>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/settings" element={<Settings />} />

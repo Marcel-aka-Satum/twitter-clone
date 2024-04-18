@@ -22,15 +22,21 @@ const Register = () => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
+    setBadPassword(false);
+    setBadUsername(false);
+    setBadEmail(false);
+    if (password !== confirmPassword || password.length === 0) {
       setBadPassword(true);
       return;
     }
-    if (username.length < 3 || username.length > 20) {
+    if (username.length < 3 || username.length > 20 || username.length === 0) {
       setBadUsername(true);
       return;
     }
-    if (email.length < 3 && !email.includes("@") && !email.includes(".")) {
+    if (
+      (email.length < 3 && !email.includes("@") && !email.includes(".")) ||
+      email.length === 0
+    ) {
       setBadEmail(true);
       return;
     }
@@ -45,6 +51,11 @@ const Register = () => {
       <div className="bg-[#989696] h-screen flex justify-center items-center">
         <div className="container bg-white flex flex-col w-96 p-8 rounded h-3/7 justify-between items-center">
           <h2 className="text-black font-bold">Make an account</h2>
+          {badPassword && (
+            <p className="text-red-500">Passwords do not match</p>
+          )}
+          {badUsername && <p className="text-red-500">Invalid username</p>}
+          {badEmail && <p className="text-red-500">Invalid email</p>}
 
           <form className="flex-col items-center" onSubmit={handleRegister}>
             <input

@@ -23,6 +23,14 @@ def get_users(db: Session):
 
 def create_user(db: Session, user: schemas.UserInDB):
     hashed_password = get_password_hash(user.password)  # hash the psswd
+
+    if len(user.email) == 0:
+        raise ValueError("Email is required")
+    if len(user.username) == 0:
+        raise ValueError("Username is required")
+    if len(user.password) == 0:
+        raise ValueError("Password is required")
+
     db_user = models.User(
         email=user.email,
         hashed_password=hashed_password,
@@ -36,8 +44,6 @@ def create_user(db: Session, user: schemas.UserInDB):
 
 
 def update_user(db: Session, user_db: models.User, user_info: schemas.UserPatch):
-    print("hahaha")
-    print(user_info)
     if user_info.email:
         user_db.email = user_info.email
     if user_info.username:

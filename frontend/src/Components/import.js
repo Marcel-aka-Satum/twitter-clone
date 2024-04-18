@@ -8,6 +8,7 @@ import LeftNavbar from "./LeftNavbar";
 import RightNavbar from "./RightNavbar";
 import Settings from "./Settings";
 import ProtectedRoute from "./ProtectedRoute";
+import Midfeed from "./Midfeed";
 
 export {
   Home,
@@ -20,4 +21,5 @@ export {
   RightNavbar,
   Settings,
   ProtectedRoute,
+  Midfeed,
 };

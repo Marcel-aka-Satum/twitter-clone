@@ -76,7 +76,9 @@ export default function Home() {
 
         <div className="flex flex-row border border-gray-500 py-2 mb-4 w-full">
           <div className="user-avatar mr-4">
-            <UserAvatarIcon avatarUrl={userDataLocalStorage.avatar} />
+            {userDataLocalStorage && userDataLocalStorage.avatar && (
+              <UserAvatarIcon avatarUrl={userDataLocalStorage.avatar} />
+            )}
           </div>
           <div className="grow">
             <div className=" bg-black text-white p-4">

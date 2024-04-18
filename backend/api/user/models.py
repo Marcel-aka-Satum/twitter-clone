@@ -7,10 +7,10 @@ class User(Base):
     __tablename__ = "users"
 
     id: int = Column(Integer, primary_key=True)
-    nickname: str = Column(String, unique=False)
-    username: str = Column(String, unique=True, index=True)
+    nickname: str = Column(String(64), unique=False)
+    username: str = Column(String(64), unique=True, index=True)
     email: str = Column(String, unique=True, index=True)
-    hashed_password: str = Column(String)
+    hashed_password: str = Column(String(128))
     avatar: str = Column(String, unique=False)
     is_active: bool = Column(Boolean, default=True)
     likes: Mapped[list["Post"]] = relationship(

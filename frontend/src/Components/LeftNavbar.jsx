@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function LeftNavbar() {
   return (
     <div className="flex flex-col ml-[40.33%] justify-between">
-      <div className="flex flex-col items-center justify-center text-white h-[50%] gap-3">
+      <div className="flex flex-col items-start ml-56 mt-8 justify-center text-white h-[50%] gap-3">
         <Link to="/" className="flex items-center mb-4">
           <i className="fas fa-home fa-2x mr-2"></i>
           <span>Home</span>

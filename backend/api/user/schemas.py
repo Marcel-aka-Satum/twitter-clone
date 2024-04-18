@@ -28,6 +28,10 @@ class UserPatch(BaseModel):
         orm_mode = True
 
 
+class UserCreate(User):
+    password: str
+
+
 class UserInDB(User):
     password: str
     avatar: Optional[str] = None

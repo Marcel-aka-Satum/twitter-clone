@@ -27,7 +27,7 @@ def create_user(db: Session, user: schemas.UserInDB):
         email=user.email,
         hashed_password=hashed_password,
         username=user.username,
-        avatar="static/images/defaultAvatar.png",
+        avatar="static/images/defaultAvatar.jpg",
     )
     db.add(db_user)
     db.commit()

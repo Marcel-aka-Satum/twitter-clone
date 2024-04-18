@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { loginAsync } from "../features/User/userSlice";
+import { loginAsync, validateUser } from "../features/User/userSlice";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
+
+  useEffect(() => {
+    const authenticated = dispatch(validateUser());
+    if (authenticated.fullfilled) {
+      window.location.href = "/";
+    }
+  }, []);
 
   const handleLogin = (e) => {
     e.preventDefault();

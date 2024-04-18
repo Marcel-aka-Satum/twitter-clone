@@ -60,3 +60,12 @@ async def login_for_access_token(
         "token_type": "bearer",
         "user": {"user": user.as_dict()},
     }
+
+
+@router.post("/logout")
+async def logout(response: Response, request: Request):
+    cookie = request.cookies.get("access_token")
+    if not cookie:
+        raise HTTPException(status_code=401, detail="Token is missing")
+    response.delete_cookie(key="access_token")
+    return {"message": "Logged out"}

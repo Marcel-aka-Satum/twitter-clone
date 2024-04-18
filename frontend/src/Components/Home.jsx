@@ -64,7 +64,7 @@ export default function Home() {
 
   return (
     <div className="grid grid-cols-3 w-screen h-screen justify-center">
-      <div className="grid-item-1 ">
+      <div className="grid-item-1 col-span-1 overflow-auto">
         <LeftNavbar />
       </div>
       {/*middle homepage */}

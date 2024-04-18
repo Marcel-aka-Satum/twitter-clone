@@ -1,9 +1,23 @@
 import { Link } from "react-router-dom";
+import cookie from "js-cookie";
 
 export default function LeftNavbar() {
+  const handleLogout = async () => {
+    const response = await fetch("http://localhost:8000/api/v1/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    if (response.ok) {
+      window.location.href = "/";
+    }
+  };
+
   return (
-    <div className="flex flex-col ml-[40.33%] justify-between">
-      <div className="flex flex-col items-center justify-center text-white h-[50%] gap-3">
+    <div className="flex flex-col ml-[40.33%] justify-between w-full sm:w-1/2 ">
+      <div className="flex flex-col items-start ml-56 mt-8 justify-center text-white h-[50%] gap-3">
         <Link to="/" className="flex items-center mb-4">
           <i className="fas fa-home fa-2x mr-2"></i>
           <span>Home</span>
@@ -36,6 +50,10 @@ export default function LeftNavbar() {
           <i className="fas fa-user fa-2x mr-2"></i>
           <span>User</span>
         </Link>
+        <button className="flex items-center mb-4" onClick={handleLogout}>
+          <i className="fas fa-sign-out-alt fa-2x mr-2"></i>
+          <span>Logout</span>
+        </button>
       </div>
       <div>
         <Link to="/Settings" className="flex items-center mb-4">

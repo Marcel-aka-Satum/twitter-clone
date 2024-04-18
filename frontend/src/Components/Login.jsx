@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { loginAsync } from "../features/User/userSlice";
+import { loginAsync, validateUser } from "../features/User/userSlice";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
+  const error = useSelector((state) => state.user.error);
 
+  useEffect(() => {
+    const authenticated = dispatch(validateUser());
+    if (authenticated.fullfilled) {
+      window.location.href = "/";
+    }
+  }, []);
   const handleLogin = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -21,6 +27,8 @@ const Login = () => {
       <div className="bg-[#989696] h-screen flex justify-center items-center">
         <div className="container bg-white flex flex-col w-96 p-8 rounded h-3/7 justify-between items-center">
           <h2 className="text-black font-bold">log in</h2>
+          {error && <p className="text-red-500">Invalid credentials</p>}
+
           <form className="flex-col items-center">
             <input
               className="p-3 border rounded mt-2 w-full"

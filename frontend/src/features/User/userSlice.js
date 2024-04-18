@@ -52,11 +52,11 @@ export const userSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(validateUser.fulfilled, (state, action) => {
-        console.log("auth succesfull");
         state.authenticated = true;
       })
       .addCase(validateUser.rejected, (state, action) => {
         state.authenticated = false;
+        localStorage.removeItem("user");
       });
   },
 });
@@ -173,6 +173,10 @@ export const validateUser = createAsyncThunk("user/validateUser", async () => {
       Cookie: document.cookie,
     },
   });
+  if (!response.ok) {
+    throw new Error("Unauthorized");
+  }
+
   const data = await response.json();
   return data;
 });

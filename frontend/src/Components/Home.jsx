@@ -8,6 +8,7 @@ import {
   deleteUserPost,
   fetchUserPosts,
   fetchUser,
+  validateUser,
 } from "../features/User/userSlice";
 
 export default function Home() {
@@ -19,6 +20,15 @@ export default function Home() {
   const [isHoveredSmile, setIsHoveredSmile] = useState(false);
   const [isHoveredSchedule, setIsHoveredSchedule] = useState(false);
   const [uploadFiles, setUploadFiles] = useState([]);
+
+  useEffect(() => {
+    if (userDataLocalStorage) {
+      dispatch(fetchUser(userDataLocalStorage.id));
+      dispatch(fetchUserPosts(userDataLocalStorage.id));
+    }
+    dispatch(validateUser());
+  }, []);
+
   const handleDelete = (post_id) => {
     dispatch(deleteUserPost(post_id));
   };
@@ -39,13 +49,6 @@ export default function Home() {
     dispatch(createPost(formData));
   };
 
-  useEffect(() => {
-    if (userDataLocalStorage) {
-      dispatch(fetchUser(userDataLocalStorage.id));
-      dispatch(fetchUserPosts(userDataLocalStorage.id));
-    }
-  }, []);
-
   const handleFileUpload = (event) => {
     const newFilesArr = [];
     for (let i = 0; i < event.target.files.length; i++) {
@@ -58,9 +61,10 @@ export default function Home() {
     const newUploadFiles = uploadFiles.filter((file, i) => i !== index);
     setUploadFiles(newUploadFiles);
   };
+
   return (
     <div className="grid grid-cols-3 w-screen h-screen justify-center">
-      <div className="grid-item-1 ">
+      <div className="grid-item-1 col-span-1 overflow-auto">
         <LeftNavbar />
       </div>
       {/*middle homepage */}
@@ -72,7 +76,9 @@ export default function Home() {
 
         <div className="flex flex-row border border-gray-500 py-2 mb-4 w-full">
           <div className="user-avatar mr-4">
-            <UserAvatarIcon avatarUrl={userDataLocalStorage.avatar} />
+            {userDataLocalStorage && userDataLocalStorage.avatar && (
+              <UserAvatarIcon avatarUrl={userDataLocalStorage.avatar} />
+            )}
           </div>
           <div className="grow">
             <div className=" bg-black text-white p-4">

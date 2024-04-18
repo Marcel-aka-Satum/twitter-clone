@@ -9,7 +9,7 @@ class Post(Base):
     __tablename__ = "posts"
 
     id: int = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    message: str = Column(String)
+    message: str = Column(String(300))
     created_on = Column(DateTime(timezone=True), server_default=func.now())
     owner_id: int = Column(Integer, ForeignKey("users.id"))
     files = Column(ARRAY(String))

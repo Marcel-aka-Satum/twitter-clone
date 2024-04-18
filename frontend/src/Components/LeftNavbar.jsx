@@ -54,13 +54,12 @@ export default function LeftNavbar() {
           <i className="fas fa-sign-out-alt fa-2x mr-2"></i>
           <span>Logout</span>
         </button>
-      </div>
-      <div>
         <Link to="/Settings" className="flex items-center mb-4">
           <i className="fas fa-cog fa-2x mr-2"></i>
           <span>Settings</span>
         </Link>
       </div>
+      <div></div>
     </div>
   );
 }

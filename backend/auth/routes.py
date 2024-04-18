@@ -8,7 +8,7 @@ from datetime import timedelta
 from auth.auth import ACCESS_TOKEN_EXPIRE_MINUTES
 import jwt
 from jwt import DecodeError
-
+from functools import wraps
 
 router = APIRouter()
 

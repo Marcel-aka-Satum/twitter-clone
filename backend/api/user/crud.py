@@ -2,7 +2,21 @@ from sqlalchemy.orm import Session
 from auth.auth import get_password_hash
 from . import models, schemas
 import os
+import re
 import base64
+from fastapi import HTTPException
+
+
+def is_password_strong(psswd):
+    # Check for uppercase, lowercase, number, and special character
+    regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$"
+    return bool(re.match(regex, psswd))
+
+
+def is_valid_email(email):
+    # Check if email is valid
+    regex = r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
+    return bool(re.match(regex, email))
 
 
 def get_user(db: Session, username: str):
@@ -22,15 +36,20 @@ def get_users(db: Session):
 
 
 def create_user(db: Session, user: schemas.UserInDB):
-    hashed_password = get_password_hash(user.password)  # hash the psswd
 
     if len(user.email) == 0:
-        raise ValueError("Email is required")
+        raise HTTPException(status_code=400, detail="Email is required")
     if len(user.username) == 0:
-        raise ValueError("Username is required")
+        raise HTTPException(status_code=400, detail="Username is required")
     if len(user.password) == 0:
-        raise ValueError("Password is required")
+        raise HTTPException(status_code=400, detail="Password is required")
 
+    if not is_password_strong(user.password):
+        raise HTTPException(status_code=400, detail="Password is not strong enough")
+    if not is_valid_email(user.email):
+        raise HTTPException(status_code=400, detail="Email is invalid")
+
+    hashed_password = get_password_hash(user.password)  # hash the psswd
     db_user = models.User(
         email=user.email,
         hashed_password=hashed_password,

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, ARRAY
 from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy.orm import relationship, Mapped, backref
 from database.database import Base
 from ..user.models import User
 
@@ -17,3 +17,9 @@ class Post(Base):
         "User", uselist=True, back_populates="likes"
     )
     user: Mapped[User] = relationship("User", back_populates="posts", uselist=False)
+
+    # Self-referential relationship
+    parent_id = Column(Integer, ForeignKey("posts.id"))
+    comments: Mapped[list["Post"]] = relationship(
+        "Post", backref=backref("parent", remote_side=[id]), uselist=True
+    )

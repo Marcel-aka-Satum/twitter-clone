@@ -7,13 +7,15 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const error = useSelector((state) => state.user.error);
+  const authenticated = useSelector((state) => state.user.authenticated);
 
   useEffect(() => {
-    const authenticated = dispatch(validateUser());
-    if (authenticated.fullfilled) {
-      window.location.href = "/";
-    }
+    dispatch(validateUser());
   }, []);
+
+  if (authenticated) {
+    window.location.href = "/";
+  }
   const handleLogin = (e) => {
     e.preventDefault();
     const formData = new FormData();

@@ -7,6 +7,7 @@ import {
   User,
   Settings,
   ProtectedRoute,
+  StatusPost,
 } from "./Components/import";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/profile/:username" element={<User />} />
+          <Route path="/:username/status/:postid" element={<StatusPost />} />
         </Route>
 
         {/* The Register and Login components are public routes. */}

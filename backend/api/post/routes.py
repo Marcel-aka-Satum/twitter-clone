@@ -21,6 +21,25 @@ async def create_post(
     return db_post
 
 
+@router.post("comment", response_model=schemas.PostOut)
+async def create_comment(
+    message: str = Form(),
+    owner_id: str = Form(),
+    created_on: str = Form(),
+    parent_id: int = Form(),
+    files: List[UploadFile] = File(None),
+    db: Session = Depends(get_db),
+):
+    parent_post = crud.get_post_by_id(db, parent_id)
+    if parent_post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    comment = await crud.create_post(db, message, owner_id, created_on, files)
+    parent_post.comments.append(comment)
+    db.add(parent_post)
+    db.commit()
+    return comment
+
+
 @router.delete("/post/{post_id}")
 def delete_post(post_id: int, db: Session = Depends(get_db)):
     response = crud.delete_post(db, post_id=post_id)
@@ -46,3 +65,9 @@ def get_posts(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     user_posts = crud.get_user_posts(db_user)
     return {"posts": user_posts}
+
+
+@router.get("/comments/post/{post_id}", response_model=schemas.PostList)
+def get_comments(post_id: int, db: Session = Depends(get_db)):
+    post_comments = crud.get_post_comments(db, post_id)
+    return post_comments

@@ -9,6 +9,7 @@ import RightNavbar from "./RightNavbar";
 import Settings from "./Settings";
 import ProtectedRoute from "./ProtectedRoute";
 import Midfeed from "./Midfeed";
+import StatusPost from "./StatusPost";
 
 export {
   Home,
@@ -22,4 +23,5 @@ export {
   Settings,
   ProtectedRoute,
   Midfeed,
+  StatusPost,
 };

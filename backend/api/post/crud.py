@@ -14,6 +14,10 @@ def get_post_likes(post: models.Post):
     return len(post.liked_by)
 
 
+def get_post_by_id(db: Session, post_id: int):
+    return db.query(models.Post).filter(models.Post.id == post_id).first()
+
+
 async def create_post(
     db: Session, message: str, owner_id: str, created_on: str, files: list[UploadFile]
 ):
@@ -63,3 +67,10 @@ def delete_post(db: Session, post_id: int):
         return True, {"owner_id": owner_id}
     except Exception as e:
         return False, {"error": str(e)}
+
+
+def get_post_comments(db: Session, post_id: int):
+    post = db.query(models.Post).filter(models.Post.id == post_id).first()
+    if post is None:
+        return {"error": "Post not found"}
+    return {"posts": post.comments}

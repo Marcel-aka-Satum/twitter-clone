@@ -10,6 +10,7 @@ import Settings from "./Settings";
 import ProtectedRoute from "./ProtectedRoute";
 import Midfeed from "./Midfeed";
 import StatusPost from "./StatusPost";
+import MidFeedStatus from "./MidFeedStatus";
 
 export {
   Home,
@@ -24,4 +25,5 @@ export {
   ProtectedRoute,
   Midfeed,
   StatusPost,
+  MidFeedStatus,
 };

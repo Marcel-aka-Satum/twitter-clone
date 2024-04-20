@@ -10,13 +10,13 @@ import {
   faShareSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { formatDistanceToNow, parseISO, format } from "date-fns";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function Post(props) {
   const owner_id = props.owner_id;
   const [userData, setUserData] = useState({});
   const [showOptions, setShowOptions] = useState(false);
   const buttonRef = useRef(null);
-
   function formatTimePosted(timePosted) {
     if (!timePosted) {
       return;
@@ -53,7 +53,7 @@ export default function Post(props) {
       <div className="flex items-start space-x-3 p-3 border-b border-gray-500">
         <div className="flex-shrink-0">
           <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-2xl">
-            <UserAvatarIcon avatarUrl={props.avatarUrl} />
+            {userData && <UserAvatarIcon avatarUrl={userData.avatar} />}
           </div>
         </div>
         <div className="flex flex-col flex-grow">

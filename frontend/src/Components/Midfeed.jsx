@@ -5,11 +5,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faSmile, faClock } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  fetchUser,
   fetchUserPosts,
   validateUser,
   deleteUserPost,
   createPost,
+  fetchUserById,
 } from "../features/User/userSlice";
 
 export default function Midfeed() {
@@ -39,7 +39,7 @@ export default function Midfeed() {
 
   useEffect(() => {
     if (userDataLocalStorage) {
-      dispatch(fetchUser(userDataLocalStorage.id));
+      dispatch(fetchUserById(userDataLocalStorage.id));
       dispatch(fetchUserPosts(userDataLocalStorage.id));
     }
     dispatch(validateUser());

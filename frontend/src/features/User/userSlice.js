@@ -19,16 +19,13 @@ export const userSlice = createSlice({
       .addCase(loginAsync.rejected, (state, action) => {
         state.error = action.error.message;
       })
-
       .addCase(registerAsync.fulfilled, (state, action) => {
         window.location.href = "/login";
         state.error = null;
       })
-
       .addCase(registerAsync.rejected, (state, action) => {
         state.error = action.error.message;
       })
-
       .addCase(createPost.fulfilled, (state, action) => {
         state.posts = [...state.posts, action.payload];
       })
@@ -48,8 +45,13 @@ export const userSlice = createSlice({
         state.user = action.payload;
         localStorage.setItem("user", JSON.stringify(action.payload));
       })
-      .addCase(fetchUser.fulfilled, (state, action) => {
+      .addCase(fetchUserById.fulfilled, (state, action) => {
         state.user = action.payload;
+        console.log("payload", action.payload);
+        console.log(state.user);
+      })
+      .addCase(fetchUserById.rejected, (state, action) => {
+        state.error = action.error.message;
       })
       .addCase(validateUser.fulfilled, (state, action) => {
         state.authenticated = true;
@@ -57,18 +59,45 @@ export const userSlice = createSlice({
       .addCase(validateUser.rejected, (state, action) => {
         state.authenticated = false;
         localStorage.removeItem("user");
+      })
+      .addCase(fetchUserByUserName.fulfilled, (state, action) => {
+        state.user = action.payload;
+      })
+      .addCase(fetchUserByUserName.rejected, (state, action) => {
+        state.error = action.error.message;
       });
   },
 });
 
-export const fetchUser = createAsyncThunk("user/fetchUser", async (user_id) => {
-  const response = await fetch(`http://localhost:8000/api/v1/user/${user_id}`, {
-    method: "GET",
-    credentials: "include",
-  });
-  const data = await response.json();
-  return data.user;
-});
+export const fetchUserById = createAsyncThunk(
+  "user/fetchUser",
+  async (user_id) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/user/${user_id}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    return data;
+  }
+);
+
+export const fetchUserByUserName = createAsyncThunk(
+  "user/fetchUserByUsernName",
+  async (username) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/user/username/${username}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    return data;
+  }
+);
 
 export const loginAsync = createAsyncThunk(
   "user/loginAsync",
@@ -180,6 +209,19 @@ export const validateUser = createAsyncThunk("user/validateUser", async () => {
   const data = await response.json();
   return data;
 });
+
+export const createComment = createAsyncThunk(
+  "user/createComment",
+  async (data) => {
+    const response = await fetch("http://localhost:8000/api/v1/comment", {
+      method: "POST",
+      credentials: "include",
+      body: data,
+    });
+    const payloadData = await response.json();
+    return payloadData;
+  }
+);
 
 export const {} = userSlice.actions;
 

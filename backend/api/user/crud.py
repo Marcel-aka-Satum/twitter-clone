@@ -58,6 +58,7 @@ def create_user(db: Session, user: schemas.UserInDB):
         email=user.email,
         hashed_password=hashed_password,
         username=user.username,
+        nickname=user.username,
         avatar="static/images/defaultAvatar.jpg",
     )
     db.add(db_user)
@@ -69,12 +70,12 @@ def create_user(db: Session, user: schemas.UserInDB):
 def update_user(db: Session, user_db: models.User, user_info: schemas.UserPatch):
     if user_info.email:
         user_db.email = user_info.email
-    if user_info.username:
-        user_db.username = user_info.username
     if user_info.nickname:
         user_db.nickname = user_info.nickname
     if user_info.password:
         user_db.hashed_password = get_password_hash(user_info.password)
+    if user_info.description:
+        user_db.description = user_info.description
     if user_info.avatar:
         base64_image = user_info.avatar.split(",")[1]
         image_data = base64.b64decode(base64_image)
@@ -84,6 +85,15 @@ def update_user(db: Session, user_db: models.User, user_info: schemas.UserPatch)
         with open(f"static/images/{user_db.id}/avatar/avatar.jpg", "wb") as file:
             file.write(image_data)
         user_db.avatar = f"static/images/{user_db.id}/avatar/avatar.jpg"
+    if user_info.banner:
+        base64_image = user_info.banner.split(",")[1]
+        image_data = base64.b64decode(base64_image)
+        directory = f"static/images/{user_db.id}/banner/"
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        with open(f"static/images/{user_db.id}/banner/banner.jpg", "wb") as file:
+            file.write(image_data)
+        user_db.banner = f"static/images/{user_db.id}/banner/banner.jpg"
     db.commit()
     db.refresh(user_db)
     return user_db

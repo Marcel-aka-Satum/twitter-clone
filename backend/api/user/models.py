@@ -12,13 +12,15 @@ class User(Base):
     email: str = Column(String, unique=True, index=True)
     hashed_password: str = Column(String(128))
     avatar: str = Column(String, unique=False)
+    banner: str = Column(String, unique=False)
     is_active: bool = Column(Boolean, default=True)
+    description: str = Column(String, unique=False)
     likes: Mapped[list["Post"]] = relationship(
         "Post", uselist=True, back_populates="liked_by"
     )
 
     posts: Mapped[list["Post"]] = relationship(
-        "Post", back_populates="user", uselist=True
+        "Post", back_populates="user", uselist=True, overlaps="liked_by"
     )
 
     # Serializer to get user in json without hashed_psswd attr

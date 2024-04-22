@@ -61,7 +61,7 @@ export default function Post(props) {
             <div>
               <a href={`/profile/${props.username}`}>
                 <span className="font-bold text-red-500">
-                  {userData.username}
+                  {userData.nickname}
                 </span>
                 <span className="text-gray-500 ml-2">@{userData.username}</span>
               </a>

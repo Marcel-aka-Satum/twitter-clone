@@ -71,3 +71,7 @@ def delete_post(db: Session, post_id: int):
 
 def get_post_comments(db: Session, post_id: int):
     return db.query(models.Post).filter(models.Post.id == post_id).first()
+
+
+def get_user_by_username(db: Session, username: str):
+    return db.query(User).filter(User.username == username).first()

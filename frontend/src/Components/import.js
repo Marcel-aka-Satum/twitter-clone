@@ -1,7 +1,7 @@
 import Home from "./Home";
 import Register from "./Register";
 import Login from "./Login";
-import User from "./User";
+import Profile from "./Profile";
 import Post from "./Post";
 import UserAvatarIcon from "./UserAvatarIcon";
 import LeftNavbar from "./LeftNavbar";
@@ -12,12 +12,13 @@ import Midfeed from "./Midfeed";
 import StatusPost from "./StatusPost";
 import MidFeedStatus from "./MidFeedStatus";
 import TextArea from "./TextArea";
+import Profilefeed from "./Profilefeed";
 
 export {
   Home,
   Register,
   Login,
-  User,
+  Profile,
   Post,
   UserAvatarIcon,
   LeftNavbar,
@@ -28,4 +29,5 @@ export {
   StatusPost,
   MidFeedStatus,
   TextArea,
+  Profilefeed,
 };

@@ -38,7 +38,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
     );
   }
   return (
-    <div className="grid-item-2 border border-gray-500 overflow-auto min-w-[300px]">
+    <div className="grid-item-2 border border-gray-500 overflow-auto">
       <div className="flex items-center justify-center mb-4 text-gray-500 ">
         <span className="font-bold flex-1 text-lg ">For you</span>
         <span className="font-bold flex-1 text-lg">Following</span>

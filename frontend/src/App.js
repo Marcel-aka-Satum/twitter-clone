@@ -4,7 +4,7 @@ import {
   Home,
   Register,
   Login,
-  User,
+  Profile,
   Settings,
   ProtectedRoute,
   StatusPost,
@@ -19,7 +19,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Home />} />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/profile/:username" element={<User />} />
+          <Route path="/profile/:username" element={<Profile />} />
           <Route path="/:username/status/:postid" element={<StatusPost />} />
         </Route>
 

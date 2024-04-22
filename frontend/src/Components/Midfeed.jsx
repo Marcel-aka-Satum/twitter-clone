@@ -166,6 +166,7 @@ export default function Midfeed() {
           posts.map((post) => (
             <Post
               key={post.id}
+              username={post.username}
               post_id={post.id}
               timePosted={post.created_on}
               message={post.message}

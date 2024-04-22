@@ -4,9 +4,12 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   fetchPostById,
   fetchCommentsByPostId,
+  deleteComment,
 } from "../features/Post/postSlice";
-import { fetchUserByUserName } from "../features/User/userSlice";
-import { Link } from "react-router-dom";
+import {
+  fetchUserByUserName,
+  deleteUserPost,
+} from "../features/User/userSlice";
 
 export default function MidFeedStatus({ post_id, owner_post }) {
   const dispatch = useDispatch();
@@ -14,6 +17,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
   const comments = useSelector((state) => state.post.comments);
   const user = useSelector((state) => state.user.user);
   const postNotFound = useSelector((state) => state.post.postNotFound);
+  const commentsNotFound = useSelector((state) => state.post.commentsNotFound);
 
   useEffect(() => {
     dispatch(fetchPostById(post_id));
@@ -21,8 +25,16 @@ export default function MidFeedStatus({ post_id, owner_post }) {
     dispatch(fetchUserByUserName(owner_post));
   }, []);
 
-  const handleDelete = (post_id) => {};
-  if (postNotFound) {
+  const handleDeletePost = (post_id) => {
+    dispatch(deleteUserPost(post_id));
+  };
+
+  const handleDeleteComment = (comment_id) => {
+    dispatch(deleteComment(comment_id));
+  };
+
+  //if there is no post logically there are no comments associated with the post either
+  if (postNotFound && commentsNotFound) {
     return (
       <div className="flex items-center justify-center ">Post not found...</div>
     );
@@ -46,7 +58,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
               owner_id={post.owner_id}
               files={post.files}
               avatarUrl={user.avatar}
-              onDelete={() => handleDelete(post.id)}
+              onDelete={() => handleDeletePost(post.id)}
             />
           )}
           {/*Comments*/}
@@ -60,7 +72,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
                 owner_id={comment.owner_id}
                 files={comment.files}
                 avatarUrl={comment.avatarUrl}
-                onDelete={() => handleDelete(comment.id)}
+                onDelete={() => handleDeleteComment(comment.id)}
               />
             ))}
           <TextArea post_id={post_id} />

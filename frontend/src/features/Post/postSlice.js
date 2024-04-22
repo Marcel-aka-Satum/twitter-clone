@@ -7,7 +7,7 @@ export const postSlice = createSlice({
     comments: [],
     error: null,
     postNotFound: null,
-    commentNotFound: null,
+    commentsNotFound: null,
     likes: 0,
   },
   reducers: {},
@@ -22,12 +22,20 @@ export const postSlice = createSlice({
       state.comments = action.payload.posts;
     });
     builder.addCase(fetchCommentsByPostId.rejected, (state, action) => {
-      state.commentNotFound = action.error.message;
+      state.commentsNotFound = action.error.message;
     });
     builder.addCase(createComment.fulfilled, (state, action) => {
       state.comments = [...state.comments, action.payload];
     });
     builder.addCase(createComment.rejected, (state, action) => {
+      state.error = action.error.message;
+    });
+    builder.addCase(deleteComment.fulfilled, (state, action) => {
+      state.comments = state.comments.filter(
+        (comment) => comment.id !== action.payload
+      );
+    });
+    builder.addCase(deleteComment.rejected, (state, action) => {
       state.error = action.error.message;
     });
   },
@@ -52,6 +60,7 @@ export const fetchCommentsByPostId = createAsyncThunk(
       `http://localhost:8000/api/v1/comments/post/${post_id}`
     );
     const data = await response.json();
+    if (response.status === 404) throw new Error("Post not found");
     return data;
   }
 );
@@ -66,6 +75,24 @@ export const createComment = createAsyncThunk(
     });
     const payloadData = await response.json();
     return payloadData;
+  }
+);
+
+export const deleteComment = createAsyncThunk(
+  "user/deleteComment",
+  async (post_id) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/post/${post_id}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.status === 404) throw new Error("Post not found");
+    return post_id;
   }
 );
 

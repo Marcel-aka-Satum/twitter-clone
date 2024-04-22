@@ -47,6 +47,8 @@ def delete_post(post_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Post not found")
     # Delete post's related images from /images folder
     image_folder = f"static\\images\\{response[1]['owner_id']}\\{post_id}"
+    if not os.path.exists(image_folder):
+        return response[0]
     for filename in os.listdir(image_folder):
         file_path = os.path.join(image_folder, filename)
         if os.path.isfile(file_path):
@@ -58,23 +60,45 @@ def delete_post(post_id: int, db: Session = Depends(get_db)):
     return response[0]
 
 
+# Get all posts of a user by a user id
 @router.get("/user/post/{user_id}", response_model=schemas.PostList)
 def get_posts(user_id: int, db: Session = Depends(get_db)):
     db_user = get_user_by_id(db, user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     user_posts = crud.get_user_posts(db_user)
-    return {"posts": user_posts}
+    serialized_posts = list()
+    for post in user_posts:
+        post = schemas.PostOut(
+            id=post.id,
+            message=post.message,
+            owner_id=post.owner_id,
+            created_on=post.created_on,
+            files=post.files,
+            username=post.user.username,
+        )
+        serialized_posts.append(post)
+    return {"posts": serialized_posts}
 
 
+# Get a post by post id
 @router.get("/post/{post_id}", response_model=schemas.PostOut)
 def get_post(post_id: int, db: Session = Depends(get_db)):
     db_post = crud.get_post_by_id(db, post_id)
     if db_post is None:
         raise HTTPException(status_code=404, detail="Post not found")
-    return db_post
+    db_post_serialzed = schemas.PostOut(
+        id=db_post.id,
+        message=db_post.message,
+        owner_id=db_post.owner_id,
+        created_on=db_post.created_on,
+        files=db_post.files,
+        username=db_post.user.username,
+    )
+    return db_post_serialzed
 
 
+# Get all comments of a post by post id
 @router.get("/comments/post/{post_id}", response_model=schemas.PostList)
 def get_comments(post_id: int, db: Session = Depends(get_db)):
     post = crud.get_post_comments(db, post_id)

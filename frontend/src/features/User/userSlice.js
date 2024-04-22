@@ -68,7 +68,7 @@ export const userSlice = createSlice({
         state.posts = action.payload.posts;
       })
       .addCase(fetchUserPostsByUsername.rejected, (state, action) => {
-        state.error = action.error.message;
+        state.error = "User not found";
       });
   },
 });
@@ -99,6 +99,9 @@ export const fetchUserByUserName = createAsyncThunk(
       }
     );
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     return data;
   }
 );

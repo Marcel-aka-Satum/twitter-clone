@@ -115,11 +115,27 @@ export default function Post(props) {
             </a>
           </div>
           <div className="flex flex-row gap-32 text-red-500 mt-2">
-            <FontAwesomeIcon icon={faComment} className="cursor-pointer" />
-            <FontAwesomeIcon icon={faRetweet} className="cursor-pointer" />
-            <FontAwesomeIcon icon={faHeart} className="cursor-pointer" />
-            <FontAwesomeIcon icon={faChartBar} className="cursor-pointer" />
-            <FontAwesomeIcon icon={faShareSquare} className="cursor-pointer" />
+            <div>
+              <FontAwesomeIcon icon={faComment} className="cursor-pointer" />{" "}
+              {props.amountOfComments}
+            </div>
+            <div>
+              <FontAwesomeIcon icon={faRetweet} className="cursor-pointer" />{" "}
+              {props.amountOfRetweets}
+            </div>
+            <div>
+              <FontAwesomeIcon icon={faHeart} className="cursor-pointer" />
+              {props.amountOfLikes}
+            </div>
+            <div>
+              <FontAwesomeIcon icon={faChartBar} className="cursor-pointer" />
+            </div>
+            <div>
+              <FontAwesomeIcon
+                icon={faShareSquare}
+                className="cursor-pointer"
+              />
+            </div>
           </div>
         </div>
       </div>

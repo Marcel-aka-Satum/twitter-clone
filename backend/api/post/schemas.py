@@ -17,6 +17,9 @@ class PostOut(Post):
     id: int
     files: Optional[list[str]]
     username: str
+    amountOfComments: int = 0
+    amountOfLikes: int = 0
+    amountOfRepost: int = 0
 
 
 class PostList(BaseModel):

@@ -15,6 +15,7 @@ export default function Profilefeed({ username, description }) {
   const [likes, setLikes] = useState([]);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+  const error = useSelector((state) => state.user.error);
   const userPosts = useSelector((state) => state.user.posts);
 
   useEffect(() => {
@@ -23,6 +24,9 @@ export default function Profilefeed({ username, description }) {
   }, []);
 
   const handleDelete = () => {};
+  if (error) {
+    return <div>{error}</div>;
+  }
   if (!user) {
     return <div>Loading...</div>;
   }
@@ -33,12 +37,15 @@ export default function Profilefeed({ username, description }) {
         avatarUrl={user.avatar}
         nickname={user.nickname}
         description={user.description}
+        bannerUrl={user.banner}
       />
       {userPosts &&
         user &&
         userPosts.map((post) => (
           <Post
             key={post.id}
+            amountOfComments={post.amountOfComments}
+            amountOfLikes={post.amountOfLikes}
             username={post.username}
             nickname={user.nickname}
             post_id={post.id}

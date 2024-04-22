@@ -23,16 +23,24 @@ export default function Profilefeed({ username, description }) {
   }, []);
 
   const handleDelete = () => {};
-  console.log(user, userPosts);
+  if (!user) {
+    return <div>Loading...</div>;
+  }
   return (
     <div>
-      <ProfileBanner username={username} />
+      <ProfileBanner
+        username={username}
+        avatarUrl={user.avatar}
+        nickname={user.nickname}
+        description={user.description}
+      />
       {userPosts &&
         user &&
         userPosts.map((post) => (
           <Post
             key={post.id}
             username={post.username}
+            nickname={user.nickname}
             post_id={post.id}
             timePosted={post.created_on}
             message={post.message}

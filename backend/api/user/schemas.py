@@ -15,6 +15,8 @@ class UserOut(User):
     id: int
     nickname: Optional[str]
     avatar: Optional[str]
+    banner: Optional[str]
+    description: Optional[str]
 
 
 class UserPatch(BaseModel):
@@ -23,6 +25,8 @@ class UserPatch(BaseModel):
     email: Optional[str] = None
     password: Optional[str] = None
     avatar: Optional[str] = None
+    banner: Optional[str] = None
+    description: Optional[str] = None
 
     class Config:
         orm_mode = True

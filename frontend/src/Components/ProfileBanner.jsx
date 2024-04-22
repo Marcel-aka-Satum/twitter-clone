@@ -1,6 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function ProfileBanner({ username }) {
+  const [visible, setVisible] = useState({
+    posts: true,
+    replies: false,
+    media: false,
+    likes: false,
+  });
+
+  const handleVisibility = (e) => {
+    const name = e.target.innerText.toLowerCase();
+    setVisible({
+      ...visible,
+      posts: false,
+      replies: false,
+      media: false,
+      likes: false,
+      [name]: true,
+    });
+  };
+
   return (
     <div>
       {/* User banner */}
@@ -43,13 +62,33 @@ export default function ProfileBanner({ username }) {
       </div>
 
       {/* Footer */}
-      <div className="mt-4 flex justify-around border border-gray-200 pt-1">
-        <button className="px-2 py-1">Posts</button>
-        <button className="px-2 py-1">Replies</button>
-        <button className="px-2 py-1">Highlights</button>
-        <button className="px-2 py-1">Articles</button>
-        <button className="px-2 py-1">Media</button>
-        <button className="px-2 py-1">Likes</button>
+      <div className="flex mt-4 justify-around border-t border-b border-gray-500 pt-1">
+        <div className="flex flex-col">
+          <button className="px-2 py-1" onClick={handleVisibility}>
+            Posts
+          </button>
+          {visible.posts && (
+            <div className="w-14 h-1 bg-blue-500 rounded-full"></div>
+          )}
+        </div>
+        <button className="px-2 py-1" onClick={handleVisibility}>
+          Replies
+          {visible.replies && (
+            <div className="w-14 h-1 bg-blue-500 rounded-full"></div>
+          )}
+        </button>
+        <button className="px-2 py-1" onClick={handleVisibility}>
+          Media
+          {visible.media && (
+            <div className="w-14 h-1 bg-blue-500 rounded-full"></div>
+          )}
+        </button>
+        <button className="px-2 py-1" onClick={handleVisibility}>
+          Likes
+          {visible.likes && (
+            <div className="w-14 h-1 bg-blue-500 rounded-full"></div>
+          )}
+        </button>
       </div>
     </div>
   );

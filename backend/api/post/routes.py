@@ -21,7 +21,7 @@ async def create_post(
     return db_post
 
 
-@router.post("comment", response_model=schemas.PostOut)
+@router.post("/comment", response_model=schemas.PostOut)
 async def create_comment(
     message: str = Form(),
     owner_id: str = Form(),

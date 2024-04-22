@@ -10,7 +10,6 @@ import {
   faShareSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { formatDistanceToNow, parseISO, format } from "date-fns";
-import { useSelector, useDispatch } from "react-redux";
 
 export default function Post(props) {
   const owner_id = props.owner_id;
@@ -50,7 +49,7 @@ export default function Post(props) {
 
   return (
     <>
-      <div className="flex items-start space-x-3 p-3 border-b border-gray-500">
+      <div className="flex items-start space-x-3 p-2 border-b border-gray-500">
         <div className="flex-shrink-0">
           <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-2xl">
             {userData && <UserAvatarIcon avatarUrl={userData.avatar} />}
@@ -116,16 +115,7 @@ export default function Post(props) {
             <FontAwesomeIcon icon={faRetweet} className="cursor-pointer" />
             <FontAwesomeIcon icon={faHeart} className="cursor-pointer" />
             <FontAwesomeIcon icon={faChartBar} className="cursor-pointer" />
-            <div className="gap-4">
-              <FontAwesomeIcon
-                icon={faBookmark}
-                className="cursor-pointer mr-4"
-              />
-              <FontAwesomeIcon
-                icon={faShareSquare}
-                className="cursor-pointer"
-              />
-            </div>
+            <FontAwesomeIcon icon={faShareSquare} className="cursor-pointer" />
           </div>
         </div>
       </div>

@@ -47,8 +47,6 @@ export const userSlice = createSlice({
       })
       .addCase(fetchUserById.fulfilled, (state, action) => {
         state.user = action.payload;
-        console.log("payload", action.payload);
-        console.log(state.user);
       })
       .addCase(fetchUserById.rejected, (state, action) => {
         state.error = action.error.message;
@@ -209,19 +207,6 @@ export const validateUser = createAsyncThunk("user/validateUser", async () => {
   const data = await response.json();
   return data;
 });
-
-export const createComment = createAsyncThunk(
-  "user/createComment",
-  async (data) => {
-    const response = await fetch("http://localhost:8000/api/v1/comment", {
-      method: "POST",
-      credentials: "include",
-      body: data,
-    });
-    const payloadData = await response.json();
-    return payloadData;
-  }
-);
 
 export const {} = userSlice.actions;
 

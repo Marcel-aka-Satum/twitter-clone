@@ -17,9 +17,15 @@ export const postSlice = createSlice({
       state.error = action.error.message;
     });
     builder.addCase(fetchCommentsByPostId.fulfilled, (state, action) => {
-      state.comments = action.payload;
+      state.comments = action.payload.posts;
     });
     builder.addCase(fetchCommentsByPostId.rejected, (state, action) => {
+      state.error = action.error.message;
+    });
+    builder.addCase(createComment.fulfilled, (state, action) => {
+      state.comments = [...state.comments, action.payload];
+    });
+    builder.addCase(createComment.rejected, (state, action) => {
       state.error = action.error.message;
     });
   },
@@ -44,6 +50,19 @@ export const fetchCommentsByPostId = createAsyncThunk(
     );
     const data = await response.json();
     return data;
+  }
+);
+
+export const createComment = createAsyncThunk(
+  "user/createComment",
+  async (data) => {
+    const response = await fetch("http://localhost:8000/api/v1/comment", {
+      method: "POST",
+      credentials: "include",
+      body: data,
+    });
+    const payloadData = await response.json();
+    return payloadData;
   }
 );
 

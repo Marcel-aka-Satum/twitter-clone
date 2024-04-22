@@ -16,6 +16,7 @@ class Post(BaseModel):
 class PostOut(Post):
     id: int
     files: Optional[list[str]]
+    username: str
 
 
 class PostList(BaseModel):

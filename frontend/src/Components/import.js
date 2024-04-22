@@ -11,6 +11,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Midfeed from "./Midfeed";
 import StatusPost from "./StatusPost";
 import MidFeedStatus from "./MidFeedStatus";
+import TextArea from "./TextArea";
 
 export {
   Home,
@@ -26,4 +27,5 @@ export {
   Midfeed,
   StatusPost,
   MidFeedStatus,
+  TextArea,
 };

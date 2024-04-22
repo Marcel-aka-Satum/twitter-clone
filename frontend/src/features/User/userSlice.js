@@ -47,8 +47,6 @@ export const userSlice = createSlice({
       })
       .addCase(fetchUserById.fulfilled, (state, action) => {
         state.user = action.payload;
-        console.log("payload", action.payload);
-        console.log(state.user);
       })
       .addCase(fetchUserById.rejected, (state, action) => {
         state.error = action.error.message;
@@ -159,18 +157,19 @@ export const fetchUserPosts = createAsyncThunk(
 export const deleteUserPost = createAsyncThunk(
   "user/deleteUserPost",
   async (post_id) => {
-    fetch(`http://localhost:8000/api/v1/post/${post_id}`, {
-      method: "DELETE",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {})
-      .then((data) => {})
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    const response = await fetch(
+      `http://localhost:8000/api/v1/post/${post_id}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     return post_id;
   }
 );
@@ -209,19 +208,6 @@ export const validateUser = createAsyncThunk("user/validateUser", async () => {
   const data = await response.json();
   return data;
 });
-
-export const createComment = createAsyncThunk(
-  "user/createComment",
-  async (data) => {
-    const response = await fetch("http://localhost:8000/api/v1/comment", {
-      method: "POST",
-      credentials: "include",
-      body: data,
-    });
-    const payloadData = await response.json();
-    return payloadData;
-  }
-);
 
 export const {} = userSlice.actions;
 

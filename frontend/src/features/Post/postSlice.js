@@ -6,6 +6,8 @@ export const postSlice = createSlice({
     post: [],
     comments: [],
     error: null,
+    postNotFound: null,
+    commentNotFound: null,
     likes: 0,
   },
   reducers: {},
@@ -14,13 +16,13 @@ export const postSlice = createSlice({
       state.post = action.payload;
     });
     builder.addCase(fetchPostById.rejected, (state, action) => {
-      state.error = action.error.message;
+      state.postNotFound = action.error.message;
     });
     builder.addCase(fetchCommentsByPostId.fulfilled, (state, action) => {
       state.comments = action.payload.posts;
     });
     builder.addCase(fetchCommentsByPostId.rejected, (state, action) => {
-      state.error = action.error.message;
+      state.commentNotFound = action.error.message;
     });
     builder.addCase(createComment.fulfilled, (state, action) => {
       state.comments = [...state.comments, action.payload];
@@ -38,6 +40,7 @@ export const fetchPostById = createAsyncThunk(
       `http://localhost:8000/api/v1/post/${post_id}`
     );
     const data = await response.json();
+    if (response.status === 404) throw new Error("Post not found");
     return data;
   }
 );

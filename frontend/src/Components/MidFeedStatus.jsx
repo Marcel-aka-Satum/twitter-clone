@@ -1,28 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { useColorMode } from "@chakra-ui/react";
-import { UserAvatarIcon, Post, TextArea } from "./import";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faImage, faSmile, faClock } from "@fortawesome/free-solid-svg-icons";
+import React, { useEffect } from "react";
+import { Post, TextArea } from "./import";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchPostById,
   fetchCommentsByPostId,
 } from "../features/Post/postSlice";
 import { fetchUserByUserName } from "../features/User/userSlice";
+import { Link } from "react-router-dom";
 
 export default function MidFeedStatus({ post_id, owner_post }) {
   const dispatch = useDispatch();
   const post = useSelector((state) => state.post.post);
   const comments = useSelector((state) => state.post.comments);
   const user = useSelector((state) => state.user.user);
+  const postNotFound = useSelector((state) => state.post.postNotFound);
 
-  console.log(comments);
   useEffect(() => {
     dispatch(fetchPostById(post_id));
     dispatch(fetchCommentsByPostId(post_id));
     dispatch(fetchUserByUserName(owner_post));
   }, []);
+
   const handleDelete = (post_id) => {};
+  if (postNotFound) {
+    return (
+      <div className="flex items-center justify-center ">Post not found...</div>
+    );
+  }
   return (
     <div className="grid-item-2 border border-gray-500 overflow-auto min-w-[300px]">
       <div className="flex items-center justify-center mb-4 text-gray-500 ">

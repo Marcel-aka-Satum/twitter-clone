@@ -77,5 +77,7 @@ def get_post(post_id: int, db: Session = Depends(get_db)):
 
 @router.get("/comments/post/{post_id}", response_model=schemas.PostList)
 def get_comments(post_id: int, db: Session = Depends(get_db)):
-    post_comments = crud.get_post_comments(db, post_id)
-    return post_comments
+    post = crud.get_post_comments(db, post_id)
+    if post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return {"posts": post.comments}

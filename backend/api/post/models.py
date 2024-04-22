@@ -21,5 +21,8 @@ class Post(Base):
     # Self-referential relationship
     parent_id = Column(Integer, ForeignKey("posts.id"))
     comments: Mapped[list["Post"]] = relationship(
-        "Post", backref=backref("parent", remote_side=[id]), uselist=True
+        "Post",
+        backref=backref("parent", remote_side=[id]),
+        uselist=True,
+        cascade="all, delete",
     )

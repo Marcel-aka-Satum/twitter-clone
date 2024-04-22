@@ -5,11 +5,9 @@ import {
   fetchPostById,
   fetchCommentsByPostId,
   deleteComment,
+  deleteUserStatusPost,
 } from "../features/Post/postSlice";
-import {
-  fetchUserByUserName,
-  deleteUserPost,
-} from "../features/User/userSlice";
+import { fetchUserByUserName } from "../features/User/userSlice";
 
 export default function MidFeedStatus({ post_id, owner_post }) {
   const dispatch = useDispatch();
@@ -26,7 +24,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
   }, []);
 
   const handleDeletePost = (post_id) => {
-    dispatch(deleteUserPost(post_id));
+    dispatch(deleteUserStatusPost(post_id));
   };
 
   const handleDeleteComment = (comment_id) => {
@@ -34,7 +32,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
   };
 
   //if there is no post logically there are no comments associated with the post either
-  if (postNotFound && commentsNotFound) {
+  if (postNotFound) {
     return (
       <div className="flex items-center justify-center ">Post not found...</div>
     );

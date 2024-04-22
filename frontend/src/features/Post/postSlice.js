@@ -38,6 +38,13 @@ export const postSlice = createSlice({
     builder.addCase(deleteComment.rejected, (state, action) => {
       state.error = action.error.message;
     });
+    builder.addCase(deleteUserStatusPost.fulfilled, (state, action) => {
+      state.post = [];
+      state.postNotFound = true;
+    });
+    builder.addCase(deleteUserStatusPost.rejected, (state, action) => {
+      state.error = action.error.message;
+    });
   },
 });
 
@@ -92,6 +99,26 @@ export const deleteComment = createAsyncThunk(
       }
     );
     if (response.status === 404) throw new Error("Post not found");
+    return post_id;
+  }
+);
+
+export const deleteUserStatusPost = createAsyncThunk(
+  "user/deleteUserStatusPost",
+  async (post_id) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/post/${post_id}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     return post_id;
   }
 );

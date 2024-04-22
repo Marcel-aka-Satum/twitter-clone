@@ -157,18 +157,19 @@ export const fetchUserPosts = createAsyncThunk(
 export const deleteUserPost = createAsyncThunk(
   "user/deleteUserPost",
   async (post_id) => {
-    fetch(`http://localhost:8000/api/v1/post/${post_id}`, {
-      method: "DELETE",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {})
-      .then((data) => {})
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    const response = await fetch(
+      `http://localhost:8000/api/v1/post/${post_id}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     return post_id;
   }
 );

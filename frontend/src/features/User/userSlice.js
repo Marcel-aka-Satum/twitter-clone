@@ -63,6 +63,12 @@ export const userSlice = createSlice({
       })
       .addCase(fetchUserByUserName.rejected, (state, action) => {
         state.error = action.error.message;
+      })
+      .addCase(fetchUserPostsByUsername.fulfilled, (state, action) => {
+        state.posts = action.payload.posts;
+      })
+      .addCase(fetchUserPostsByUsername.rejected, (state, action) => {
+        state.error = action.error.message;
       });
   },
 });
@@ -150,6 +156,20 @@ export const fetchUserPosts = createAsyncThunk(
       `http://localhost:8000/api/v1/user/post/${user_id}`
     );
     const data = await response.json();
+    return data;
+  }
+);
+
+export const fetchUserPostsByUsername = createAsyncThunk(
+  "user/fetchUserPostsByUsername",
+  async (username) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/user/post/username/${username}`
+    );
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     return data;
   }
 );

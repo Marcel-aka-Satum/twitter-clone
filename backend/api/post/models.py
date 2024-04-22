@@ -14,7 +14,7 @@ class Post(Base):
     owner_id: int = Column(Integer, ForeignKey("users.id"))
     files = Column(ARRAY(String))
     liked_by: Mapped[list[User]] = relationship(
-        "User", uselist=True, back_populates="likes"
+        "User", back_populates="likes", uselist=True, overlaps="user"
     )
     user: Mapped[User] = relationship("User", back_populates="posts", uselist=False)
 

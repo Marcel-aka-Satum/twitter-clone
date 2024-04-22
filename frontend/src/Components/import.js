@@ -13,6 +13,7 @@ import StatusPost from "./StatusPost";
 import MidFeedStatus from "./MidFeedStatus";
 import TextArea from "./TextArea";
 import Profilefeed from "./Profilefeed";
+import ProfileBanner from "./ProfileBanner";
 
 export {
   Home,
@@ -30,4 +31,5 @@ export {
   MidFeedStatus,
   TextArea,
   Profilefeed,
+  ProfileBanner,
 };

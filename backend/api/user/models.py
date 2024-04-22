@@ -18,7 +18,7 @@ class User(Base):
     )
 
     posts: Mapped[list["Post"]] = relationship(
-        "Post", back_populates="user", uselist=True
+        "Post", back_populates="user", uselist=True, overlaps="liked_by"
     )
 
     # Serializer to get user in json without hashed_psswd attr

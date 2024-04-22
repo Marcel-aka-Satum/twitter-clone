@@ -79,14 +79,14 @@ export default function Midfeed() {
   };
 
   return (
-    <div className="grid-item-2 border border-gray-500 overflow-auto min-w-[300px]">
-      <div className="flex items-center justify-center mb-4 text-gray-500 ">
+    <div className="grid-item-2 overflow-auto min-w-[300px]">
+      <div className="flex border-t border-gray-500 items-center justify-center mb-4 text-gray-500 ">
         <span className="font-bold flex-1 text-lg ">For you</span>
         <span className="font-bold flex-1 text-lg">Following</span>
         <button onClick={changeColor}>change color</button>
       </div>
 
-      <div className="flex flex-row border border-gray-500 py-2 mb-4 w-full">
+      <div className="flex flex-row border-t border-b border-gray-500 py-2 mb-4 w-full">
         <div className="user-avatar mr-4">
           {userDataLocalStorage && userDataLocalStorage.avatar && (
             <UserAvatarIcon avatarUrl={userDataLocalStorage.avatar} />

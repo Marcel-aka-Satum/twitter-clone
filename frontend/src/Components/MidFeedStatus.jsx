@@ -37,6 +37,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
       <div className="flex items-center justify-center ">Post not found...</div>
     );
   }
+
   return (
     <div className="grid-item-2 border border-gray-500 overflow-auto">
       <div className="flex items-center justify-center mb-4 text-gray-500">

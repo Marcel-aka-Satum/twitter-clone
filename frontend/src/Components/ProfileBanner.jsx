@@ -5,6 +5,7 @@ export default function ProfileBanner({
   avatarUrl,
   description,
   nickname,
+  bannerUrl,
 }) {
   const [visible, setVisible] = useState({
     posts: true,
@@ -26,16 +27,20 @@ export default function ProfileBanner({
   };
   return (
     <div>
-      <div className="w-full h-48 bg-blue-500"></div>
+      <img
+        src={`http://localhost:8000/${bannerUrl}`}
+        alt="User Banner"
+        className="w-full h-48"
+      />
 
       <div className="flex justify-between w-full px-4">
         <div>
           <img
             src={`http://localhost:8000/${avatarUrl}`}
             alt="User avatar"
-            className="relative -top-12 w-24 h-24 rounded-full border-4 border-white"
+            className="relative -top-12 w-24 h-24 rounded-full border"
           />
-          <h2 className="text-xl font-bold">{nickname}</h2>
+          <h2 className="-mt-8 text-xl font-bold">{nickname}</h2>
           <h2 className="text-xl font-bold">@{username}</h2>
         </div>
 
@@ -46,15 +51,7 @@ export default function ProfileBanner({
         </div>
       </div>
 
-      <div className="px-4">
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum."
-      </div>
+      <div className="px-4">{description}</div>
 
       {/* Footer */}
       <div className="flex mt-4 justify-around border-t border-b border-gray-500 pt-1">

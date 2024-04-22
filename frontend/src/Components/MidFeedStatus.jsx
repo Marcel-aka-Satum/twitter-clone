@@ -52,6 +52,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
           {post && user && (
             <Post
               key={post.id}
+              username={post.username}
               post_id={post.id}
               timePosted={post.created_on}
               message={post.message}
@@ -67,6 +68,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
               <Post
                 key={comment.id}
                 post_id={comment.id}
+                username={comment.username}
                 timePosted={comment.created_on}
                 message={comment.message}
                 owner_id={comment.owner_id}

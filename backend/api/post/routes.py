@@ -18,7 +18,15 @@ async def create_post(
     db: Session = Depends(get_db),
 ):
     db_post = await crud.create_post(db, message, owner_id, created_on, files)
-    return db_post
+    db_post_serialized = schemas.PostOut(
+        id=db_post.id,
+        message=db_post.message,
+        owner_id=db_post.owner_id,
+        created_on=db_post.created_on,
+        files=db_post.files,
+        username=db_post.user.username,
+    )
+    return db_post_serialized
 
 
 @router.post("/comment", response_model=schemas.PostOut)
@@ -35,9 +43,17 @@ async def create_comment(
         raise HTTPException(status_code=404, detail="Post not found")
     comment = await crud.create_post(db, message, owner_id, created_on, files)
     parent_post.comments.append(comment)
+    serialized_comment = schemas.PostOut(
+        id=comment.id,
+        message=comment.message,
+        owner_id=comment.owner_id,
+        created_on=comment.created_on,
+        files=comment.files,
+        username=comment.user.username,
+    )
     db.add(parent_post)
     db.commit()
-    return comment
+    return serialized_comment
 
 
 @router.delete("/post/{post_id}")
@@ -104,4 +120,15 @@ def get_comments(post_id: int, db: Session = Depends(get_db)):
     post = crud.get_post_comments(db, post_id)
     if post is None:
         raise HTTPException(status_code=404, detail="Post not found")
-    return {"posts": post.comments}
+    serialized_comments = list()
+    for comment in post.comments:
+        comment = schemas.PostOut(
+            id=comment.id,
+            message=comment.message,
+            owner_id=comment.owner_id,
+            created_on=comment.created_on,
+            files=comment.files,
+            username=comment.user.username,
+        )
+        serialized_comments.append(comment)
+    return {"posts": serialized_comments}

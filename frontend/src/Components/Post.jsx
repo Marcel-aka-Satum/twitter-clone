@@ -6,11 +6,9 @@ import {
   faRetweet,
   faHeart,
   faChartBar,
-  faBookmark,
   faShareSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { formatDistanceToNow, parseISO, format } from "date-fns";
-import { Link } from "react-router-dom";
 
 export default function Post(props) {
   const owner_id = props.owner_id;
@@ -50,21 +48,23 @@ export default function Post(props) {
 
   return (
     <>
-      <Link to={`/${props.username}/status/${props.post_id}`}></Link>
       <div className="flex items-start space-x-3 p-2 border-b border-gray-500">
         <div className="flex-shrink-0">
-          <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-2xl">
-            {userData && <UserAvatarIcon avatarUrl={userData.avatar} />}
-          </div>
+          <a href={`/profile/${props.username}`}>
+            <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-2xl">
+              {userData && <UserAvatarIcon avatarUrl={userData.avatar} />}
+            </div>
+          </a>
         </div>
         <div className="flex flex-col flex-grow">
           <div className="flex flex-row text-gray-500 ml-1 justify-between relative">
             <div>
-              <span className="font-bold text-red-500">
-                {userData.username}
-              </span>
-              {/**this is gonna be a nickname */}
-              <span className="text-gray-500 ml-2">@{userData.username}</span>
+              <a href={`/profile/${props.username}`}>
+                <span className="font-bold text-red-500">
+                  {userData.username}
+                </span>
+                <span className="text-gray-500 ml-2">@{userData.username}</span>
+              </a>
               {" ~ " + formatTimePosted(props.timePosted)}
             </div>
 
@@ -110,7 +110,9 @@ export default function Post(props) {
                 })}
               </div>
             )}
-            <p className="mt-2 text-red-500">{props.message}</p>
+            <a href={`/${props.username}/status/${props.post_id}`}>
+              <p className="mt-2 text-red-500">{props.message}</p>
+            </a>
           </div>
           <div className="flex flex-row gap-32 text-red-500 mt-2">
             <FontAwesomeIcon icon={faComment} className="cursor-pointer" />

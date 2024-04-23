@@ -15,7 +15,6 @@ export default function MidFeedStatus({ post_id, owner_post }) {
   const comments = useSelector((state) => state.post.comments);
   const user = useSelector((state) => state.user.user);
   const postNotFound = useSelector((state) => state.post.postNotFound);
-  const commentsNotFound = useSelector((state) => state.post.commentsNotFound);
 
   useEffect(() => {
     dispatch(fetchPostById(post_id));
@@ -53,6 +52,8 @@ export default function MidFeedStatus({ post_id, owner_post }) {
               key={post.id}
               username={post.username}
               post_id={post.id}
+              amountOfComments={post.amountOfComments}
+              amountOfLikes={post.amountOfLikes}
               timePosted={post.created_on}
               message={post.message}
               owner_id={post.owner_id}
@@ -68,6 +69,8 @@ export default function MidFeedStatus({ post_id, owner_post }) {
                 key={comment.id}
                 post_id={comment.id}
                 username={comment.username}
+                amountOfComments={comment.amountOfComments}
+                amountOfLikes={comment.amountOfLikes}
                 timePosted={comment.created_on}
                 message={comment.message}
                 owner_id={comment.owner_id}

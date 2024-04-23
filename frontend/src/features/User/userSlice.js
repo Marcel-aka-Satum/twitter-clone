@@ -18,52 +18,77 @@ export const userSlice = createSlice({
       })
       .addCase(loginAsync.rejected, (state, action) => {
         state.error = action.error.message;
-      })
+      });
+
+    builder
       .addCase(registerAsync.fulfilled, (state, action) => {
         window.location.href = "/login";
         state.error = null;
       })
       .addCase(registerAsync.rejected, (state, action) => {
         state.error = action.error.message;
-      })
+      });
+
+    builder
       .addCase(createPost.fulfilled, (state, action) => {
         state.posts = [...state.posts, action.payload];
       })
       .addCase(createPost.rejected, (state, action) => {
         state.error = action.error.message;
-      })
+      });
+
+    builder
       .addCase(fetchUserPosts.fulfilled, (state, action) => {
         state.posts = action.payload.posts;
       })
       .addCase(fetchUserPosts.rejected, (state, action) => {
         state.error = action.error.message;
-      })
+      });
+
+    builder
       .addCase(deleteUserPost.fulfilled, (state, action) => {
         state.posts = state.posts.filter((post) => post.id !== action.payload);
       })
+      .addCase(deleteUserPost.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
+
+    builder
       .addCase(patchUser.fulfilled, (state, action) => {
         state.user = action.payload;
         localStorage.setItem("user", JSON.stringify(action.payload));
       })
+      .addCase(patchUser.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
+
+    builder
       .addCase(fetchUserById.fulfilled, (state, action) => {
         state.user = action.payload;
+        localStorage.setItem("user", JSON.stringify(action.payload));
       })
       .addCase(fetchUserById.rejected, (state, action) => {
         state.error = action.error.message;
-      })
+      });
+
+    builder
       .addCase(validateUser.fulfilled, (state, action) => {
         state.authenticated = true;
       })
       .addCase(validateUser.rejected, (state, action) => {
         state.authenticated = false;
         localStorage.removeItem("user");
-      })
+      });
+
+    builder
       .addCase(fetchUserByUserName.fulfilled, (state, action) => {
         state.user = action.payload;
       })
       .addCase(fetchUserByUserName.rejected, (state, action) => {
         state.error = action.error.message;
-      })
+      });
+
+    builder
       .addCase(fetchUserPostsByUsername.fulfilled, (state, action) => {
         state.posts = action.payload.posts;
       })

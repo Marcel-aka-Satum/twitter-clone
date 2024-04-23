@@ -168,6 +168,9 @@ export default function Midfeed() {
               key={post.id}
               nickname={post.nickname}
               username={post.username}
+              amountOfComments={post.amountOfComments}
+              amountOfLikes={post.amountOfLikes}
+              amountOfReposts={post.amountOfRepost}
               post_id={post.id}
               timePosted={post.created_on}
               message={post.message}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { validateUser } from "../features/User/userSlice";
+import { fetchUserById, validateUser } from "../features/User/userSlice";
 import { Navigate, Outlet } from "react-router-dom";
 
 export default function ProtectedRoute() {
@@ -9,8 +9,12 @@ export default function ProtectedRoute() {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(validateUser()).then(() => {
+    dispatch(validateUser()).then((action) => {
       setLoading(false);
+      if (validateUser.fulfilled.match(action)) {
+        console.log(action.payload);
+        dispatch(fetchUserById(action.payload.user_id));
+      }
     });
   }, []);
 

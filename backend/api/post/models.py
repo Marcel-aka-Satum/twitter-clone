@@ -25,6 +25,7 @@ class Post(Base):
         backref=backref("parent", remote_side=[id]),
         uselist=True,
         cascade="all, delete",
+        foreign_keys=[parent_id],
     )
 
     # Self-referential relationship for reposts
@@ -34,4 +35,5 @@ class Post(Base):
         backref=backref("original_post", remote_side=[id]),
         uselist=True,
         cascade="all, delete",
+        foreign_keys=[original_post_id],
     )

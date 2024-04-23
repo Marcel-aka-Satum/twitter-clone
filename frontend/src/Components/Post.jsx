@@ -36,6 +36,8 @@ export default function Post(props) {
     }
   }
 
+  const repostPost = () => {};
+
   useEffect(() => {
     if (owner_id === undefined) return;
     fetch(`http://localhost:8000/api/v1/user/${owner_id}`, {
@@ -119,12 +121,12 @@ export default function Post(props) {
               <FontAwesomeIcon icon={faComment} className="cursor-pointer" />{" "}
               {props.amountOfComments}
             </div>
-            <div>
+            <button onClick={repostPost}>
               <FontAwesomeIcon icon={faRetweet} className="cursor-pointer" />{" "}
-              {props.amountOfRetweets}
-            </div>
+              {props.amountOfReposts}
+            </button>
             <div>
-              <FontAwesomeIcon icon={faHeart} className="cursor-pointer" />
+              <FontAwesomeIcon icon={faHeart} className="cursor-pointer" />{" "}
               {props.amountOfLikes}
             </div>
             <div>

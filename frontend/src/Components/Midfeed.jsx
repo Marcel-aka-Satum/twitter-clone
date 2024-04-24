@@ -214,23 +214,29 @@ export default function Midfeed() {
 
       <div className="space-y-4">
         {posts &&
-          posts.map((post) => (
-            <Post
-              key={post.id}
-              nickname={post.nickname}
-              username={post.username}
-              amountOfComments={post.amountOfComments}
-              amountOfLikes={post.amountOfLikes}
-              amountOfReposts={post.amountOfReposts}
-              post_id={post.id}
-              timePosted={post.created_on}
-              message={post.message}
-              owner_id={post.owner_id}
-              files={post.files}
-              avatarUrl={userDataLocalStorage.avatar}
-              onDelete={() => handleDelete(post.id)}
-            />
-          ))}
+          (() => {
+            let postsReversed = [];
+            for (let i = posts.length - 1; i >= 0; i--) {
+              postsReversed.push(
+                <Post
+                  key={posts[i].id}
+                  nickname={posts[i].nickname}
+                  username={posts[i].username}
+                  amountOfComments={posts[i].amountOfComments}
+                  amountOfLikes={posts[i].amountOfLikes}
+                  amountOfReposts={posts[i].amountOfReposts}
+                  post_id={posts[i].id}
+                  timePosted={posts[i].created_on}
+                  message={posts[i].message}
+                  owner_id={posts[i].owner_id}
+                  files={posts[i].files}
+                  avatarUrl={userDataLocalStorage.avatar}
+                  onDelete={() => handleDelete(posts[i].id)}
+                />
+              );
+            }
+            return postsReversed;
+          })()}
       </div>
     </div>
   );

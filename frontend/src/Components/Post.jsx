@@ -8,12 +8,13 @@ import {
   faChartBar,
   faShareSquare,
 } from "@fortawesome/free-solid-svg-icons";
-import { formatDistanceToNow, parseISO, format } from "date-fns";
+import { formatDistanceToNow, parseISO, format, set } from "date-fns";
 
 export default function Post(props) {
   const owner_id = props.owner_id;
   const [userData, setUserData] = useState({});
   const [showOptions, setShowOptions] = useState(false);
+  const [showShare, setShowShare] = useState(false);
   const buttonRef = useRef(null);
   function formatTimePosted(timePosted) {
     if (!timePosted) {
@@ -37,6 +38,26 @@ export default function Post(props) {
   }
 
   const repostPost = () => {};
+
+  const sharePost = (url_info) => {
+    setShowShare(true);
+    let url_path =
+      "http://localhost:3000/" +
+      url_info.username +
+      "/status/" +
+      url_info.post_id;
+    navigator.clipboard
+      .writeText(url_path)
+      .then(() => {
+        console.log("URL copied to clipboard");
+        setTimeout(() => {
+          setShowShare(false);
+        }, 2000);
+      })
+      .catch((err) => {
+        console.error("Failed to copy URL: ", err);
+      });
+  };
 
   useEffect(() => {
     if (owner_id === undefined) return;
@@ -132,13 +153,18 @@ export default function Post(props) {
             <div>
               <FontAwesomeIcon icon={faChartBar} className="cursor-pointer" />
             </div>
-            <div>
+            <button onClick={() => sharePost(props)}>
               <FontAwesomeIcon
                 icon={faShareSquare}
                 className="cursor-pointer"
               />
-            </div>
+            </button>
           </div>
+          {showShare && (
+            <div className="fixed w-44 h-10 inset-x-0 bottom-0 mx-auto mb-4 z-50 bg-blue-500 text-white pt-2 rounded text-center">
+              Copied to clipboard
+            </div>
+          )}
         </div>
       </div>
     </>

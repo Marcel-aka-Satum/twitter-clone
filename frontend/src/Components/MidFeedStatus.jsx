@@ -32,7 +32,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
   const handleDeleteComment = (comment_id) => {
     dispatch(deleteComment(comment_id));
   };
-
+  console.log(postNotFound, userNotFound, owner_post, post);
   if (postNotFound || userNotFound || owner_post !== post.username) {
     return (
       <div className="flex items-center justify-center ">Post not found...</div>

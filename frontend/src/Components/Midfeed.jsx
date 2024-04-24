@@ -20,6 +20,7 @@ export default function Midfeed() {
   const [isHovered, setIsHovered] = useState(false);
   const [isHoveredSmile, setIsHoveredSmile] = useState(false);
   const [isHoveredSchedule, setIsHoveredSchedule] = useState(false);
+  const [fileLarge, setFileLarge] = useState(false);
   const [uploadFiles, setUploadFiles] = useState([]);
   const { colorMode, toggleColorMode } = useColorMode();
 
@@ -67,7 +68,12 @@ export default function Midfeed() {
 
   const handleFileUpload = (event) => {
     const newFilesArr = [];
+    setFileLarge(false);
     for (let i = 0; i < event.target.files.length; i++) {
+      if (event.target.files[i].size > 5000000) {
+        setFileLarge(true);
+        return;
+      }
       newFilesArr.push(event.target.files[i]);
     }
     setUploadFiles(newFilesArr);
@@ -115,6 +121,9 @@ export default function Midfeed() {
                   </p>
                 </>
               ))}
+            {fileLarge && (
+              <p className="text-red-500">File size is too large</p>
+            )}
             <div className="flex items-center justify-between">
               <div className="flex space-x-4 gap-12">
                 <label>

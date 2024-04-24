@@ -28,8 +28,7 @@ class Post(Base):
         foreign_keys=[parent_id],
     )
 
-    reposts: Mapped[list[User]] = relationship(
-        "User",
+    reposted_by: Mapped[list[User]] = relationship(
         back_populates="reposts",
         uselist=True,
     )

@@ -170,7 +170,7 @@ export default function Midfeed() {
               username={post.username}
               amountOfComments={post.amountOfComments}
               amountOfLikes={post.amountOfLikes}
-              amountOfReposts={post.amountOfRepost}
+              amountOfReposts={post.amountOfReposts}
               post_id={post.id}
               timePosted={post.created_on}
               message={post.message}

@@ -1,9 +1,11 @@
 from . import schemas, crud
 from sqlalchemy.orm import Session
-from fastapi import Depends, HTTPException, APIRouter, UploadFile, File, Form
+from fastapi import Depends, HTTPException, APIRouter, UploadFile, File, Form, Request
 from database.database import get_db
 from ..user.crud import get_user_by_id
 from typing import List
+import jwt
+from jwt import DecodeError
 import os
 
 router = APIRouter()
@@ -28,6 +30,50 @@ async def create_post(
         username=db_post.user.username,
     )
     return db_post_serialized
+
+
+@router.post("/repost", response_model=schemas.PostOut)
+async def repost_post(
+    request: Request,
+    post_id: int = Form(...),
+    db: Session = Depends(get_db),
+):
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(status_code=401, detail="Token is missing")
+    try:
+        decoded_token = jwt.decode(
+            token,
+            "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",  # SECRET_KEY
+            algorithms=["HS256"],  # ALGORITHM
+        )
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token invalid")
+    except DecodeError:
+        raise HTTPException(status_code=401, detail="Token is not a valid JWT")
+
+    user_id = decoded_token.get("user_id")
+    db_user = get_user_by_id(db, user_id)
+    post = crud.get_post_by_id(db, post_id)
+    if post is None:
+        raise HTTPException(status_code=404, detail="Post not found, can't retweet")
+    if db_user in post.reposts:
+        raise HTTPException(status_code=404, detail="You already retweeted this post")
+    post.reposts.append(db_user)
+    db.add(post)
+    db.commit()
+    serialized_post = schemas.PostOut(
+        id=post.id,
+        message=post.message,
+        owner_id=post.owner_id,
+        created_on=post.created_on,
+        files=post.files,
+        username=post.user.username,
+        amountOfComments=len(post.comments),
+        amountOfLikes=len(post.liked_by),
+        amountOfReposts=len(post.reposts),
+    )
+    return serialized_post
 
 
 # delete a post by post id
@@ -104,7 +150,7 @@ def get_post(post_id: int, db: Session = Depends(get_db)):
     db_post = crud.get_post_by_id(db, post_id)
     if db_post is None:
         raise HTTPException(status_code=404, detail="Post not found")
-    db_post_serialzed = schemas.PostOut(
+    db_post_serialized = schemas.PostOut(
         id=db_post.id,
         message=db_post.message,
         owner_id=db_post.owner_id,
@@ -115,7 +161,8 @@ def get_post(post_id: int, db: Session = Depends(get_db)):
         amountOfLikes=len(db_post.liked_by),
         amountOfReposts=len(db_post.reposts),
     )
-    return db_post_serialzed
+    print(len(db_post.reposts))
+    return db_post_serialized
 
 
 # Get all comments of a post by post id

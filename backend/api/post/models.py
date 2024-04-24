@@ -28,12 +28,8 @@ class Post(Base):
         foreign_keys=[parent_id],
     )
 
-    # Self-referential relationship for reposts
-    original_post_id = Column(Integer, ForeignKey("posts.id"))
-    reposts: Mapped[list["Post"]] = relationship(
-        "Post",
-        backref=backref("original_post", remote_side=[id]),
+    reposts: Mapped[list[User]] = relationship(
+        "User",
+        back_populates="reposts",
         uselist=True,
-        cascade="all, delete",
-        foreign_keys=[original_post_id],
     )

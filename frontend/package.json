@@ -3,6 +3,8 @@
   "private": true,
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
+    "@emoji-mart/data": "^1.1.2",
+    "@emoji-mart/react": "^1.1.1",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@fortawesome/fontawesome-free": "^6.5.1",
@@ -14,6 +16,7 @@
     "@testing-library/user-event": "latest",
     "autoprefixer": "latest",
     "date-fns": "^3.6.0",
+    "emoji-mart": "^5.5.2",
     "framer-motion": "^11.1.5",
     "js-cookie": "^3.0.5",
     "postcss": "latest",

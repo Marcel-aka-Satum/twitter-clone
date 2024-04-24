@@ -11,6 +11,8 @@ import {
   createPost,
   fetchUserById,
 } from "../features/User/userSlice";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 export default function Midfeed() {
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
@@ -20,7 +22,10 @@ export default function Midfeed() {
   const [isHovered, setIsHovered] = useState(false);
   const [isHoveredSmile, setIsHoveredSmile] = useState(false);
   const [isHoveredSchedule, setIsHoveredSchedule] = useState(false);
+  const [fileLarge, setFileLarge] = useState(false);
+  const [wrongTypeFile, setWrongTypeFile] = useState(false);
   const [uploadFiles, setUploadFiles] = useState([]);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const { colorMode, toggleColorMode } = useColorMode();
 
   const changeColor = () => {
@@ -65,9 +70,30 @@ export default function Midfeed() {
     dispatch(createPost(formData));
   };
 
+  const emojiMenu = () => {
+    setShowEmojiPicker(!showEmojiPicker);
+  };
+
   const handleFileUpload = (event) => {
     const newFilesArr = [];
+    setFileLarge(false);
+    setWrongTypeFile(false);
     for (let i = 0; i < event.target.files.length; i++) {
+      if (event.target.files[i].size > 5000000) {
+        setFileLarge(true);
+        return;
+      }
+      console.log(event.target.files[i]);
+      if (
+        event.target.files[i].type !== "image/jpeg" &&
+        event.target.files[i].type !== "image/png" &&
+        event.target.files[i].type !== "image/gif" &&
+        event.target.files[i].type !== "image/jif" &&
+        event.target.files[i].type !== "application/pdf"
+      ) {
+        setWrongTypeFile(true);
+        return;
+      }
       newFilesArr.push(event.target.files[i]);
     }
     setUploadFiles(newFilesArr);
@@ -101,7 +127,7 @@ export default function Midfeed() {
                 setMessage(e.target.value);
               }}
             />
-            {uploadFiles &&
+            {uploadFiles && uploadFiles.length > 0 ? (
               uploadFiles.map((file, index) => (
                 <>
                   <p className="text-blue-500" key={index}>
@@ -114,7 +140,19 @@ export default function Midfeed() {
                     </button>
                   </p>
                 </>
-              ))}
+              ))
+            ) : (
+              <p className="text-gray-500 text-sm">
+                Files supported: -jpg -png, -gif, -jif, -pdf.
+              </p>
+            )}
+
+            {fileLarge && (
+              <p className="text-red-500">File size is too large</p>
+            )}
+            {wrongTypeFile && (
+              <p className="text-red-500">File type is not supported</p>
+            )}
             <div className="flex items-center justify-between">
               <div className="flex space-x-4 gap-12">
                 <label>
@@ -133,14 +171,27 @@ export default function Midfeed() {
                     style={{ display: "none" }}
                   />
                 </label>
-                <FontAwesomeIcon
-                  icon={faSmile}
-                  className={`text-blue-500 cursor-pointer ${
-                    isHoveredSmile ? "border-2 border-blue-500 rounded" : ""
-                  }`}
-                  onMouseEnter={() => setIsHoveredSmile(true)}
-                  onMouseLeave={() => setIsHoveredSmile(false)}
-                />
+                <div className="relative">
+                  <button onClick={emojiMenu}>
+                    <FontAwesomeIcon
+                      icon={faSmile}
+                      className={`text-blue-500 cursor-pointer ${
+                        isHoveredSmile ? "border-2 border-blue-500 rounded" : ""
+                      }`}
+                      onMouseEnter={() => setIsHoveredSmile(true)}
+                      onMouseLeave={() => setIsHoveredSmile(false)}
+                    />
+                    {showEmojiPicker && (
+                      <Picker
+                        className="absolute bottom-14"
+                        data={data}
+                        onEmojiSelect={(data) => {
+                          setMessage(message + data.native);
+                        }}
+                      />
+                    )}
+                  </button>
+                </div>
                 <FontAwesomeIcon
                   icon={faClock}
                   className={`text-blue-500 cursor-pointer ${
@@ -163,23 +214,29 @@ export default function Midfeed() {
 
       <div className="space-y-4">
         {posts &&
-          posts.map((post) => (
-            <Post
-              key={post.id}
-              nickname={post.nickname}
-              username={post.username}
-              amountOfComments={post.amountOfComments}
-              amountOfLikes={post.amountOfLikes}
-              amountOfReposts={post.amountOfRepost}
-              post_id={post.id}
-              timePosted={post.created_on}
-              message={post.message}
-              owner_id={post.owner_id}
-              files={post.files}
-              avatarUrl={userDataLocalStorage.avatar}
-              onDelete={() => handleDelete(post.id)}
-            />
-          ))}
+          (() => {
+            let postsReversed = [];
+            for (let i = posts.length - 1; i >= 0; i--) {
+              postsReversed.push(
+                <Post
+                  key={posts[i].id}
+                  nickname={posts[i].nickname}
+                  username={posts[i].username}
+                  amountOfComments={posts[i].amountOfComments}
+                  amountOfLikes={posts[i].amountOfLikes}
+                  amountOfReposts={posts[i].amountOfReposts}
+                  post_id={posts[i].id}
+                  timePosted={posts[i].created_on}
+                  message={posts[i].message}
+                  owner_id={posts[i].owner_id}
+                  files={posts[i].files}
+                  avatarUrl={userDataLocalStorage.avatar}
+                  onDelete={() => handleDelete(posts[i].id)}
+                />
+              );
+            }
+            return postsReversed;
+          })()}
       </div>
     </div>
   );

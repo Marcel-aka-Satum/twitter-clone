@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Post, TextArea } from "./import";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -13,28 +13,33 @@ export default function MidFeedStatus({ post_id, owner_post }) {
   const dispatch = useDispatch();
   const post = useSelector((state) => state.post.post);
   const comments = useSelector((state) => state.post.comments);
-  const user = useSelector((state) => state.user.user);
+  const [user, setUser] = useState(null);
   const postNotFound = useSelector((state) => state.post.postNotFound);
+  const userNotFound = useSelector((state) => state.user.error);
 
   useEffect(() => {
     dispatch(fetchPostById(post_id));
     dispatch(fetchCommentsByPostId(post_id));
-    dispatch(fetchUserByUserName(owner_post));
+    dispatch(fetchUserByUserName(owner_post))
+      .unwrap()
+      .then((userData) => setUser(userData))
+      .catch((error) => console.error("Failed to fetch user:", error));
   }, []);
 
   const handleDeletePost = (post_id) => {
     dispatch(deleteUserStatusPost(post_id));
   };
-
   const handleDeleteComment = (comment_id) => {
     dispatch(deleteComment(comment_id));
   };
-
-  //if there is no post logically there are no comments associated with the post either
-  if (postNotFound) {
+  console.log(postNotFound, userNotFound, owner_post, post);
+  if (postNotFound || userNotFound || owner_post !== post.username) {
     return (
       <div className="flex items-center justify-center ">Post not found...</div>
     );
+  }
+  if (!user || !post) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -54,6 +59,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
               post_id={post.id}
               amountOfComments={post.amountOfComments}
               amountOfLikes={post.amountOfLikes}
+              amountOfReposts={post.amountOfReposts}
               timePosted={post.created_on}
               message={post.message}
               owner_id={post.owner_id}
@@ -71,6 +77,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
                 username={comment.username}
                 amountOfComments={comment.amountOfComments}
                 amountOfLikes={comment.amountOfLikes}
+                amountOfReposts={comment.amountOfReposts}
                 timePosted={comment.created_on}
                 message={comment.message}
                 owner_id={comment.owner_id}

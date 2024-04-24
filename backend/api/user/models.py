@@ -23,6 +23,10 @@ class User(Base):
         "Post", back_populates="user", uselist=True, overlaps="liked_by"
     )
 
+    reposts: Mapped[list["Post"]] = relationship(
+        back_populates="reposted_by", uselist=False
+    )
+
     # Serializer to get user in json without hashed_psswd attr
     def as_dict(self):
         return {

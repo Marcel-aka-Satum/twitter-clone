@@ -19,7 +19,7 @@ class PostOut(Post):
     username: str
     amountOfComments: int = 0
     amountOfLikes: int = 0
-    amountOfRepost: int = 0
+    amountOfReposts: int = 0
 
 
 class PostList(BaseModel):

@@ -71,7 +71,6 @@ async def repost_post(
     user_id = decoded_token.get("user_id")
     db_user = get_user_by_id(db, user_id)
     post = crud.get_post_by_id(db, post_id)
-    print(post.reposted_by)
     if post is None:
         raise HTTPException(status_code=404, detail="Post not found, can't retweet")
     if db_user in post.reposted_by:

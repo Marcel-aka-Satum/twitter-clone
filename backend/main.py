@@ -4,6 +4,7 @@ from database.database import create_all_tables
 from api.user.routes import router as user_router
 from api.post.routes import router as post_router
 from auth.routes import router as auth_router
+from api.feed.routes import router as feed_router
 from fastapi import Request
 import uvicorn
 import time
@@ -17,6 +18,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(user_router, prefix="/api/v1")
 app.include_router(post_router, prefix="/api/v1")
 app.include_router(auth_router, prefix="/api/v1")
+app.include_router(feed_router, prefix="/api/v1")
 
 origins = [
     "http://localhost",

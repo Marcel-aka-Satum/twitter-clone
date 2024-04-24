@@ -11,6 +11,8 @@ import {
   createPost,
   fetchUserById,
 } from "../features/User/userSlice";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 export default function Midfeed() {
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
@@ -23,6 +25,7 @@ export default function Midfeed() {
   const [fileLarge, setFileLarge] = useState(false);
   const [wrongTypeFile, setWrongTypeFile] = useState(false);
   const [uploadFiles, setUploadFiles] = useState([]);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const { colorMode, toggleColorMode } = useColorMode();
 
   const changeColor = () => {
@@ -65,6 +68,10 @@ export default function Midfeed() {
     setMessage("");
     setUploadFiles([]);
     dispatch(createPost(formData));
+  };
+
+  const emojiMenu = () => {
+    setShowEmojiPicker(!showEmojiPicker);
   };
 
   const handleFileUpload = (event) => {
@@ -164,14 +171,27 @@ export default function Midfeed() {
                     style={{ display: "none" }}
                   />
                 </label>
-                <FontAwesomeIcon
-                  icon={faSmile}
-                  className={`text-blue-500 cursor-pointer ${
-                    isHoveredSmile ? "border-2 border-blue-500 rounded" : ""
-                  }`}
-                  onMouseEnter={() => setIsHoveredSmile(true)}
-                  onMouseLeave={() => setIsHoveredSmile(false)}
-                />
+                <div className="relative">
+                  <button onClick={emojiMenu}>
+                    <FontAwesomeIcon
+                      icon={faSmile}
+                      className={`text-blue-500 cursor-pointer ${
+                        isHoveredSmile ? "border-2 border-blue-500 rounded" : ""
+                      }`}
+                      onMouseEnter={() => setIsHoveredSmile(true)}
+                      onMouseLeave={() => setIsHoveredSmile(false)}
+                    />
+                    {showEmojiPicker && (
+                      <Picker
+                        className="absolute bottom-14"
+                        data={data}
+                        onEmojiSelect={(data) => {
+                          setMessage(message + data.native);
+                        }}
+                      />
+                    )}
+                  </button>
+                </div>
                 <FontAwesomeIcon
                   icon={faClock}
                   className={`text-blue-500 cursor-pointer ${

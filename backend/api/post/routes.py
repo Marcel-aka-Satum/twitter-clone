@@ -20,20 +20,21 @@ async def create_post(
     files: List[UploadFile] = File(None),
     db: Session = Depends(get_db),
 ):
-    for file in files:
-        if file.content_type not in [
-            "image/jpeg",
-            "image/png",
-            "image/jpg",
-            "image/gif",
-            "image/jfif",
-            "image/pdf",
-        ]:
-            raise HTTPException(status_code=400, detail="Only images are allowed")
-        if file.size > 5 * 1024 * 1024:
-            raise HTTPException(
-                status_code=400, detail="File size must be less than 5MB"
-            )
+    if files:
+        for file in files:
+            if file.content_type not in [
+                "image/jpeg",
+                "image/png",
+                "image/jpg",
+                "image/gif",
+                "image/jfif",
+                "image/pdf",
+            ]:
+                raise HTTPException(status_code=400, detail="Only images are allowed")
+            if file.size > 5 * 1024 * 1024:
+                raise HTTPException(
+                    status_code=400, detail="File size must be less than 5MB"
+                )
 
     db_post = await crud.create_post(db, message, owner_id, created_on, files)
     db_post_serialized = schemas.PostOut(
@@ -222,20 +223,21 @@ async def create_comment(
     if parent_post is None:
         raise HTTPException(status_code=404, detail="Post not found")
 
-    for file in files:
-        if file.content_type not in [
-            "image/jpeg",
-            "image/png",
-            "image/jpg",
-            "image/gif",
-            "image/jfif",
-            "image/pdf",
-        ]:
-            raise HTTPException(status_code=400, detail="Only images are allowed")
-        if file.size > 5 * 1024 * 1024:
-            raise HTTPException(
-                status_code=400, detail="File size must be less than 5MB"
-            )
+    if files:
+        for file in files:
+            if file.content_type not in [
+                "image/jpeg",
+                "image/png",
+                "image/jpg",
+                "image/gif",
+                "image/jfif",
+                "image/pdf",
+            ]:
+                raise HTTPException(status_code=400, detail="Only images are allowed")
+            if file.size > 5 * 1024 * 1024:
+                raise HTTPException(
+                    status_code=400, detail="File size must be less than 5MB"
+                )
     comment = await crud.create_post(db, message, owner_id, created_on, files)
     parent_post.comments.append(comment)
     serialized_comment = schemas.PostOut(

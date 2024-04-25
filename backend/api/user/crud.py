@@ -5,6 +5,7 @@ import os
 import re
 import base64
 from fastapi import HTTPException
+from ..post.crud import get_post_by_id
 
 
 def is_password_strong(psswd):
@@ -17,6 +18,16 @@ def is_valid_email(email):
     # Check if email is valid
     regex = r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
     return bool(re.match(regex, email))
+
+
+def repost_post(db: Session, user_db: models.User, post_id: int):
+    post = get_post_by_id(db, post_id)
+    if post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    user_db.reposting.append(post)
+    db.commit()
+    db.refresh(user_db)
+    return user_db
 
 
 def get_user(db: Session, username: str):

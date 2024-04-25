@@ -1,6 +1,13 @@
-from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy import Boolean, Column, Integer, String, Table, ForeignKey
 from sqlalchemy.orm import relationship, Mapped
 from database.database import Base
+
+user_repost = Table(
+    "user_repost",
+    Base.metadata,
+    Column("user_id", Integer, ForeignKey("users.id")),
+    Column("post_id", Integer, ForeignKey("posts.id")),
+)
 
 
 class User(Base):
@@ -23,8 +30,8 @@ class User(Base):
         "Post", back_populates="user", uselist=True, overlaps="liked_by"
     )
 
-    reposts: Mapped[list["Post"]] = relationship(
-        back_populates="reposted_by", uselist=False
+    reposting: Mapped[list["Post"]] = relationship(
+        "Post", secondary=user_repost, backref="reposted_by"
     )
 
     # Serializer to get user in json without hashed_psswd attr

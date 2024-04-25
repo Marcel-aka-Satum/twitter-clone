@@ -13,10 +13,13 @@ import {
 } from "../features/User/userSlice";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import { globalFeed, fetchPostsGlobal } from "../features/Feed/feedSlice";
 
 export default function Midfeed() {
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
-  const posts = useSelector((state) => state.user.posts);
+  let posts = useSelector((state) => state.user.posts);
+  let post_ids = useSelector((state) => state.feed.posts_ids);
+  let global_posts = useSelector((state) => state.feed.posts);
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
   const [isHovered, setIsHovered] = useState(false);
@@ -47,7 +50,11 @@ export default function Midfeed() {
       dispatch(fetchUserById(userDataLocalStorage.id));
       dispatch(fetchUserPosts(userDataLocalStorage.id));
     }
+    // if (post_ids.length > 0) {
+    //   dispatch(fetchPostsGlobal(post_ids));
+    // }
     dispatch(validateUser());
+    // dispatch(globalFeed("global"));
   }, []);
 
   const handleDelete = (post_id) => {
@@ -83,7 +90,6 @@ export default function Midfeed() {
         setFileLarge(true);
         return;
       }
-      console.log(event.target.files[i]);
       if (
         event.target.files[i].type !== "image/jpeg" &&
         event.target.files[i].type !== "image/png" &&
@@ -103,7 +109,6 @@ export default function Midfeed() {
     const newUploadFiles = uploadFiles.filter((file, i) => i !== index);
     setUploadFiles(newUploadFiles);
   };
-
   return (
     <div className="grid-item-2 overflow-auto min-w-[300px]">
       <div className="flex border-t border-gray-500 items-center justify-center mb-4 text-gray-500 ">

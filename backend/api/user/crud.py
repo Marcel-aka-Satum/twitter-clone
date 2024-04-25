@@ -24,7 +24,10 @@ def repost_post(db: Session, user_db: models.User, post_id: int):
     post = get_post_by_id(db, post_id)
     if post is None:
         raise HTTPException(status_code=404, detail="Post not found")
-    user_db.reposting.append(post)
+    if post in user_db.reposting:
+        user_db.reposting.remove(post)
+    else:
+        user_db.reposting.append(post)
     db.commit()
     db.refresh(user_db)
     return user_db

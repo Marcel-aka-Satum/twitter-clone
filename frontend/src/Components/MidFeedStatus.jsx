@@ -7,7 +7,7 @@ import {
   deleteComment,
   deleteUserStatusPost,
 } from "../features/Post/postSlice";
-import { fetchUserByUserName } from "../features/User/userSlice";
+import { fetchUserByUserName, repostPost } from "../features/User/userSlice";
 
 export default function MidFeedStatus({ post_id, owner_post }) {
   const dispatch = useDispatch();
@@ -16,6 +16,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
   const [user, setUser] = useState(null);
   const postNotFound = useSelector((state) => state.post.postNotFound);
   const userNotFound = useSelector((state) => state.user.error);
+  let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
 
   useEffect(() => {
     dispatch(fetchPostById(post_id));
@@ -32,7 +33,11 @@ export default function MidFeedStatus({ post_id, owner_post }) {
   const handleDeleteComment = (comment_id) => {
     dispatch(deleteComment(comment_id));
   };
-  console.log(postNotFound, userNotFound, owner_post, post);
+
+  const handleRepost = (username, post_id) => {
+    dispatch(repostPost({ username: username, post_id: post_id }));
+  };
+
   if (postNotFound || userNotFound || owner_post !== post.username) {
     return (
       <div className="flex items-center justify-center ">Post not found...</div>
@@ -66,6 +71,9 @@ export default function MidFeedStatus({ post_id, owner_post }) {
               files={post.files}
               avatarUrl={user.avatar}
               onDelete={() => handleDeletePost(post.id)}
+              onRepost={() =>
+                handleRepost(userDataLocalStorage.username, post.id)
+              }
             />
           )}
           {/*Comments*/}
@@ -84,6 +92,9 @@ export default function MidFeedStatus({ post_id, owner_post }) {
                 files={comment.files}
                 avatarUrl={comment.avatarUrl}
                 onDelete={() => handleDeleteComment(comment.id)}
+                onRepost={() =>
+                  handleRepost(userDataLocalStorage.username, comment.id)
+                }
               />
             ))}
           <TextArea post_id={post_id} />

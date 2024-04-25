@@ -16,9 +16,17 @@ def create_feed(type: str, db: Session = Depends(get_db)):
     return new_feed
 
 
-@router.get("/feed/{feed_id}", response_model=schemas.FeedOut)
+@router.get("/feed/id/{feed_id}", response_model=schemas.FeedOut)
 def get_feed(feed_id: int, db: Session = Depends(get_db)):
     feed = db.query(models.Feed).filter(models.Feed.id == feed_id).first()
+    if feed is None:
+        raise HTTPException(status_code=404, detail="Feed not found")
+    return feed
+
+
+@router.get("/feed/type/{feed_type}", response_model=schemas.FeedOut)
+def get_feed_by_name(feed_type: str, db: Session = Depends(get_db)):
+    feed = db.query(models.Feed).filter(models.Feed.type == feed_type).first()
     if feed is None:
         raise HTTPException(status_code=404, detail="Feed not found")
     return feed

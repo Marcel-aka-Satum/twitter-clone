@@ -13,10 +13,11 @@ import {
 } from "../features/User/userSlice";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import { globalFeed } from "../features/Feed/feedSlice";
 
 export default function Midfeed() {
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
-  const posts = useSelector((state) => state.user.posts);
+  let posts = useSelector((state) => state.user.posts);
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
   const [isHovered, setIsHovered] = useState(false);
@@ -83,7 +84,6 @@ export default function Midfeed() {
         setFileLarge(true);
         return;
       }
-      console.log(event.target.files[i]);
       if (
         event.target.files[i].type !== "image/jpeg" &&
         event.target.files[i].type !== "image/png" &&

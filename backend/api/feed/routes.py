@@ -7,6 +7,7 @@ from . import models
 router = APIRouter()
 
 
+# create a new feed
 @router.post("/feed", response_model=schemas.Feed)
 def create_feed(type: str, db: Session = Depends(get_db)):
     new_feed = models.Feed(type=type)
@@ -16,6 +17,7 @@ def create_feed(type: str, db: Session = Depends(get_db)):
     return new_feed
 
 
+# get a feed by id
 @router.get("/feed/id/{feed_id}", response_model=schemas.FeedOut)
 def get_feed(feed_id: int, db: Session = Depends(get_db)):
     feed = db.query(models.Feed).filter(models.Feed.id == feed_id).first()
@@ -24,6 +26,7 @@ def get_feed(feed_id: int, db: Session = Depends(get_db)):
     return feed
 
 
+# get a feed by type
 @router.get("/feed/type/{feed_type}", response_model=schemas.FeedOut)
 def get_feed_by_name(feed_type: str, db: Session = Depends(get_db)):
     feed = db.query(models.Feed).filter(models.Feed.type == feed_type).first()
@@ -32,6 +35,7 @@ def get_feed_by_name(feed_type: str, db: Session = Depends(get_db)):
     return feed
 
 
+# add a post to a feed
 @router.patch("/feed/{feed_id}", response_model=schemas.FeedOut)
 def add_post_to_feed(feed_id: int, post_id: int, db: Session = Depends(get_db)):
     feed = db.query(models.Feed).filter(models.Feed.id == feed_id).first()

@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException, APIRouter, UploadFile, File, Form, Request
 from database.database import get_db
 from ..user.crud import get_user_by_id
+from ..feed.crud import get_feed_by_type
 from typing import List
 import jwt
 from jwt import DecodeError
@@ -46,55 +47,6 @@ async def create_post(
         username=db_post.user.username,
     )
     return db_post_serialized
-
-
-@router.post("/repost", response_model=schemas.PostOut)
-async def repost_post(
-    request: Request,
-    post_id: int = Form(...),
-    db: Session = Depends(get_db),
-):
-    token = request.cookies.get("access_token")
-    if not token:
-        raise HTTPException(status_code=401, detail="Token is missing")
-    try:
-        decoded_token = jwt.decode(
-            token,
-            "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",  # SECRET_KEY
-            algorithms=["HS256"],  # ALGORITHM
-        )
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token invalid")
-    except DecodeError:
-        raise HTTPException(status_code=401, detail="Token is not a valid JWT")
-
-    user_id = decoded_token.get("user_id")
-    db_user = get_user_by_id(db, user_id)
-    post = crud.get_post_by_id(db, post_id)
-    if post is None:
-        raise HTTPException(status_code=404, detail="Post not found, can't retweet")
-    if db_user in post.reposted_by:
-        raise HTTPException(status_code=404, detail="You already retweeted this post")
-    post.reposted_by.append(db_user)
-    db_user.reposts.append(post)
-    try:
-        db.is_modified(post, include_collections=True)
-        db.commit()
-    except Exception as e:
-        print("Failed to add and commit post: ", e)
-        db.rollback()
-    serialized_post = schemas.PostOut(
-        id=post.id,
-        message=post.message,
-        owner_id=post.owner_id,
-        created_on=post.created_on,
-        files=post.files,
-        username=post.user.username,
-        amountOfComments=len(post.comments),
-        amountOfLikes=len(post.liked_by),
-        amountOfReposts=len(post.reposted_by),
-    )
-    return serialized_post
 
 
 # delete a post by post id

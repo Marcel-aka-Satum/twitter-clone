@@ -1,8 +1,7 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, ARRAY
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, ARRAY, Table
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship, Mapped, backref
 from database.database import Base
-from ..user.models import User
 
 
 class Post(Base):
@@ -13,10 +12,10 @@ class Post(Base):
     created_on = Column(DateTime(timezone=True), server_default=func.now())
     owner_id: int = Column(Integer, ForeignKey("users.id"))
     files = Column(ARRAY(String))
-    liked_by: Mapped[list[User]] = relationship(
+    liked_by: Mapped[list["User"]] = relationship(
         "User", back_populates="likes", uselist=True, overlaps="user"
     )
-    user: Mapped[User] = relationship("User", back_populates="posts", uselist=False)
+    user: Mapped["User"] = relationship("User", back_populates="posts", uselist=False)
 
     # Self-referential relationship for comments
     parent_id = Column(Integer, ForeignKey("posts.id"))
@@ -26,9 +25,4 @@ class Post(Base):
         uselist=True,
         cascade="all, delete",
         foreign_keys=[parent_id],
-    )
-
-    reposted_by: Mapped[list[User]] = relationship(
-        back_populates="reposts",
-        uselist=True,
     )

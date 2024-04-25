@@ -24,6 +24,14 @@ def update_user(user: schemas.UserPatch, user_id: int, db: Session = Depends(get
     return crud.update_user(db=db, user_db=db_user, user_info=user)
 
 
+@router.patch("/repost/{username}/{post_id}", response_model=schemas.UserOut)
+def repost_post(username: str, post_id: int, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_username(db, username)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return crud.repost_post(db=db, user_db=db_user, post_id=post_id)
+
+
 @router.get("/user/{user_id}", response_model=schemas.UserOut)
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_id(db, user_id)

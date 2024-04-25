@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session
-from . import models, schemas
+from . import models
 from ..user.models import User
 from fastapi import UploadFile
-from typing import Optional, List
 import os
 
 

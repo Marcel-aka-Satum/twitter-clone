@@ -37,8 +37,6 @@ export default function Post(props) {
     }
   }
 
-  const repostPost = () => {};
-
   const sharePost = (url_info) => {
     setShowShare(true);
     let url_path =
@@ -49,7 +47,6 @@ export default function Post(props) {
     navigator.clipboard
       .writeText(url_path)
       .then(() => {
-        console.log("URL copied to clipboard");
         setTimeout(() => {
           setShowShare(false);
         }, 2000);
@@ -68,7 +65,6 @@ export default function Post(props) {
       .then((data) => setUserData(data))
       .catch((error) => console.error("Error:", error));
   }, []);
-
   return (
     <>
       <div className="flex items-start space-x-3 p-2 border-b border-gray-500">
@@ -138,11 +134,13 @@ export default function Post(props) {
             </a>
           </div>
           <div className="flex flex-row gap-32 text-red-500 mt-2">
-            <div>
+            <a href={`/${props.username}/status/${props.post_id}`}>
               <FontAwesomeIcon icon={faComment} className="cursor-pointer" />{" "}
               {props.amountOfComments}
-            </div>
-            <button onClick={repostPost}>
+            </a>
+            <button
+              onClick={() => props.onRepost(props.username, props.post_id)}
+            >
               <FontAwesomeIcon icon={faRetweet} className="cursor-pointer" />{" "}
               {props.amountOfReposts}
             </button>

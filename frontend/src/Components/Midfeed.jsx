@@ -10,6 +10,7 @@ import {
   deleteUserPost,
   createPost,
   fetchUserById,
+  repostPost,
 } from "../features/User/userSlice";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
@@ -59,6 +60,10 @@ export default function Midfeed() {
 
   const handleDelete = (post_id) => {
     dispatch(deleteUserPost(post_id));
+  };
+
+  const handleRepost = (username, post_id) => {
+    dispatch(repostPost({ username: username, post_id: post_id }));
   };
 
   const handleSubmit = () => {
@@ -236,6 +241,9 @@ export default function Midfeed() {
                   owner_id={posts[i].owner_id}
                   files={posts[i].files}
                   avatarUrl={userDataLocalStorage.avatar}
+                  onRepost={() =>
+                    handleRepost(userDataLocalStorage.username, posts[i].id)
+                  }
                   onDelete={() => handleDelete(posts[i].id)}
                 />
               );

@@ -32,6 +32,7 @@ export default function Midfeed() {
   const [showScheduler, setShowScheduler] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [humanReadableDate, setHumanReadableDate] = useState(null);
 
   const { colorMode, toggleColorMode } = useColorMode();
   const changeColor = () => {
@@ -55,6 +56,23 @@ export default function Midfeed() {
     }
     dispatch(validateUser());
   }, []);
+
+  useEffect(() => {
+    if (selectedDate && selectedTime) {
+      toHumanReadable();
+    }
+  }, [selectedDate, selectedTime]);
+
+  const toHumanReadable = () => {
+    let humanReadableDateArgument = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth(),
+      selectedDate.getDate(),
+      selectedTime.getHours(),
+      selectedTime.getMinutes()
+    );
+    setHumanReadableDate(humanReadableDateArgument);
+  };
 
   const handleDelete = (post_id) => {
     dispatch(deleteUserPost(post_id));
@@ -116,8 +134,13 @@ export default function Midfeed() {
     const newUploadFiles = uploadFiles.filter((file, i) => i !== index);
     setUploadFiles(newUploadFiles);
   };
-  console.log(selectedDate);
-  console.log(selectedTime);
+
+  const cancelScheduling = () => {
+    setSelectedDate(null);
+    setSelectedTime(null);
+    setShowScheduler(false);
+  };
+
   return (
     <div className="grid-item-2 overflow-auto min-w-[300px]">
       <div className="flex border-t border-gray-500 items-center justify-center mb-4 text-gray-500 ">
@@ -164,6 +187,29 @@ export default function Midfeed() {
               </p>
             )}
 
+            {selectedDate && selectedTime && (
+              <>
+                <p className="text-red-500">
+                  Ur post will be scheduled at:{" "}
+                  {humanReadableDate &&
+                    new Intl.DateTimeFormat("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                    }).format(humanReadableDate)}
+                  <button
+                    className="ml-5 text-white"
+                    onClick={cancelScheduling}
+                  >
+                    X
+                  </button>
+                </p>
+              </>
+            )}
+
             {fileLarge && (
               <p className="text-red-500">File size is too large</p>
             )}
@@ -174,7 +220,7 @@ export default function Midfeed() {
               <div className="flex p-1">
                 <DatePicker
                   className="w-2/5"
-                  placeholder="m/dd/yy"
+                  placeholder="dd/m/yy"
                   defaultValue={new Date()}
                   onChange={(date) => setSelectedDate(date)}
                 />

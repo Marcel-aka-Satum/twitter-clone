@@ -20,6 +20,8 @@ class PostOut(Post):
     amountOfComments: int = 0
     amountOfLikes: int = 0
     amountOfReposts: int = 0
+    published: bool = False
+    scheduled_for: Optional[datetime] = None
 
 
 class PostList(BaseModel):

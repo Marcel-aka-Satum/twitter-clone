@@ -9,6 +9,8 @@ from fastapi import Request
 import uvicorn
 import time
 from fastapi.staticfiles import StaticFiles
+from apscheduler.schedulers.background import BackgroundScheduler
+from api.post.crud import publish_scheduled_posts
 
 
 create_all_tables()
@@ -46,4 +48,7 @@ async def add_process_time_header(request: Request, call_next):
 
 
 if __name__ == "__main__":
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(publish_scheduled_posts, "interval", seconds=10)
+    scheduler.start()
     uvicorn.run(app, host="0.0.0.0", port=8000)

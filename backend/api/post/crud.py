@@ -18,7 +18,12 @@ def get_post_by_id(db: Session, post_id: int):
 
 
 async def create_post(
-    db: Session, message: str, owner_id: str, created_on: str, files: list[UploadFile]
+    db: Session,
+    message: str,
+    owner_id: str,
+    created_on: str,
+    files: list[UploadFile],
+    scheduled_time: str,
 ):
     user = (
         db.query(User).filter(User.id == owner_id).first()
@@ -29,6 +34,7 @@ async def create_post(
             owner_id=owner_id,
             user=user,
             created_on=created_on,
+            scheduled_for=scheduled_time,
         )
 
         user.posts.append(db_post)  # relationship

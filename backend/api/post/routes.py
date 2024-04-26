@@ -5,6 +5,7 @@ from database.database import get_db
 from ..user.crud import get_user_by_id
 from typing import List
 import os
+from datetime import datetime
 
 router = APIRouter()
 
@@ -15,6 +16,7 @@ async def create_post(
     message: str = Form(),
     owner_id: str = Form(),
     created_on: str = Form(),
+    scheduled_time: str = Form(None),
     files: List[UploadFile] = File(None),
     db: Session = Depends(get_db),
 ):
@@ -34,7 +36,9 @@ async def create_post(
                     status_code=400, detail="File size must be less than 5MB"
                 )
 
-    db_post = await crud.create_post(db, message, owner_id, created_on, files)
+    db_post = await crud.create_post(
+        db, message, owner_id, created_on, files, scheduled_time
+    )
     db_post_serialized = schemas.PostOut(
         id=db_post.id,
         message=db_post.message,

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, ARRAY, Table
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, ARRAY
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship, Mapped, backref
 from database.database import Base
@@ -10,6 +10,7 @@ class Post(Base):
     id: int = Column(Integer, primary_key=True, index=True, autoincrement=True)
     message: str = Column(String(300))
     created_on = Column(DateTime(timezone=True), server_default=func.now())
+    scheduled_for = Column(DateTime(timezone=True), nullable=True)
     owner_id: int = Column(Integer, ForeignKey("users.id"))
     files = Column(ARRAY(String))
     liked_by: Mapped[list["User"]] = relationship(

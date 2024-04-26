@@ -20,6 +20,8 @@ import TimeInput from "react-widgets/TimeInput";
 export default function Midfeed() {
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
   let posts = useSelector((state) => state.user.posts);
+  let scheduled = useSelector((state) => state.user.scheduled);
+  let scheduledError = useSelector((state) => state.user.scheduledError);
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
   const [isHovered, setIsHovered] = useState(false);
@@ -32,6 +34,7 @@ export default function Midfeed() {
   const [showScheduler, setShowScheduler] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [requestedDate, setRequestedDate] = useState(null);
   const [humanReadableDate, setHumanReadableDate] = useState(null);
 
   const { colorMode, toggleColorMode } = useColorMode();
@@ -72,6 +75,7 @@ export default function Midfeed() {
       selectedTime.getMinutes()
     );
     setHumanReadableDate(humanReadableDateArgument);
+    setRequestedDate(humanReadableDateArgument.toISOString());
   };
 
   const handleDelete = (post_id) => {
@@ -97,8 +101,12 @@ export default function Midfeed() {
         formData.append("files", file);
       });
     }
+    if (requestedDate) {
+      formData.append("scheduled_time", requestedDate);
+    }
     setMessage("");
     setUploadFiles([]);
+    cancelScheduling();
     dispatch(createPost(formData));
   };
 
@@ -139,6 +147,7 @@ export default function Midfeed() {
     setSelectedDate(null);
     setSelectedTime(null);
     setShowScheduler(false);
+    setRequestedDate(null);
   };
 
   return (
@@ -159,6 +168,16 @@ export default function Midfeed() {
         <div className="flex-grow">
           <div className="text-white p-4">
             <div className="grow">
+              {scheduled && (
+                <p className="text-green-500">
+                  Post has been succesfully scheduled!
+                </p>
+              )}
+              {scheduledError && (
+                <p className="text-red-500">
+                  Post could not be scheduled, try later!
+                </p>
+              )}
               <textarea
                 className="w-full h-32 bg-gray-800 text-white p-2 mb-4"
                 value={message}
@@ -221,11 +240,9 @@ export default function Midfeed() {
                 <DatePicker
                   className="w-2/5"
                   placeholder="dd/m/yy"
-                  defaultValue={new Date()}
                   onChange={(date) => setSelectedDate(date)}
                 />
                 <TimeInput
-                  defaultValue={new Date()}
                   className="w-2/5 mt-0 ml-2"
                   use12HourClock
                   onChange={(time) => setSelectedTime(time)}

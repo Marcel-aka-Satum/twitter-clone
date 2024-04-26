@@ -9,6 +9,7 @@ import {
   ProtectedRoute,
   StatusPost,
 } from "./Components/import";
+import "react-widgets/styles.css";
 
 function App() {
   return (

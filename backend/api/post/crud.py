@@ -3,6 +3,9 @@ from . import models
 from ..user.models import User
 from fastapi import UploadFile
 import os
+from datetime import datetime
+from .models import Post
+from database.database import SessionLocal
 
 
 def get_user_posts(user: User) -> list[models.Post]:
@@ -17,18 +20,34 @@ def get_post_by_id(db: Session, post_id: int):
     return db.query(models.Post).filter(models.Post.id == post_id).first()
 
 
+def publish_scheduled_posts():
+    db: Session = SessionLocal()
+    posts = db.query(Post).filter(Post.scheduled_for <= datetime.now()).all()
+    for post in posts:
+        post.published = True
+    db.commit()
+
+
 async def create_post(
-    db: Session, message: str, owner_id: str, created_on: str, files: list[UploadFile]
+    db: Session,
+    message: str,
+    owner_id: str,
+    created_on: str,
+    files: list[UploadFile],
+    scheduled_time: str,
 ):
-    user = (
-        db.query(User).filter(User.id == owner_id).first()
-    )  # we have function for that change it later to it DRY!
+    user = db.query(User).filter(User.id == owner_id).first()
+    published = True
+    if scheduled_time is not None:
+        published = False
     if user:
         db_post = models.Post(
             message=message,
             owner_id=owner_id,
             user=user,
             created_on=created_on,
+            scheduled_for=scheduled_time,
+            published=published,
         )
 
         user.posts.append(db_post)  # relationship

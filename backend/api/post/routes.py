@@ -5,6 +5,7 @@ from database.database import get_db
 from ..user.crud import get_user_by_id
 from typing import List
 import os
+from datetime import datetime
 
 router = APIRouter()
 
@@ -15,6 +16,7 @@ async def create_post(
     message: str = Form(),
     owner_id: str = Form(),
     created_on: str = Form(),
+    scheduled_time: str = Form(None),
     files: List[UploadFile] = File(None),
     db: Session = Depends(get_db),
 ):
@@ -34,7 +36,9 @@ async def create_post(
                     status_code=400, detail="File size must be less than 5MB"
                 )
 
-    db_post = await crud.create_post(db, message, owner_id, created_on, files)
+    db_post = await crud.create_post(
+        db, message, owner_id, created_on, files, scheduled_time
+    )
     db_post_serialized = schemas.PostOut(
         id=db_post.id,
         message=db_post.message,
@@ -42,6 +46,7 @@ async def create_post(
         created_on=db_post.created_on,
         files=db_post.files,
         username=db_post.user.username,
+        published=db_post.published,
     )
     return db_post_serialized
 
@@ -76,17 +81,20 @@ def get_posts(user_id: int, db: Session = Depends(get_db)):
     user_posts = crud.get_user_posts(db_user)
     serialized_posts = list()
     for post in user_posts:
-        post = schemas.PostOut(
-            id=post.id,
-            message=post.message,
-            owner_id=post.owner_id,
-            created_on=post.created_on,
-            files=post.files,
-            username=post.user.username,
-            amountOfComments=len(post.comments),
-            amountOfReposts=len(post.reposted_by),
-        )
-        serialized_posts.append(post)
+        if post.published:
+            post = schemas.PostOut(
+                id=post.id,
+                message=post.message,
+                owner_id=post.owner_id,
+                created_on=post.created_on,
+                files=post.files,
+                username=post.user.username,
+                amountOfComments=len(post.comments),
+                amountOfReposts=len(post.reposted_by),
+                published=post.published,
+                scheduled_for=post.scheduled_for,
+            )
+            serialized_posts.append(post)
     return {"posts": serialized_posts}
 
 
@@ -99,16 +107,18 @@ def get_posts_by_username(username: str, db: Session = Depends(get_db)):
     user_posts = crud.get_user_posts(db_user)
     serialized_posts = list()
     for post in user_posts:
-        post = schemas.PostOut(
-            id=post.id,
-            message=post.message,
-            owner_id=post.owner_id,
-            created_on=post.created_on,
-            files=post.files,
-            username=post.user.username,
-            amountOfComments=len(post.comments),
-            amountOfLikes=len(post.liked_by),
-        )
+        if post.published == True:
+            post = schemas.PostOut(
+                id=post.id,
+                message=post.message,
+                owner_id=post.owner_id,
+                created_on=post.created_on,
+                files=post.files,
+                username=post.user.username,
+                amountOfComments=len(post.comments),
+                amountOfLikes=len(post.liked_by),
+                published=post.published,
+            )
         serialized_posts.append(post)
     return {"posts": serialized_posts}
 
@@ -129,6 +139,7 @@ def get_post(post_id: int, db: Session = Depends(get_db)):
         amountOfComments=len(db_post.comments),
         amountOfLikes=len(db_post.liked_by),
         amountOfReposts=len(db_post.reposted_by),
+        published=db_post.published,
     )
     return db_post_serialized
 
@@ -151,6 +162,7 @@ def get_comments(post_id: int, db: Session = Depends(get_db)):
             amountOfComments=len(comment.comments),
             amountOfLikes=len(comment.liked_by),
             amountOfReposts=len(comment.reposted_by),
+            published=comment.published,
         )
         serialized_comments.append(comment)
     return {"posts": serialized_comments}

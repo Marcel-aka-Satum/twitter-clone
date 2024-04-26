@@ -14,13 +14,12 @@ import {
 } from "../features/User/userSlice";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { globalFeed, fetchPostsGlobal } from "../features/Feed/feedSlice";
+import DatePicker from "react-widgets/DatePicker";
+import TimeInput from "react-widgets/TimeInput";
 
 export default function Midfeed() {
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
   let posts = useSelector((state) => state.user.posts);
-  let post_ids = useSelector((state) => state.feed.posts_ids);
-  let global_posts = useSelector((state) => state.feed.posts);
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
   const [isHovered, setIsHovered] = useState(false);
@@ -30,8 +29,11 @@ export default function Midfeed() {
   const [wrongTypeFile, setWrongTypeFile] = useState(false);
   const [uploadFiles, setUploadFiles] = useState([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const { colorMode, toggleColorMode } = useColorMode();
+  const [showScheduler, setShowScheduler] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
 
+  const { colorMode, toggleColorMode } = useColorMode();
   const changeColor = () => {
     if (colorMode === "dark") {
       // If the current color mode is dark, switch to system color mode
@@ -51,11 +53,7 @@ export default function Midfeed() {
       dispatch(fetchUserById(userDataLocalStorage.id));
       dispatch(fetchUserPosts(userDataLocalStorage.id));
     }
-    // if (post_ids.length > 0) {
-    //   dispatch(fetchPostsGlobal(post_ids));
-    // }
     dispatch(validateUser());
-    // dispatch(globalFeed("global"));
   }, []);
 
   const handleDelete = (post_id) => {
@@ -64,6 +62,10 @@ export default function Midfeed() {
 
   const handleRepost = (username, post_id) => {
     dispatch(repostPost({ username: username, post_id: post_id }));
+  };
+
+  const schedulePost = () => {
+    setShowScheduler(!showScheduler);
   };
 
   const handleSubmit = () => {
@@ -114,6 +116,8 @@ export default function Midfeed() {
     const newUploadFiles = uploadFiles.filter((file, i) => i !== index);
     setUploadFiles(newUploadFiles);
   };
+  console.log(selectedDate);
+  console.log(selectedTime);
   return (
     <div className="grid-item-2 overflow-auto min-w-[300px]">
       <div className="flex border-t border-gray-500 items-center justify-center mb-4 text-gray-500 ">
@@ -128,15 +132,18 @@ export default function Midfeed() {
             <UserAvatarIcon avatarUrl={userDataLocalStorage.avatar} />
           )}
         </div>
-        <div className="grow">
+
+        <div className="flex-grow">
           <div className="text-white p-4">
-            <textarea
-              className="w-full h-32 bg-gray-800 text-white p-2 mb-4"
-              value={message}
-              onChange={(e) => {
-                setMessage(e.target.value);
-              }}
-            />
+            <div className="grow">
+              <textarea
+                className="w-full h-32 bg-gray-800 text-white p-2 mb-4"
+                value={message}
+                onChange={(e) => {
+                  setMessage(e.target.value);
+                }}
+              />
+            </div>
             {uploadFiles && uploadFiles.length > 0 ? (
               uploadFiles.map((file, index) => (
                 <>
@@ -162,6 +169,22 @@ export default function Midfeed() {
             )}
             {wrongTypeFile && (
               <p className="text-red-500">File type is not supported</p>
+            )}
+            {showScheduler && (
+              <div className="flex p-1">
+                <DatePicker
+                  className="w-2/5"
+                  placeholder="m/dd/yy"
+                  defaultValue={new Date()}
+                  onChange={(date) => setSelectedDate(date)}
+                />
+                <TimeInput
+                  defaultValue={new Date()}
+                  className="w-2/5 mt-0 ml-2"
+                  use12HourClock
+                  onChange={(time) => setSelectedTime(time)}
+                />
+              </div>
             )}
             <div className="flex items-center justify-between">
               <div className="flex space-x-4 gap-12">
@@ -202,14 +225,20 @@ export default function Midfeed() {
                     )}
                   </button>
                 </div>
-                <FontAwesomeIcon
-                  icon={faClock}
-                  className={`text-blue-500 cursor-pointer ${
-                    isHoveredSchedule ? "border-2 border-blue-500 rounded" : ""
-                  }`}
-                  onMouseEnter={() => setIsHoveredSchedule(true)}
-                  onMouseLeave={() => setIsHoveredSchedule(false)}
-                />
+                <div>
+                  <button onClick={schedulePost}>
+                    <FontAwesomeIcon
+                      icon={faClock}
+                      className={`text-blue-500 cursor-pointer ${
+                        isHoveredSchedule
+                          ? "border-2 border-blue-500 rounded"
+                          : ""
+                      }`}
+                      onMouseEnter={() => setIsHoveredSchedule(true)}
+                      onMouseLeave={() => setIsHoveredSchedule(false)}
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 className="bg-blue-500 rounded-full text-white  px-4 py-2"
@@ -221,7 +250,6 @@ export default function Midfeed() {
           </div>
         </div>
       </div>
-
       <div className="space-y-4">
         {posts &&
           (() => {

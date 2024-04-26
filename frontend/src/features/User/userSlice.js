@@ -7,6 +7,7 @@ export const userSlice = createSlice({
     authenticated: false,
     posts: [],
     error: null,
+    reposted: false,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -97,10 +98,11 @@ export const userSlice = createSlice({
       });
     builder
       .addCase(repostPost.fulfilled, (state, action) => {
-        console.log("Reposted");
+        state.reposted = true;
       })
       .addCase(repostPost.rejected, (state, action) => {
         state.error = action.error.message;
+        state.reposted = false;
       });
   },
 });
@@ -278,7 +280,7 @@ export const repostPost = createAsyncThunk(
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return payloadData;
+    return { post_id: post_id };
   }
 );
 

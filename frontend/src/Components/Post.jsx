@@ -149,14 +149,13 @@ export default function Post(props) {
               {props.amountOfLikes}
             </div>
             <div>
-              <FontAwesomeIcon icon={faChartBar} className="cursor-pointer" />
+              <button onClick={() => sharePost(props)}>
+                <FontAwesomeIcon
+                  icon={faShareSquare}
+                  className="cursor-pointer"
+                />
+              </button>
             </div>
-            <button onClick={() => sharePost(props)}>
-              <FontAwesomeIcon
-                icon={faShareSquare}
-                className="cursor-pointer"
-              />
-            </button>
           </div>
           {showShare && (
             <div className="fixed w-44 h-10 inset-x-0 bottom-0 mx-auto mb-4 z-50 bg-blue-500 text-white pt-2 rounded text-center">

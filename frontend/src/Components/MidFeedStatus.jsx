@@ -13,6 +13,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
   const dispatch = useDispatch();
   const post = useSelector((state) => state.post.post);
   const comments = useSelector((state) => state.post.comments);
+  const reposted = useSelector((state) => state.user.reposted);
   const [user, setUser] = useState(null);
   const postNotFound = useSelector((state) => state.post.postNotFound);
   const userNotFound = useSelector((state) => state.user.error);
@@ -46,59 +47,57 @@ export default function MidFeedStatus({ post_id, owner_post }) {
   if (!user || !post) {
     return <div>Loading...</div>;
   }
-
   return (
-    <div className="grid-item-2 border border-gray-500 overflow-auto">
+    <div className="overflow-auto min-w-[300px]">
       <div className="flex items-center justify-center mb-4 text-gray-500">
         <span className="font-bold flex-1 text-lg ">For you</span>
         <span className="font-bold flex-1 text-lg">Following</span>
         {/* <button onClick={changeColor}>change color</button> */}
       </div>
-      <div className="flex flex-row border border-gray-500 py-2 mb-4 w-full">
-        <div className="space-y-4">
-          {/*Main post*/}
-          {post && user && (
+
+      <div className="space-y-4">
+        {/*Main post*/}
+        {post && user && (
+          <Post
+            key={post.id}
+            username={post.username}
+            post_id={post.id}
+            amountOfComments={post.amountOfComments}
+            amountOfLikes={post.amountOfLikes}
+            amountOfReposts={post.amountOfReposts}
+            timePosted={post.created_on}
+            message={post.message}
+            owner_id={post.owner_id}
+            files={post.files}
+            avatarUrl={user.avatar}
+            onDelete={() => handleDeletePost(post.id)}
+            onRepost={() =>
+              handleRepost(userDataLocalStorage.username, post.id)
+            }
+          />
+        )}
+        {/*Comments*/}
+        {comments &&
+          comments.map((comment) => (
             <Post
-              key={post.id}
-              username={post.username}
-              post_id={post.id}
-              amountOfComments={post.amountOfComments}
-              amountOfLikes={post.amountOfLikes}
-              amountOfReposts={post.amountOfReposts}
-              timePosted={post.created_on}
-              message={post.message}
-              owner_id={post.owner_id}
-              files={post.files}
-              avatarUrl={user.avatar}
-              onDelete={() => handleDeletePost(post.id)}
+              key={comment.id}
+              post_id={comment.id}
+              username={comment.username}
+              amountOfComments={comment.amountOfComments}
+              amountOfLikes={comment.amountOfLikes}
+              amountOfReposts={comment.amountOfReposts}
+              timePosted={comment.created_on}
+              message={comment.message}
+              owner_id={comment.owner_id}
+              files={comment.files}
+              avatarUrl={comment.avatarUrl}
+              onDelete={() => handleDeleteComment(comment.id)}
               onRepost={() =>
-                handleRepost(userDataLocalStorage.username, post.id)
+                handleRepost(userDataLocalStorage.username, comment.id)
               }
             />
-          )}
-          {/*Comments*/}
-          {comments &&
-            comments.map((comment) => (
-              <Post
-                key={comment.id}
-                post_id={comment.id}
-                username={comment.username}
-                amountOfComments={comment.amountOfComments}
-                amountOfLikes={comment.amountOfLikes}
-                amountOfReposts={comment.amountOfReposts}
-                timePosted={comment.created_on}
-                message={comment.message}
-                owner_id={comment.owner_id}
-                files={comment.files}
-                avatarUrl={comment.avatarUrl}
-                onDelete={() => handleDeleteComment(comment.id)}
-                onRepost={() =>
-                  handleRepost(userDataLocalStorage.username, comment.id)
-                }
-              />
-            ))}
-          <TextArea post_id={post_id} />
-        </div>
+          ))}
+        <TextArea post_id={post_id} isComment={true} />
       </div>
     </div>
   );

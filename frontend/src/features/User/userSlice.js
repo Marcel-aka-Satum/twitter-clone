@@ -8,6 +8,8 @@ export const userSlice = createSlice({
     posts: [],
     error: null,
     reposted: false,
+    scheduled: false,
+    scheduledError: false,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -32,10 +34,16 @@ export const userSlice = createSlice({
 
     builder
       .addCase(createPost.fulfilled, (state, action) => {
-        state.posts = [...state.posts, action.payload];
+        if (action.payload.published == true) {
+          state.posts = [...state.posts, action.payload];
+          state.scheduled = false;
+        } else {
+          state.scheduled = true;
+        }
       })
       .addCase(createPost.rejected, (state, action) => {
         state.error = action.error.message;
+        state.scheduledError = true;
       });
 
     builder
@@ -276,7 +284,6 @@ export const repostPost = createAsyncThunk(
         credentials: "include",
       }
     );
-    const payloadData = await response.json();
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

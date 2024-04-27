@@ -197,7 +197,7 @@ async def create_comment(
                 raise HTTPException(
                     status_code=400, detail="File size must be less than 5MB"
                 )
-    comment = await crud.create_post(db, message, owner_id, created_on, files)
+    comment = await crud.create_post(db, message, owner_id, created_on, files, None)
     parent_post.comments.append(comment)
     serialized_comment = schemas.PostOut(
         id=comment.id,

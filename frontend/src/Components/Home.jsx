@@ -6,7 +6,9 @@ export default function Home() {
       <div className="grid-item-1 col-span-1 overflow-auto">
         <LeftNavbar />
       </div>
-      <Midfeed />
+      <div className="grid-item-2">
+        <Midfeed />
+      </div>
       <div className="grid-item-3">
         <RightNavbar />
       </div>

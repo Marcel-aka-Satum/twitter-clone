@@ -6,6 +6,7 @@ import re
 import base64
 from fastapi import HTTPException
 from ..post.crud import get_post_by_id
+from ..post.schemas import PostOut
 
 
 def is_password_strong(psswd):
@@ -30,7 +31,19 @@ def repost_post(db: Session, user_db: models.User, post_id: int):
         user_db.reposting.append(post)
     db.commit()
     db.refresh(user_db)
-    return user_db
+    serialized_post = PostOut(
+        id=post.id,
+        message=post.message,
+        owner_id=post.owner_id,
+        created_on=post.created_on,
+        files=post.files,
+        username=post.user.username,
+        amountOfComments=len(post.comments),
+        amountOfLikes=len(post.liked_by),
+        amountOfReposts=len(post.reposted_by),
+        published=post.published,
+    )
+    return serialized_post
 
 
 def get_user(db: Session, username: str):
@@ -67,7 +80,7 @@ def create_user(db: Session, user: schemas.UserInDB):
     if not is_valid_email(user.email):
         raise HTTPException(status_code=400, detail="Email is invalid")
 
-    hashed_password = get_password_hash(user.password)  # hash the psswd
+    hashed_password = get_password_hash(user.password)
     db_user = models.User(
         email=user.email,
         hashed_password=hashed_password,

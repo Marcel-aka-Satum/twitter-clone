@@ -119,7 +119,7 @@ export default function TextArea({ post_id, isComment }) {
   };
 
   return (
-    <div className="flex flex-row py-2 mb-4 w-full">
+    <div className="flex flex-row py-2 mb-4 w-full border-b border-gray-500">
       <div className="user-avatar ml-2 mt-3">
         {userDataLocalStorage && userDataLocalStorage.avatar && (
           <UserAvatarIcon avatarUrl={userDataLocalStorage.avatar} />

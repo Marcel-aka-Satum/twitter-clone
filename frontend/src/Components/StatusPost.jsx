@@ -20,7 +20,9 @@ export default function StatusPost() {
       <div className="grid-item-1 col-span-1 overflow-auto">
         <LeftNavbar />
       </div>
-      <MidFeedStatus post_id={postid} owner_post={username} />
+      <div className="grid-item-2">
+        <MidFeedStatus post_id={postid} owner_post={username} />
+      </div>
       <div className="grid-item-3">
         <RightNavbar />
       </div>

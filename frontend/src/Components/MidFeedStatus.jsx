@@ -13,6 +13,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
   const dispatch = useDispatch();
   const post = useSelector((state) => state.post.post);
   const comments = useSelector((state) => state.post.comments);
+  const reposted = useSelector((state) => state.user.reposted);
   const [user, setUser] = useState(null);
   const postNotFound = useSelector((state) => state.post.postNotFound);
   const userNotFound = useSelector((state) => state.user.error);
@@ -46,7 +47,6 @@ export default function MidFeedStatus({ post_id, owner_post }) {
   if (!user || !post) {
     return <div>Loading...</div>;
   }
-
   return (
     <div className="grid-item-2 border border-gray-500 overflow-auto">
       <div className="flex items-center justify-center mb-4 text-gray-500">
@@ -97,7 +97,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
                 }
               />
             ))}
-          <TextArea post_id={post_id} />
+          <TextArea post_id={post_id} isComment={true} />
         </div>
       </div>
     </div>

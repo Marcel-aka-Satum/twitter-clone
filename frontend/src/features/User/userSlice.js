@@ -284,7 +284,6 @@ export const repostPost = createAsyncThunk(
         credentials: "include",
       }
     );
-    const payloadData = await response.json();
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

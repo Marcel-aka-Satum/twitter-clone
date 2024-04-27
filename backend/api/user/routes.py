@@ -33,6 +33,12 @@ def repost_post(username: str, post_id: int, db: Session = Depends(get_db)):
     return crud.repost_post(db=db, user_db=db_user, post_id=post_id)
 
 
+@router.patch("/like/{username}/{post_id}", response_model=PostOut)
+def like_post(post_id: int, username: str, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_username(db, username)
+    return crud.like_post(db=db, post_id=post_id, user_db=db_user)
+
+
 @router.get("/user/{user_id}", response_model=schemas.UserOut)
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_id(db, user_id)

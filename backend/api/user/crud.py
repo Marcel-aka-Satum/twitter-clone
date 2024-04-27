@@ -46,6 +46,32 @@ def repost_post(db: Session, user_db: models.User, post_id: int):
     return serialized_post
 
 
+def like_post(db: Session, user_db: models.User, post_id: int):
+    post = get_post_by_id(db, post_id)
+    if post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    if post in user_db.likes:
+        user_db.likes.remove(post)
+    else:
+        user_db.likes.append(post)
+    db.commit()
+    db.refresh(post)
+    db.refresh(user_db)
+    serialized_post = PostOut(
+        id=post.id,
+        message=post.message,
+        owner_id=post.owner_id,
+        created_on=post.created_on,
+        files=post.files,
+        username=post.user.username,
+        amountOfComments=len(post.comments),
+        amountOfLikes=len(post.users_liked_by),
+        amountOfReposts=len(post.reposted_by),
+        published=post.published,
+    )
+    return serialized_post
+
+
 def get_user(db: Session, username: str):
     return db.query(models.User).filter(models.User.username == username).first()
 

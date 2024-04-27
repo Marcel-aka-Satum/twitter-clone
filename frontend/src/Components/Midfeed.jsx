@@ -61,6 +61,7 @@ export default function Midfeed() {
           (() => {
             let postsReversed = [];
             for (let i = posts.length - 1; i >= 0; i--) {
+              console.log(posts[i]);
               postsReversed.push(
                 <Post
                   key={posts[i].id}

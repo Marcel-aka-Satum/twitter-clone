@@ -3,12 +3,12 @@ import { faImage, faSmile, faClock } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createComment } from "../features/Post/postSlice";
-import { createPost } from "../features/User/userSlice";
 import { UserAvatarIcon } from "./import";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import DatePicker from "react-widgets/DatePicker";
 import TimeInput from "react-widgets/TimeInput";
+import { createPost } from "../features/Post/postSlice";
 
 export default function TextArea({ post_id, isComment }) {
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));

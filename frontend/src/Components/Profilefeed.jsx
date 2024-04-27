@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { ProfileBanner, Post } from "./import";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  fetchUserByUserName,
-  fetchUserPostsByUsername,
-} from "../features/User/userSlice";
+import { fetchUserByUserName } from "../features/User/userSlice";
+import { fetchUserPostsByUsername } from "../features/Post/postSlice";
 
 export default function Profilefeed({ username, description }) {
   const [posts, setPosts] = useState([]);

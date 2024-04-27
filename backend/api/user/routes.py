@@ -1,6 +1,7 @@
 from fastapi import Depends, HTTPException, APIRouter, UploadFile, File
 from sqlalchemy.orm import Session
 from . import schemas, crud
+from ..post.schemas import PostOut
 from database.database import get_db
 import os
 
@@ -24,7 +25,7 @@ def update_user(user: schemas.UserPatch, user_id: int, db: Session = Depends(get
     return crud.update_user(db=db, user_db=db_user, user_info=user)
 
 
-@router.patch("/repost/{username}/{post_id}", response_model=schemas.UserOut)
+@router.patch("/repost/{username}/{post_id}", response_model=PostOut)
 def repost_post(username: str, post_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_username(db, username)
     if db_user is None:

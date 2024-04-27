@@ -3,18 +3,19 @@ import { useColorMode } from "@chakra-ui/react";
 import { Post, TextArea } from "./import";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  fetchUserPosts,
   validateUser,
-  deleteUserPost,
   fetchUserById,
   repostPost,
 } from "../features/User/userSlice";
 
+import { fetchUserPosts, deleteUserPost } from "../features/Post/postSlice";
+
 export default function Midfeed() {
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
-  let posts = useSelector((state) => state.user.posts);
+  let posts = useSelector((state) => state.post.posts);
   const dispatch = useDispatch();
   const { colorMode, toggleColorMode } = useColorMode();
+
   const changeColor = () => {
     if (colorMode === "dark") {
       // If the current color mode is dark, switch to system color mode

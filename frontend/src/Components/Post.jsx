@@ -69,11 +69,14 @@ export default function Post(props) {
     <>
       <div className="flex items-start space-x-3 p-2 border-b border-gray-500">
         <div className="flex-shrink-0">
-          <a href={`/profile/${props.username}`}>
-            <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-2xl">
-              {userData && <UserAvatarIcon avatarUrl={userData.avatar} />}
-            </div>
-          </a>
+          <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-2xl">
+            {userData && (
+              <UserAvatarIcon
+                avatarUrl={userData.avatar}
+                userProfilePath={`/profile/${props.username}`}
+              />
+            )}
+          </div>
         </div>
         <div className="flex flex-col flex-grow">
           <div className="flex flex-row text-gray-500 ml-1 justify-between relative">

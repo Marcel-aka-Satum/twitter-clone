@@ -13,9 +13,6 @@ class Post(Base):
     scheduled_for = Column(DateTime(timezone=True), nullable=True)
     owner_id: int = Column(Integer, ForeignKey("users.id"))
     files = Column(ARRAY(String))
-    liked_by: Mapped[list["User"]] = relationship(
-        "User", back_populates="likes", uselist=True, overlaps="user"
-    )
     user: Mapped["User"] = relationship("User", back_populates="posts", uselist=False)
     published = Column(Boolean, default=True)
 

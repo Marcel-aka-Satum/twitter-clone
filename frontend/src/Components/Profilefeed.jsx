@@ -14,7 +14,7 @@ export default function Profilefeed({ username, description }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const error = useSelector((state) => state.user.error);
-  const userPosts = useSelector((state) => state.user.posts);
+  const userPosts = useSelector((state) => state.post.posts);
 
   useEffect(() => {
     dispatch(fetchUserByUserName(username));
@@ -22,6 +22,8 @@ export default function Profilefeed({ username, description }) {
   }, []);
 
   const handleDelete = () => {};
+  const handleLike = () => {};
+
   if (error) {
     return <div>{error}</div>;
   }
@@ -53,6 +55,7 @@ export default function Profilefeed({ username, description }) {
             files={post.files}
             avatarUrl={user.avatar}
             onDelete={() => handleDelete(post.id)}
+            likePost={() => handleLike(post.id)}
           />
         ))}
     </div>

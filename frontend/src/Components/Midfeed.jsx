@@ -2,13 +2,14 @@ import React, { useEffect } from "react";
 import { useColorMode } from "@chakra-ui/react";
 import { Post, TextArea } from "./import";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  validateUser,
-  fetchUserById,
-  repostPost,
-} from "../features/User/userSlice";
+import { validateUser, fetchUserById } from "../features/User/userSlice";
 
-import { fetchUserPosts, deleteUserPost } from "../features/Post/postSlice";
+import {
+  fetchUserPosts,
+  deleteUserPost,
+  likePost,
+  repostPost,
+} from "../features/Post/postSlice";
 
 export default function Midfeed() {
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
@@ -42,8 +43,12 @@ export default function Midfeed() {
     dispatch(deleteUserPost(post_id));
   };
 
-  const handleRepost = (username, post_id) => {
-    dispatch(repostPost({ username: username, post_id: post_id }));
+  const handleRepost = (post_id) => {
+    dispatch(repostPost({ post_id: post_id }));
+  };
+
+  const handleLike = (post_id) => {
+    dispatch(likePost(post_id));
   };
 
   return (
@@ -75,9 +80,8 @@ export default function Midfeed() {
                   owner_id={posts[i].owner_id}
                   files={posts[i].files}
                   avatarUrl={userDataLocalStorage.avatar}
-                  onRepost={() =>
-                    handleRepost(userDataLocalStorage.username, posts[i].id)
-                  }
+                  handleLike={() => handleLike(posts[i].id)}
+                  onRepost={() => handleRepost(posts[i].id)}
                   onDelete={() => handleDelete(posts[i].id)}
                 />
               );

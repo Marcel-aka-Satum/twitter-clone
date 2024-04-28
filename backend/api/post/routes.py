@@ -91,6 +91,7 @@ def get_posts(user_id: int, db: Session = Depends(get_db)):
                 username=post.user.username,
                 amountOfComments=len(post.comments),
                 amountOfReposts=len(post.reposted_by),
+                amountOfLikes=len(post.users_liked_by),
                 published=post.published,
                 scheduled_for=post.scheduled_for,
             )
@@ -116,7 +117,7 @@ def get_posts_by_username(username: str, db: Session = Depends(get_db)):
                 files=post.files,
                 username=post.user.username,
                 amountOfComments=len(post.comments),
-                amountOfLikes=len(post.liked_by),
+                amountOfLikes=len(post.users_liked_by),
                 published=post.published,
             )
         serialized_posts.append(post)
@@ -137,7 +138,7 @@ def get_post(post_id: int, db: Session = Depends(get_db)):
         files=db_post.files,
         username=db_post.user.username,
         amountOfComments=len(db_post.comments),
-        amountOfLikes=len(db_post.liked_by),
+        amountOfLikes=len(db_post.users_liked_by),
         amountOfReposts=len(db_post.reposted_by),
         published=db_post.published,
     )
@@ -160,7 +161,7 @@ def get_comments(post_id: int, db: Session = Depends(get_db)):
             files=comment.files,
             username=comment.user.username,
             amountOfComments=len(comment.comments),
-            amountOfLikes=len(comment.liked_by),
+            amountOfLikes=len(comment.users_liked_by),
             amountOfReposts=len(comment.reposted_by),
             published=comment.published,
         )

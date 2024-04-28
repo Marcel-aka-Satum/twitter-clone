@@ -32,6 +32,10 @@ export const postSlice = createSlice({
 
     builder
       .addCase(createComment.fulfilled, (state, action) => {
+        state.post = {
+          ...state.post,
+          amountOfComments: state.post.amountOfComments + 1,
+        };
         state.comments = [...state.comments, action.payload];
       })
       .addCase(createComment.rejected, (state, action) => {
@@ -40,6 +44,10 @@ export const postSlice = createSlice({
 
     builder
       .addCase(deleteComment.fulfilled, (state, action) => {
+        state.post = {
+          ...state.post,
+          amountOfComments: state.post.amountOfComments - 1,
+        };
         state.comments = state.comments.filter(
           (comment) => comment.id !== action.payload
         );
@@ -91,6 +99,64 @@ export const postSlice = createSlice({
       .addCase(deleteUserPost.rejected, (state, action) => {
         state.error = action.error.message;
       });
+
+    builder
+      .addCase(likePost.fulfilled, (state, action) => {
+        if (state.post.id === action.payload.id) {
+          state.post = action.payload;
+        }
+        state.comments = state.comments.map((comment) => {
+          if (comment.id === action.payload.id) {
+            return {
+              ...comment,
+              amountOfLikes: action.payload.amountOfLikes,
+            };
+          }
+          return comment;
+        });
+        state.posts = state.posts.map((post) => {
+          if (post.id === action.payload.id) {
+            return {
+              ...post,
+              amountOfLikes: action.payload.amountOfLikes,
+            };
+          }
+          return post;
+        });
+      })
+      .addCase(likePost.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
+
+    builder
+      .addCase(repostPost.fulfilled, (state, action) => {
+        if (state.post.id === action.payload.id) {
+          state.post = action.payload;
+        }
+        state.comments = state.comments.map((comment) => {
+          if (comment.id === action.payload.id) {
+            return {
+              ...comment,
+              amountOfReposts: action.payload.amountOfReposts,
+            };
+          }
+          return comment;
+        });
+        state.posts = state.posts.map((post) => {
+          if (post.id === action.payload.id) {
+            return {
+              ...post,
+              amountOfReposts: action.payload.amountOfReposts,
+            };
+          }
+          return post;
+        });
+        state.reposted = true;
+      })
+      .addCase(repostPost.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.reposted = false;
+      });
   },
 });
 
@@ -114,6 +180,33 @@ export const fetchUserPosts = createAsyncThunk(
     return data;
   }
 );
+
+export const repostPost = createAsyncThunk(
+  "user/repostPost",
+  async ({ post_id }) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/repost/${post_id}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return data;
+  }
+);
+
+export const likePost = createAsyncThunk("user/likePost", async (post_id) => {
+  const response = await fetch(`http://localhost:8000/api/v1/like/${post_id}`, {
+    method: "PATCH",
+    credentials: "include",
+  });
+  const data = await response.json();
+  return data;
+});
 
 export const fetchPostById = createAsyncThunk(
   "post/fetchPostById",

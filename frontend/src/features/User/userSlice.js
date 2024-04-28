@@ -63,15 +63,6 @@ export const userSlice = createSlice({
       .addCase(fetchUserByUserName.rejected, (state, action) => {
         state.error = action.error.message;
       });
-
-    builder
-      .addCase(repostPost.fulfilled, (state, action) => {
-        state.reposted = true;
-      })
-      .addCase(repostPost.rejected, (state, action) => {
-        state.error = action.error.message;
-        state.reposted = false;
-      });
   },
 });
 
@@ -178,24 +169,6 @@ export const validateUser = createAsyncThunk("user/validateUser", async () => {
   const data = await response.json();
   return data;
 });
-
-export const repostPost = createAsyncThunk(
-  "user/repostPost",
-  async ({ username, post_id }) => {
-    const response = await fetch(
-      `http://localhost:8000/api/v1/repost/${username}/${post_id}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-      }
-    );
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return data;
-  }
-);
 
 export const {} = userSlice.actions;
 

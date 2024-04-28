@@ -7,17 +7,16 @@ import {
   deleteComment,
   deleteUserStatusPost,
 } from "../features/Post/postSlice";
-import { fetchUserByUserName, repostPost } from "../features/User/userSlice";
+import { fetchUserByUserName } from "../features/User/userSlice";
+import { repostPost, likePost } from "../features/Post/postSlice";
 
 export default function MidFeedStatus({ post_id, owner_post }) {
   const dispatch = useDispatch();
   const post = useSelector((state) => state.post.post);
   const comments = useSelector((state) => state.post.comments);
-  const reposted = useSelector((state) => state.user.reposted);
   const [user, setUser] = useState(null);
   const postNotFound = useSelector((state) => state.post.postNotFound);
   const userNotFound = useSelector((state) => state.user.error);
-  let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
 
   useEffect(() => {
     dispatch(fetchPostById(post_id));
@@ -35,8 +34,12 @@ export default function MidFeedStatus({ post_id, owner_post }) {
     dispatch(deleteComment(comment_id));
   };
 
-  const handleRepost = (username, post_id) => {
-    dispatch(repostPost({ username: username, post_id: post_id }));
+  const handleRepost = (post_id) => {
+    dispatch(repostPost({ post_id: post_id }));
+  };
+
+  const handleLike = (post_id) => {
+    dispatch(likePost(post_id));
   };
 
   if (postNotFound || userNotFound || owner_post !== post.username) {
@@ -70,10 +73,9 @@ export default function MidFeedStatus({ post_id, owner_post }) {
             owner_id={post.owner_id}
             files={post.files}
             avatarUrl={user.avatar}
+            handleLike={() => handleLike(post.id)}
             onDelete={() => handleDeletePost(post.id)}
-            onRepost={() =>
-              handleRepost(userDataLocalStorage.username, post.id)
-            }
+            onRepost={() => handleRepost(post.id)}
           />
         )}
         {/*Comments*/}
@@ -91,10 +93,9 @@ export default function MidFeedStatus({ post_id, owner_post }) {
               owner_id={comment.owner_id}
               files={comment.files}
               avatarUrl={comment.avatarUrl}
+              handleLike={() => handleLike(comment.id)}
               onDelete={() => handleDeleteComment(comment.id)}
-              onRepost={() =>
-                handleRepost(userDataLocalStorage.username, comment.id)
-              }
+              onRepost={() => handleRepost(comment.id)}
             />
           ))}
         <TextArea post_id={post_id} isComment={true} />

@@ -2,8 +2,16 @@ from sqlalchemy import Boolean, Column, Integer, String, Table, ForeignKey
 from sqlalchemy.orm import relationship, Mapped
 from database.database import Base
 
+
 user_repost = Table(
     "user_repost",
+    Base.metadata,
+    Column("user_id", Integer, ForeignKey("users.id")),
+    Column("post_id", Integer, ForeignKey("posts.id")),
+)
+
+liked_post = Table(
+    "user_likes",
     Base.metadata,
     Column("user_id", Integer, ForeignKey("users.id")),
     Column("post_id", Integer, ForeignKey("posts.id")),
@@ -22,12 +30,13 @@ class User(Base):
     banner: str = Column(String, unique=False)
     is_active: bool = Column(Boolean, default=True)
     description: str = Column(String, unique=False)
+
     likes: Mapped[list["Post"]] = relationship(
-        "Post", uselist=True, back_populates="liked_by"
+        "Post", secondary=liked_post, backref="users_liked_by"
     )
 
     posts: Mapped[list["Post"]] = relationship(
-        "Post", back_populates="user", uselist=True, overlaps="liked_by"
+        "Post", back_populates="user", uselist=True
     )
 
     reposting: Mapped[list["Post"]] = relationship(

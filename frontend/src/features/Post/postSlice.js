@@ -32,6 +32,10 @@ export const postSlice = createSlice({
 
     builder
       .addCase(createComment.fulfilled, (state, action) => {
+        state.post = {
+          ...state.post,
+          amountOfComments: state.post.amountOfComments + 1,
+        };
         state.comments = [...state.comments, action.payload];
       })
       .addCase(createComment.rejected, (state, action) => {
@@ -40,6 +44,10 @@ export const postSlice = createSlice({
 
     builder
       .addCase(deleteComment.fulfilled, (state, action) => {
+        state.post = {
+          ...state.post,
+          amountOfComments: state.post.amountOfComments - 1,
+        };
         state.comments = state.comments.filter(
           (comment) => comment.id !== action.payload
         );
@@ -94,6 +102,18 @@ export const postSlice = createSlice({
 
     builder
       .addCase(likePost.fulfilled, (state, action) => {
+        if (state.post.id === action.payload.id) {
+          state.post = action.payload;
+        }
+        state.comments = state.comments.map((comment) => {
+          if (comment.id === action.payload.id) {
+            return {
+              ...comment,
+              amountOfLikes: action.payload.amountOfLikes,
+            };
+          }
+          return comment;
+        });
         state.posts = state.posts.map((post) => {
           if (post.id === action.payload.id) {
             return {
@@ -110,6 +130,18 @@ export const postSlice = createSlice({
 
     builder
       .addCase(repostPost.fulfilled, (state, action) => {
+        if (state.post.id === action.payload.id) {
+          state.post = action.payload;
+        }
+        state.comments = state.comments.map((comment) => {
+          if (comment.id === action.payload.id) {
+            return {
+              ...comment,
+              amountOfReposts: action.payload.amountOfReposts,
+            };
+          }
+          return comment;
+        });
         state.posts = state.posts.map((post) => {
           if (post.id === action.payload.id) {
             return {

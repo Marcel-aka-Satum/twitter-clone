@@ -8,7 +8,7 @@ import {
   deleteUserStatusPost,
 } from "../features/Post/postSlice";
 import { fetchUserByUserName } from "../features/User/userSlice";
-import { repostPost } from "../features/Post/postSlice";
+import { repostPost, likePost } from "../features/Post/postSlice";
 
 export default function MidFeedStatus({ post_id, owner_post }) {
   const dispatch = useDispatch();
@@ -36,6 +36,10 @@ export default function MidFeedStatus({ post_id, owner_post }) {
 
   const handleRepost = (post_id) => {
     dispatch(repostPost({ post_id: post_id }));
+  };
+
+  const handleLike = (post_id) => {
+    dispatch(likePost(post_id));
   };
 
   if (postNotFound || userNotFound || owner_post !== post.username) {
@@ -69,6 +73,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
             owner_id={post.owner_id}
             files={post.files}
             avatarUrl={user.avatar}
+            handleLike={() => handleLike(post.id)}
             onDelete={() => handleDeletePost(post.id)}
             onRepost={() => handleRepost(post.id)}
           />
@@ -88,6 +93,7 @@ export default function MidFeedStatus({ post_id, owner_post }) {
               owner_id={comment.owner_id}
               files={comment.files}
               avatarUrl={comment.avatarUrl}
+              handleLike={() => handleLike(comment.id)}
               onDelete={() => handleDeleteComment(comment.id)}
               onRepost={() => handleRepost(comment.id)}
             />

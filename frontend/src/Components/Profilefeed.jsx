@@ -22,6 +22,8 @@ export default function Profilefeed({ username, description }) {
   }, []);
 
   const handleDelete = () => {};
+  const handleLike = () => {};
+
   if (error) {
     return <div>{error}</div>;
   }
@@ -53,6 +55,7 @@ export default function Profilefeed({ username, description }) {
             files={post.files}
             avatarUrl={user.avatar}
             onDelete={() => handleDelete(post.id)}
+            likePost={() => handleLike(post.id)}
           />
         ))}
     </div>

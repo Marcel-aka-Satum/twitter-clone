@@ -91,6 +91,40 @@ export const postSlice = createSlice({
       .addCase(deleteUserPost.rejected, (state, action) => {
         state.error = action.error.message;
       });
+
+    builder
+      .addCase(likePost.fulfilled, (state, action) => {
+        state.posts = state.posts.map((post) => {
+          if (post.id === action.payload.id) {
+            return {
+              ...post,
+              amountOfLikes: action.payload.amountOfLikes,
+            };
+          }
+          return post;
+        });
+      })
+      .addCase(likePost.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
+
+    builder
+      .addCase(repostPost.fulfilled, (state, action) => {
+        state.posts = state.posts.map((post) => {
+          if (post.id === action.payload.id) {
+            return {
+              ...post,
+              amountOfReposts: action.payload.amountOfReposts,
+            };
+          }
+          return post;
+        });
+        state.reposted = true;
+      })
+      .addCase(repostPost.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.reposted = false;
+      });
   },
 });
 
@@ -114,6 +148,33 @@ export const fetchUserPosts = createAsyncThunk(
     return data;
   }
 );
+
+export const repostPost = createAsyncThunk(
+  "user/repostPost",
+  async ({ post_id }) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/repost/${post_id}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return data;
+  }
+);
+
+export const likePost = createAsyncThunk("user/likePost", async (post_id) => {
+  const response = await fetch(`http://localhost:8000/api/v1/like/${post_id}`, {
+    method: "PATCH",
+    credentials: "include",
+  });
+  const data = await response.json();
+  return data;
+});
 
 export const fetchPostById = createAsyncThunk(
   "post/fetchPostById",

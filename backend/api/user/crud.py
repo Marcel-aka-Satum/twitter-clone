@@ -39,7 +39,7 @@ def repost_post(db: Session, user_db: models.User, post_id: int):
         files=post.files,
         username=post.user.username,
         amountOfComments=len(post.comments),
-        amountOfLikes=len(post.liked_by),
+        amountOfLikes=len(post.users_liked_by),
         amountOfReposts=len(post.reposted_by),
         published=post.published,
     )

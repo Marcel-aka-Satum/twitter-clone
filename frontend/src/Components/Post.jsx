@@ -147,10 +147,10 @@ export default function Post(props) {
               <FontAwesomeIcon icon={faRetweet} className="cursor-pointer" />{" "}
               {props.amountOfReposts}
             </button>
-            <div>
+            <button onClick={() => props.handleLike()}>
               <FontAwesomeIcon icon={faHeart} className="cursor-pointer" />{" "}
               {props.amountOfLikes}
-            </div>
+            </button>
             <div>
               <button onClick={() => sharePost(props)}>
                 <FontAwesomeIcon

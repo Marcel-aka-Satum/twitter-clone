@@ -5,17 +5,19 @@ import {
   faComment,
   faRetweet,
   faHeart,
-  faChartBar,
   faShareSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { formatDistanceToNow, parseISO, format, set } from "date-fns";
 
 export default function Post(props) {
+  const likedPosts = JSON.parse(localStorage.getItem("liked_posts")) || {};
   const owner_id = props.owner_id;
   const [userData, setUserData] = useState({});
   const [showOptions, setShowOptions] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const buttonRef = useRef(null);
+  const [isLiked, setIsLiked] = useState(false);
+
   function formatTimePosted(timePosted) {
     if (!timePosted) {
       return;
@@ -65,6 +67,19 @@ export default function Post(props) {
       .then((data) => setUserData(data))
       .catch((error) => console.error("Error:", error));
   }, []);
+
+  const persistLikeState = () => {
+    // Update the liked state for the current post
+    if (likedPosts[props.post_id]) {
+      likedPosts[props.post_id] = false;
+    } else {
+      likedPosts[props.post_id] = true;
+    }
+    // Save the updated liked posts back to local storage
+    localStorage.setItem("liked_posts", JSON.stringify(likedPosts));
+    setIsLiked(likedPosts[props.post_id]);
+  };
+
   return (
     <>
       <div className="flex items-start space-x-3 p-2 border-b border-gray-500">
@@ -154,10 +169,29 @@ export default function Post(props) {
               <FontAwesomeIcon icon={faRetweet} className="cursor-pointer" />{" "}
               {props.amountOfReposts}
             </button>
-            <button onClick={() => props.handleLike()}>
-              <FontAwesomeIcon icon={faHeart} className="cursor-pointer" />{" "}
-              {props.amountOfLikes}
-            </button>
+            {likedPosts[props.post_id] ? (
+              <button
+                style={{ color: "#f33098" }}
+                onClick={() => {
+                  props.handleLike();
+                  persistLikeState();
+                }}
+              >
+                <FontAwesomeIcon icon={faHeart} className="cursor-pointer" />{" "}
+                {props.amountOfLikes}
+              </button>
+            ) : (
+              <button
+                style={{ color: "white" }}
+                onClick={() => {
+                  props.handleLike();
+                  persistLikeState();
+                }}
+              >
+                <FontAwesomeIcon icon={faHeart} className="cursor-pointer" />{" "}
+                {props.amountOfLikes}
+              </button>
+            )}
             <div>
               <button onClick={() => sharePost(props)}>
                 <FontAwesomeIcon

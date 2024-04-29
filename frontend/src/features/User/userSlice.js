@@ -39,11 +39,12 @@ export const userSlice = createSlice({
       });
 
     builder
-      .addCase(fetchUserById.fulfilled, (state, action) => {
+      .addCase(fetchUser.fulfilled, (state, action) => {
         state.user = action.payload;
+        console.log(action.payload);
         localStorage.setItem("user", JSON.stringify(action.payload));
       })
-      .addCase(fetchUserById.rejected, (state, action) => {
+      .addCase(fetchUser.rejected, (state, action) => {
         state.error = action.error.message;
       });
 
@@ -66,20 +67,14 @@ export const userSlice = createSlice({
   },
 });
 
-export const fetchUserById = createAsyncThunk(
-  "user/fetchUser",
-  async (user_id) => {
-    const response = await fetch(
-      `http://localhost:8000/api/v1/user/${user_id}`,
-      {
-        method: "GET",
-        credentials: "include",
-      }
-    );
-    const data = await response.json();
-    return data;
-  }
-);
+export const fetchUser = createAsyncThunk("user/fetchUser", async (user_id) => {
+  const response = await fetch(`http://localhost:8000/api/v1/user`, {
+    method: "GET",
+    credentials: "include",
+  });
+  const data = await response.json();
+  return data;
+});
 
 export const fetchUserByUserName = createAsyncThunk(
   "user/fetchUserByUsernName",

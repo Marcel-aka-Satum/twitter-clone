@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Post, TextArea } from "./import";
 import { useSelector, useDispatch } from "react-redux";
-import { validateUser, fetchUserById } from "../features/User/userSlice";
+import { validateUser, fetchUser } from "../features/User/userSlice";
 import {
   fetchUserPosts,
   deleteUserPost,
@@ -18,9 +18,9 @@ export default function Midfeed() {
 
   useEffect(() => {
     if (userDataLocalStorage) {
-      dispatch(fetchUserById(userDataLocalStorage.id));
       dispatch(fetchUserPosts(userDataLocalStorage.id));
     }
+    dispatch(fetchUser());
     dispatch(validateUser());
     dispatch(fetchPostsGlobal());
   }, []);

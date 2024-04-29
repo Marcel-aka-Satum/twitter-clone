@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import cookie from "js-cookie";
 
 export default function LeftNavbar() {
   const handleLogout = async () => {
@@ -16,7 +15,7 @@ export default function LeftNavbar() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative ">
       <div className="sticky top-0 ml-[75%]">
         <div className="flex flex-col mt-16 text-white gap-3">
           <Link to="/" className="flex items-center mb-4">

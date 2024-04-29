@@ -3,7 +3,7 @@ import { LeftNavbar, RightNavbar, Midfeed } from "../import";
 export default function Home() {
   return (
     <div className="grid grid-cols-3 max-w-screen h-screen">
-      <div className="grid-item-1 col-span-1 border-r border-gray-500">
+      <div className="grid-item-1 col-span-1 border-r border-grey-500">
         <LeftNavbar />
       </div>
       <div className="grid-item-2 col-span-1">

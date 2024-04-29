@@ -16,8 +16,8 @@ export default function StatusPost() {
   if (!authenticated) window.location.href = "/login";
 
   return (
-    <div className="grid grid-cols-3 w-screen h-screen justify-center">
-      <div className="grid-item-1 col-span-1 overflow-auto">
+    <div className="grid grid-cols-3 w-screen h-screen">
+      <div className="grid-item-1 col-span-1 border-r border-grey-500">
         <LeftNavbar />
       </div>
       <div className="grid-item-2">

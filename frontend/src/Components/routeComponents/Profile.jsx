@@ -7,7 +7,7 @@ export default function Profile() {
   const { username } = useParams();
   const [isUsersProfile, setIsUsersProfile] = useState(false);
   const currentUser = useSelector((state) => state.user.user);
-  const [authenticatedUser, setAuthenticatedUser] = useState("");
+  const [authenticatedUser, setAuthenticatedUser] = useState(null);
 
   useEffect(() => {
     if (currentUser && currentUser.username === username) {
@@ -26,11 +26,7 @@ export default function Profile() {
         <LeftNavbar />
       </div>
       <div className="grid-items-2 col-span-1">
-        <Profilefeed
-          username={username}
-          usersProfile={isUsersProfile}
-          authenticated_user={authenticatedUser}
-        />
+        <Profilefeed username={username} usersProfile={isUsersProfile} />
       </div>
       <div className="grid-item-3">
         <RightNavbar />

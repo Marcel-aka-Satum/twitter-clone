@@ -8,6 +8,7 @@ export const userSlice = createSlice({
     error: null,
     reposted: false,
     user_followers: [],
+    authenticated_user: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -51,9 +52,11 @@ export const userSlice = createSlice({
     builder
       .addCase(validateUser.fulfilled, (state, action) => {
         state.authenticated = true;
+        state.authenticated_user = action.payload;
       })
       .addCase(validateUser.rejected, (state, action) => {
         state.authenticated = false;
+        state.authenticated_user = null;
         localStorage.removeItem("user");
       });
 

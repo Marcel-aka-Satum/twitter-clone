@@ -12,6 +12,7 @@ import { Navigate, Outlet } from "react-router-dom";
 export default function ProtectedRoute() {
   let authenticated = useSelector((state) => state.user.authenticated);
   const [loading, setLoading] = useState(true);
+  const auth_user = useSelector((state) => state.user.auth_user);
 
   const dispatch = useDispatch();
   useEffect(() => {

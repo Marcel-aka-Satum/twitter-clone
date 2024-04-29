@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function ProfileBanner({
   username,
@@ -10,12 +11,17 @@ export default function ProfileBanner({
   onVisibilityChange,
   isFollowing,
 }) {
+  const authenticated_user = useSelector(
+    (state) => state.user.authenticated_user
+  );
+
   const [visible, setVisible] = useState({
     posts: true,
     replies: false,
     reposts: false,
     likes: false,
   });
+
   const handleVisibility = (e) => {
     const name = e.target.innerText.toLowerCase();
     const newVisible = {
@@ -30,10 +36,7 @@ export default function ProfileBanner({
     onVisibilityChange(newVisible);
   };
 
-  const handleFollow = () => {
-    console.log("Follow");
-  };
-
+  const handleFollow = () => {};
   return (
     <div>
       <img
@@ -62,19 +65,22 @@ export default function ProfileBanner({
             </a>
           </div>
         )}
-        {isFollowing ? (
+
+        {isFollowing && (
           <div className="flex items-center">
             <button
-              className="bg-black text-white rounded-full px-4 py-2 flex-shrink-0 ml-4"
+              className="bg-gray-500 text-white rounded-full px-4 py-2 flex-shrink-0 ml-4"
               onClick={handleFollow}
             >
               Unfollow
             </button>
           </div>
-        ) : (
+        )}
+
+        {!isFollowing && authenticated_user.username !== username && (
           <div className="flex items-center">
             <button
-              className="bg-black text-white rounded-full px-4 py-2 flex-shrink-0 ml-4"
+              className="bg-gray-500 text-white rounded-full px-4 py-2 flex-shrink-0 ml-4"
               onClick={handleFollow}
             >
               Follow

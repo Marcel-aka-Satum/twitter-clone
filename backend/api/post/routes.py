@@ -5,13 +5,15 @@ from database.database import get_db
 from ..user.crud import get_user_by_id
 from typing import List
 import os
-from datetime import datetime
+from fastapi import Request
+import jwt
+from jwt import DecodeError
 
 router = APIRouter()
 
 
 # create a post
-@router.post("/post", response_model=schemas.PostOut)
+@router.post("/post", response_model=schemas.PostOut, tags=["posts"])
 async def create_post(
     message: str = Form(),
     owner_id: str = Form(),
@@ -52,8 +54,27 @@ async def create_post(
 
 
 # delete a post by post id
-@router.delete("/post/{post_id}")
-def delete_post(post_id: int, db: Session = Depends(get_db)):
+@router.delete("/post/{post_id}", tags=["posts"])
+def delete_post(request: Request, post_id: int, db: Session = Depends(get_db)):
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(status_code=401, detail="Token is missing")
+    try:
+        decoded_token = jwt.decode(
+            token,
+            "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",  # SECRET_KEY
+            algorithms=["HS256"],  # ALGORITHM
+        )
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token invalid")
+    except DecodeError:
+        raise HTTPException(status_code=401, detail="Token is not a valid JWT")
+    username = decoded_token.get("username")
+    current_post = crud.get_post_by_id(db, post_id)
+    if username != current_post.user.username:
+        raise HTTPException(
+            status_code=401, detail="You are not allowed to delete this post"
+        )
     response = crud.delete_post(db, post_id=post_id)
     if not response[0]:
         raise HTTPException(status_code=404, detail="Post not found")
@@ -73,7 +94,7 @@ def delete_post(post_id: int, db: Session = Depends(get_db)):
 
 
 # Get all posts of a user by a user id
-@router.get("/user/post/{user_id}", response_model=schemas.PostList)
+@router.get("/user/post/{user_id}", response_model=schemas.PostList, tags=["posts"])
 def get_posts(user_id: int, db: Session = Depends(get_db)):
     db_user = get_user_by_id(db, user_id)
     if db_user is None:
@@ -100,7 +121,9 @@ def get_posts(user_id: int, db: Session = Depends(get_db)):
 
 
 # Get all posts of a user by a username
-@router.get("/user/post/username/{username}", response_model=schemas.PostList)
+@router.get(
+    "/user/post/username/{username}", response_model=schemas.PostList, tags=["posts"]
+)
 def get_posts_by_username(username: str, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_username(db, username)
     if db_user is None:
@@ -125,7 +148,7 @@ def get_posts_by_username(username: str, db: Session = Depends(get_db)):
 
 
 # Get a post by post id
-@router.get("/post/{post_id}", response_model=schemas.PostOut)
+@router.get("/post/{post_id}", response_model=schemas.PostOut, tags=["posts"])
 def get_post(post_id: int, db: Session = Depends(get_db)):
     db_post = crud.get_post_by_id(db, post_id)
     if db_post is None:
@@ -146,7 +169,7 @@ def get_post(post_id: int, db: Session = Depends(get_db)):
 
 
 # Get all comments of a post by post id
-@router.get("/comments/post/{post_id}", response_model=schemas.PostList)
+@router.get("/comments/post/{post_id}", response_model=schemas.PostList, tags=["posts"])
 def get_comments(post_id: int, db: Session = Depends(get_db)):
     post = crud.get_post_comments(db, post_id)
     if post is None:
@@ -170,7 +193,7 @@ def get_comments(post_id: int, db: Session = Depends(get_db)):
 
 
 # create comment
-@router.post("/comment", response_model=schemas.PostOut)
+@router.post("/comment", response_model=schemas.PostOut, tags=["posts"])
 async def create_comment(
     message: str = Form(),
     owner_id: str = Form(),

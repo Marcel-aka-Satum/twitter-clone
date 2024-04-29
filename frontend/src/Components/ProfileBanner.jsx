@@ -6,6 +6,7 @@ export default function ProfileBanner({
   description,
   nickname,
   bannerUrl,
+  usersProfile,
 }) {
   const [visible, setVisible] = useState({
     posts: true,
@@ -43,12 +44,16 @@ export default function ProfileBanner({
           <h2 className="-mt-8 text-xl font-bold">{nickname}</h2>
           <h2 className="text-xl font-bold">@{username}</h2>
         </div>
-
-        <div className="flex items-center">
-          <button className="bg-black text-white rounded-full px-4 py-2 flex-shrink-0 ml-4">
-            Edit Profile
-          </button>
-        </div>
+        {usersProfile && (
+          <div className="flex items-center">
+            <a
+              className="bg-black text-white rounded-full px-4 py-2 flex-shrink-0 ml-4"
+              href="/settings"
+            >
+              Edit Profile
+            </a>
+          </div>
+        )}
       </div>
 
       <div className="px-4">{description}</div>

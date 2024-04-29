@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { loginAsync, validateUser } from "../features/User/userSlice";
+import { loginAsync, validateUser } from "../../features/User/userSlice";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -38,20 +38,24 @@ const Login = () => {
               placeholder="Username"
               onChange={(e) => setUsername(e.target.value)}
             />
-
             <input
               className="p-3 border rounded mt-2 w-full"
               type="password"
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
             />
-
             <button
               className="bg-white text-blue-500 p-2 border rounded mt-5"
               onClick={handleLogin}
             >
               Login
             </button>
+            <p className="text-black">
+              No account?{" "}
+              <a className="text-blue-500" href="/register">
+                Sign In
+              </a>
+            </p>
           </form>
         </div>
       </div>

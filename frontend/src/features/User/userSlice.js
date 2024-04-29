@@ -39,11 +39,11 @@ export const userSlice = createSlice({
       });
 
     builder
-      .addCase(fetchUserById.fulfilled, (state, action) => {
+      .addCase(fetchUser.fulfilled, (state, action) => {
         state.user = action.payload;
         localStorage.setItem("user", JSON.stringify(action.payload));
       })
-      .addCase(fetchUserById.rejected, (state, action) => {
+      .addCase(fetchUser.rejected, (state, action) => {
         state.error = action.error.message;
       });
 
@@ -63,23 +63,31 @@ export const userSlice = createSlice({
       .addCase(fetchUserByUserName.rejected, (state, action) => {
         state.error = action.error.message;
       });
+
+    builder
+      .addCase(fetchUserLikes.fulfilled, (state, action) => {
+        localStorage.setItem("likes", JSON.stringify(action.payload));
+      })
+      .addCase(fetchUserLikes.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
+    builder.addCase(fetchUserReposts.fulfilled, (state, action) => {
+      localStorage.setItem("reposts", JSON.stringify(action.payload));
+    });
+    builder.addCase(fetchUserReposts.rejected, (state, action) => {
+      state.error = action.error.message;
+    });
   },
 });
 
-export const fetchUserById = createAsyncThunk(
-  "user/fetchUser",
-  async (user_id) => {
-    const response = await fetch(
-      `http://localhost:8000/api/v1/user/${user_id}`,
-      {
-        method: "GET",
-        credentials: "include",
-      }
-    );
-    const data = await response.json();
-    return data;
-  }
-);
+export const fetchUser = createAsyncThunk("user/fetchUser", async (user_id) => {
+  const response = await fetch(`http://localhost:8000/api/v1/user`, {
+    method: "GET",
+    credentials: "include",
+  });
+  const data = await response.json();
+  return data;
+});
 
 export const fetchUserByUserName = createAsyncThunk(
   "user/fetchUserByUsernName",
@@ -137,18 +145,15 @@ export const registerAsync = createAsyncThunk(
 
 export const patchUser = createAsyncThunk(
   "user/patchUser",
-  async ({ user_id, data }) => {
-    const response = await fetch(
-      `http://localhost:8000/api/v1/user/${user_id}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+  async ({ data }) => {
+    const response = await fetch(`http://localhost:8000/api/v1/user`, {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     const payloadData = await response.json();
     return payloadData;
   }
@@ -169,6 +174,30 @@ export const validateUser = createAsyncThunk("user/validateUser", async () => {
   const data = await response.json();
   return data;
 });
+
+export const fetchUserLikes = createAsyncThunk(
+  "user/fetchUserLikes",
+  async () => {
+    const response = await fetch("http://localhost:8000/api/v1/user/likes", {
+      method: "GET",
+      credentials: "include",
+    });
+    const data = await response.json();
+    return data;
+  }
+);
+
+export const fetchUserReposts = createAsyncThunk(
+  "user/fetchUserReposts",
+  async () => {
+    const response = await fetch("http://localhost:8000/api/v1/user/reposts", {
+      method: "GET",
+      credentials: "include",
+    });
+    const data = await response.json();
+    return data;
+  }
+);
 
 export const {} = userSlice.actions;
 

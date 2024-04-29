@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import Optional
 
 
 class Feed(BaseModel):
@@ -10,7 +9,6 @@ class Feed(BaseModel):
 
 
 class FeedOut(Feed):
-    post_ids: list[int]
     id: int
 
     class Config:

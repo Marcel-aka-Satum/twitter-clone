@@ -13,7 +13,7 @@ from functools import wraps
 router = APIRouter()
 
 
-@router.get("/validate", response_model=schemas.Validate)
+@router.get("/validate", response_model=schemas.Validate, tags=["auth"])
 async def validate_token(request: Request, db: Session = Depends(get_db)):
     token = request.cookies.get("access_token")
     if not token:
@@ -36,7 +36,7 @@ async def validate_token(request: Request, db: Session = Depends(get_db)):
     return {"authenticated": True, "user_id": user_id, "username": username}
 
 
-@router.post("/token", response_model=schemas.TokenOut)
+@router.post("/token", response_model=schemas.TokenOut, tags=["auth"])
 async def login_for_access_token(
     response: Response,
     form_data: OAuth2PasswordRequestForm = Depends(),
@@ -62,7 +62,7 @@ async def login_for_access_token(
     }
 
 
-@router.post("/logout")
+@router.post("/logout", tags=["auth"])
 async def logout(response: Response, request: Request):
     cookie = request.cookies.get("access_token")
     if not cookie:

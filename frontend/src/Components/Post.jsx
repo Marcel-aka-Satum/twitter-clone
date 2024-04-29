@@ -5,17 +5,45 @@ import {
   faComment,
   faRetweet,
   faHeart,
-  faChartBar,
   faShareSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { formatDistanceToNow, parseISO, format, set } from "date-fns";
 
 export default function Post(props) {
-  const owner_id = props.owner_id;
   const [userData, setUserData] = useState({});
   const [showOptions, setShowOptions] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const buttonRef = useRef(null);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isReposted, setIsReposted] = useState(false);
+  const [likedPosts, setLikedPosts] = useState(
+    JSON.parse(localStorage.getItem("likes")) || []
+  );
+  const [repostedPosts, setRepostedPosts] = useState(
+    JSON.parse(localStorage.getItem("reposts")) || []
+  );
+  useEffect(() => {
+    if (likedPosts.includes(props.post_id)) {
+      setIsLiked(true);
+    } else {
+      setIsLiked(false);
+    }
+    if (repostedPosts.includes(props.post_id)) {
+      setIsReposted(true);
+    } else {
+      setIsReposted(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetch(`http://localhost:8000/api/v1/user/username/${props.username}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((data) => setUserData(data))
+      .catch((error) => console.error("Error:", error));
+  }, []);
+
   function formatTimePosted(timePosted) {
     if (!timePosted) {
       return;
@@ -56,15 +84,14 @@ export default function Post(props) {
       });
   };
 
-  useEffect(() => {
-    if (owner_id === undefined) return;
-    fetch(`http://localhost:8000/api/v1/user/${owner_id}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((data) => setUserData(data))
-      .catch((error) => console.error("Error:", error));
-  }, []);
+  const persistLikeState = () => {
+    setIsLiked(!isLiked);
+  };
+
+  const persistRepostState = () => {
+    setIsReposted(!isReposted);
+  };
+
   return (
     <>
       <div className="flex items-start space-x-3 p-2 border-b border-gray-500">
@@ -100,13 +127,20 @@ export default function Post(props) {
             </button>
 
             {showOptions && (
-              <div className="bg-gray-300 text-black p-2 absolute rounded right-5">
-                <button
-                  id="showboxOptionButton"
-                  onClick={() => props.onDelete(props.post_id)}
-                >
-                  Delete Post
-                </button>
+              <div className="flex flex-col bg-gray-300 text-black p-2 absolute rounded right-5 ">
+                <div className="transition-colors duration-300 hover:bg-gray-200">
+                  <button
+                    id="showboxOptionButton"
+                    onClick={() => props.onDelete(props.post_id)}
+                  >
+                    Delete Post
+                  </button>
+                </div>
+                <div className="border-t border-black transition-colors duration-300 hover:bg-gray-200">
+                  <a href={`http://localhost:3000/profile/${props.username}`}>
+                    View Profile
+                  </a>
+                </div>
               </div>
             )}
           </div>
@@ -142,15 +176,27 @@ export default function Post(props) {
               {props.amountOfComments}
             </a>
             <button
-              onClick={() => props.onRepost(props.username, props.post_id)}
+              style={{ color: isReposted && "#f33098" }}
+              onClick={() => {
+                props.onRepost(props.username, props.post_id);
+                persistRepostState();
+              }}
             >
               <FontAwesomeIcon icon={faRetweet} className="cursor-pointer" />{" "}
               {props.amountOfReposts}
             </button>
-            <button onClick={() => props.handleLike()}>
+
+            <button
+              style={{ color: isLiked && "#f33098" }}
+              onClick={() => {
+                props.handleLike();
+                persistLikeState();
+              }}
+            >
               <FontAwesomeIcon icon={faHeart} className="cursor-pointer" />{" "}
               {props.amountOfLikes}
             </button>
+
             <div>
               <button onClick={() => sharePost(props)}>
                 <FontAwesomeIcon

@@ -6,6 +6,8 @@ export const postSlice = createSlice({
     post: [],
     posts: [],
     comments: [],
+    reposts: [],
+    likedPosts: [],
     error: null,
     postNotFound: null,
     commentsNotFound: null,
@@ -165,6 +167,21 @@ export const postSlice = createSlice({
       .addCase(fetchUserCommentByUsername.rejected, (state, action) => {
         state.error = action.error.message;
       });
+
+    builder
+      .addCase(fetchUserRepostsByUsername.fulfilled, (state, action) => {
+        state.reposts = action.payload;
+      })
+      .addCase(fetchUserRepostsByUsername.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(fetchUserLikedPosts.fulfilled, (state, action) => {
+        state.likedPosts = action.payload;
+      })
+      .addCase(fetchUserLikedPosts.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
   },
 });
 
@@ -247,6 +264,34 @@ export const fetchCommentsByPostId = createAsyncThunk(
     );
     const data = await response.json();
     if (response.status === 404) throw new Error("Post not found");
+    return data;
+  }
+);
+
+export const fetchUserLikedPosts = createAsyncThunk(
+  "user/fetchUserLikedPosts",
+  async (username) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/user/likes/${username}`
+    );
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return data;
+  }
+);
+
+export const fetchUserRepostsByUsername = createAsyncThunk(
+  "user/fetchUserRepostsByUsername",
+  async (username) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/user/reposts/${username}`
+    );
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     return data;
   }
 );

@@ -5,6 +5,8 @@ import { fetchUserByUserName } from "../features/User/userSlice";
 import {
   fetchUserCommentByUsername,
   fetchUserPostsByUsername,
+  fetchUserRepostsByUsername,
+  fetchUserLikedPosts,
 } from "../features/Post/postSlice";
 
 export default function Profilefeed({ username }) {
@@ -14,6 +16,9 @@ export default function Profilefeed({ username }) {
   const error = useSelector((state) => state.user.error);
   const userPosts = useSelector((state) => state.post.posts);
   const userReplies = useSelector((state) => state.post.comments);
+  const userReposts = useSelector((state) => state.post.reposts);
+  const userLikes = useSelector((state) => state.post.likedPosts);
+
   const [visible, setVisible] = useState({
     posts: true,
     replies: false,
@@ -25,6 +30,8 @@ export default function Profilefeed({ username }) {
     dispatch(fetchUserByUserName(username));
     dispatch(fetchUserPostsByUsername(username));
     dispatch(fetchUserCommentByUsername(username));
+    dispatch(fetchUserRepostsByUsername(username));
+    dispatch(fetchUserLikedPosts(username));
   }, []);
 
   const handleDelete = () => {};
@@ -77,6 +84,48 @@ export default function Profilefeed({ username }) {
         userReplies &&
         user &&
         userReplies.map((post) => (
+          <Post
+            key={post.id}
+            amountOfComments={post.amountOfComments}
+            amountOfLikes={post.amountOfLikes}
+            username={post.username}
+            nickname={user.nickname}
+            post_id={post.id}
+            timePosted={post.created_on}
+            message={post.message}
+            owner_id={post.owner_id}
+            files={post.files}
+            avatarUrl={user.avatar}
+            onDelete={() => handleDelete(post.id)}
+            likePost={() => handleLike(post.id)}
+          />
+        ))}
+
+      {visible.reposts &&
+        userReposts &&
+        user &&
+        userReposts.map((post) => (
+          <Post
+            key={post.id}
+            amountOfComments={post.amountOfComments}
+            amountOfLikes={post.amountOfLikes}
+            username={post.username}
+            nickname={user.nickname}
+            post_id={post.id}
+            timePosted={post.created_on}
+            message={post.message}
+            owner_id={post.owner_id}
+            files={post.files}
+            avatarUrl={user.avatar}
+            onDelete={() => handleDelete(post.id)}
+            likePost={() => handleLike(post.id)}
+          />
+        ))}
+
+      {visible.likes &&
+        userLikes &&
+        user &&
+        userLikes.map((post) => (
           <Post
             key={post.id}
             amountOfComments={post.amountOfComments}

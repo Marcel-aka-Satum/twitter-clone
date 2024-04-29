@@ -5,7 +5,9 @@ from database.database import get_db
 from ..user.crud import get_user_by_id
 from typing import List
 import os
-from datetime import datetime
+from fastapi import Request
+import jwt
+from jwt import DecodeError
 
 router = APIRouter()
 
@@ -53,7 +55,26 @@ async def create_post(
 
 # delete a post by post id
 @router.delete("/post/{post_id}")
-def delete_post(post_id: int, db: Session = Depends(get_db)):
+def delete_post(request: Request, post_id: int, db: Session = Depends(get_db)):
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(status_code=401, detail="Token is missing")
+    try:
+        decoded_token = jwt.decode(
+            token,
+            "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",  # SECRET_KEY
+            algorithms=["HS256"],  # ALGORITHM
+        )
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token invalid")
+    except DecodeError:
+        raise HTTPException(status_code=401, detail="Token is not a valid JWT")
+    username = decoded_token.get("username")
+    current_post = crud.get_post_by_id(db, post_id)
+    if username != current_post.user.username:
+        raise HTTPException(
+            status_code=401, detail="You are not allowed to delete this post"
+        )
     response = crud.delete_post(db, post_id=post_id)
     if not response[0]:
         raise HTTPException(status_code=404, detail="Post not found")

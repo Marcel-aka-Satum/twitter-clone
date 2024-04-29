@@ -12,7 +12,6 @@ export default function ProtectedRoute() {
     dispatch(validateUser()).then((action) => {
       setLoading(false);
       if (validateUser.fulfilled.match(action)) {
-        console.log(action.payload);
         dispatch(fetchUserById(action.payload.user_id));
       }
     });

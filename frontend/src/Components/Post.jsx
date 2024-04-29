@@ -100,13 +100,20 @@ export default function Post(props) {
             </button>
 
             {showOptions && (
-              <div className="bg-gray-300 text-black p-2 absolute rounded right-5">
-                <button
-                  id="showboxOptionButton"
-                  onClick={() => props.onDelete(props.post_id)}
-                >
-                  Delete Post
-                </button>
+              <div className="flex flex-col bg-gray-300 text-black p-2 absolute rounded right-5 ">
+                <div className="transition-colors duration-300 hover:bg-gray-200">
+                  <button
+                    id="showboxOptionButton"
+                    onClick={() => props.onDelete(props.post_id)}
+                  >
+                    Delete Post
+                  </button>
+                </div>
+                <div className="border-t border-black transition-colors duration-300 hover:bg-gray-200">
+                  <a href={`http://localhost:3000/profile/${props.username}`}>
+                    View Profile
+                  </a>
+                </div>
               </div>
             )}
           </div>

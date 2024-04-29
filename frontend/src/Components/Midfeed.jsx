@@ -1,9 +1,7 @@
 import React, { useEffect } from "react";
-import { useColorMode } from "@chakra-ui/react";
 import { Post, TextArea } from "./import";
 import { useSelector, useDispatch } from "react-redux";
 import { validateUser, fetchUserById } from "../features/User/userSlice";
-
 import {
   fetchUserPosts,
   deleteUserPost,
@@ -17,21 +15,6 @@ export default function Midfeed() {
   let posts = useSelector((state) => state.post.posts);
   let globalPosts = useSelector((state) => state.feed.posts);
   const dispatch = useDispatch();
-  const { colorMode, toggleColorMode } = useColorMode();
-
-  const changeColor = () => {
-    if (colorMode === "dark") {
-      // If the current color mode is dark, switch to system color mode
-      const systemColorMode = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "system";
-      toggleColorMode(systemColorMode);
-    } else {
-      // If the current color mode is not dark, switch to dark mode
-      toggleColorMode("dark");
-    }
-  };
 
   useEffect(() => {
     if (userDataLocalStorage) {
@@ -53,13 +36,12 @@ export default function Midfeed() {
   const handleLike = (post_id) => {
     dispatch(likePost(post_id));
   };
-  console.log(globalPosts);
+
   return (
-    <div className="overflow-auto min-w-[300px]">
+    <div className="min-w-[300px]">
       <div className="flex border-t border-gray-500 items-center justify-center mb-4 text-gray-500 ">
         <span className="font-bold flex-1 text-lg ">For you</span>
         <span className="font-bold flex-1 text-lg">Following</span>
-        <button onClick={changeColor}>change color</button>
       </div>
 
       <TextArea isComment={false} />

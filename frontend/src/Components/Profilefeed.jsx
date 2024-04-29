@@ -5,12 +5,6 @@ import { fetchUserByUserName } from "../features/User/userSlice";
 import { fetchUserPostsByUsername } from "../features/Post/postSlice";
 
 export default function Profilefeed({ username, description }) {
-  const [posts, setPosts] = useState([]);
-  const [replies, setReplies] = useState([]);
-  const [highlights, setHighlights] = useState([]);
-  const [articles, setArticles] = useState([]);
-  const [media, setMedia] = useState([]);
-  const [likes, setLikes] = useState([]);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const error = useSelector((state) => state.user.error);

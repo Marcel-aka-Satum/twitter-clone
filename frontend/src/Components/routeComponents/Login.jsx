@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { loginAsync, validateUser } from "../features/User/userSlice";
+import { loginAsync, validateUser } from "../../features/User/userSlice";
 
 const Login = () => {
   const [username, setUsername] = useState("");

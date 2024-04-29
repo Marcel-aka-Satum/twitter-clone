@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { LeftNavbar, RightNavbar, Profilefeed } from "./import";
+import { LeftNavbar, RightNavbar, Profilefeed } from "../import";
 import React from "react";
 
 export default function Profile() {

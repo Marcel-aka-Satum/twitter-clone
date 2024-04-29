@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { validateUser } from "../features/User/userSlice";
-import { LeftNavbar, RightNavbar, MidFeedStatus } from "./import";
+import { validateUser } from "../../features/User/userSlice";
+import { LeftNavbar, RightNavbar, MidFeedStatus } from "../import";
 
 export default function StatusPost() {
   const { username, postid } = useParams();

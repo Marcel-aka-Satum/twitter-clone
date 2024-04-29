@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { patchUser } from "../features/User/userSlice";
+import { patchUser } from "../../features/User/userSlice";
 import AvatarEditor from "react-avatar-editor";
 
 export default function Settings() {
@@ -68,7 +68,10 @@ export default function Settings() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-white">
-      <h1 className="mb-4">Settings</h1>
+      <h1 className="mb-4">
+        <i className="fas fa-cog fa-2x mr-4"></i>
+        Settings
+      </h1>
       {badPassword && <p className="text-red-500">Passwords do not match</p>}
       {avatar && popupAvatar && (
         <>
@@ -228,6 +231,12 @@ export default function Settings() {
           Save Changes
         </button>
       </form>
+      <a
+        href={"/"}
+        className="mt-5 font-bold hover:text-blue-500 transition-colors"
+      >
+        Go back to homepage
+      </a>
     </div>
   );
 }

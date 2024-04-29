@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import { LeftNavbar, RightNavbar, Profilefeed } from "../import";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { fetchUser } from "../../features/User/userSlice";
 
 export default function Profile() {
   const { username } = useParams();

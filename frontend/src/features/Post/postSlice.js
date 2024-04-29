@@ -6,6 +6,8 @@ export const postSlice = createSlice({
     post: [],
     posts: [],
     comments: [],
+    reposts: [],
+    likedPosts: [],
     error: null,
     postNotFound: null,
     commentsNotFound: null,
@@ -105,6 +107,22 @@ export const postSlice = createSlice({
         if (state.post.id === action.payload.id) {
           state.post = action.payload;
         }
+
+        // Check if the post is already in likedPosts
+        const isAlreadyLiked = state.likedPosts.some(
+          (post) => post.id === action.payload.id
+        );
+
+        if (isAlreadyLiked) {
+          // If it is, filter it out
+          state.likedPosts = state.likedPosts.filter(
+            (post) => post.id !== action.payload.id
+          );
+        } else {
+          // If it's not, add it to likedPosts
+          state.likedPosts = [...state.likedPosts, action.payload];
+        }
+
         state.comments = state.comments.map((comment) => {
           if (comment.id === action.payload.id) {
             return {
@@ -133,6 +151,7 @@ export const postSlice = createSlice({
         if (state.post.id === action.payload.id) {
           state.post = action.payload;
         }
+
         state.comments = state.comments.map((comment) => {
           if (comment.id === action.payload.id) {
             return {
@@ -156,6 +175,29 @@ export const postSlice = createSlice({
       .addCase(repostPost.rejected, (state, action) => {
         state.error = action.error.message;
         state.reposted = false;
+      });
+    builder
+      .addCase(fetchUserCommentByUsername.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.comments = action.payload;
+      })
+      .addCase(fetchUserCommentByUsername.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
+
+    builder
+      .addCase(fetchUserRepostsByUsername.fulfilled, (state, action) => {
+        state.reposts = action.payload;
+      })
+      .addCase(fetchUserRepostsByUsername.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(fetchUserLikedPosts.fulfilled, (state, action) => {
+        state.likedPosts = action.payload;
+      })
+      .addCase(fetchUserLikedPosts.rejected, (state, action) => {
+        state.error = action.error.message;
       });
   },
 });
@@ -199,6 +241,17 @@ export const repostPost = createAsyncThunk(
   }
 );
 
+export const fetchUserCommentByUsername = createAsyncThunk(
+  "user/fetchUserCommentByUsername",
+  async (username) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/user/comments/${username}`
+    );
+    const data = await response.json();
+    return data;
+  }
+);
+
 export const likePost = createAsyncThunk("user/likePost", async (post_id) => {
   const response = await fetch(`http://localhost:8000/api/v1/like/${post_id}`, {
     method: "PATCH",
@@ -228,6 +281,34 @@ export const fetchCommentsByPostId = createAsyncThunk(
     );
     const data = await response.json();
     if (response.status === 404) throw new Error("Post not found");
+    return data;
+  }
+);
+
+export const fetchUserLikedPosts = createAsyncThunk(
+  "user/fetchUserLikedPosts",
+  async (username) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/user/likes/${username}`
+    );
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return data;
+  }
+);
+
+export const fetchUserRepostsByUsername = createAsyncThunk(
+  "user/fetchUserRepostsByUsername",
+  async (username) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/user/reposts/${username}`
+    );
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     return data;
   }
 );

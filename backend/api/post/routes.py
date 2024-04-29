@@ -141,6 +141,7 @@ def get_posts_by_username(username: str, db: Session = Depends(get_db)):
                 username=post.user.username,
                 amountOfComments=len(post.comments),
                 amountOfLikes=len(post.users_liked_by),
+                amountOfReposts=len(post.reposted_by),
                 published=post.published,
             )
         serialized_posts.append(post)

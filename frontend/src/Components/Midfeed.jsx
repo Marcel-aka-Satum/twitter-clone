@@ -36,8 +36,10 @@ export default function Midfeed() {
 
   return (
     <div className="min-w-[300px]">
-      <div className="flex border-t border-gray-500 items-center justify-center mb-4 text-gray-500 ">
-        <span className="font-bold flex-1 text-lg ">For you</span>
+      <div className="flex border-t border-gray-500 items-center justify-center mb-4 text-gray-500 border-b">
+        <span className="font-bold flex-1 text-lg border-r border-gray-500">
+          For you
+        </span>
         <span className="font-bold flex-1 text-lg">Following</span>
       </div>
 

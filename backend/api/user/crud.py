@@ -151,3 +151,10 @@ def update_user(db: Session, user_db: models.User, user_info: schemas.UserPatch)
     db.commit()
     db.refresh(user_db)
     return user_db
+
+
+def follow_user(db: Session, user_db: models.User):
+    user_db.followers.append(user_db)
+    db.commit()
+    db.refresh(user_db)
+    return user_db

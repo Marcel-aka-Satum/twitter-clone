@@ -7,7 +7,8 @@ import {
   faHeart,
   faShareSquare,
 } from "@fortawesome/free-solid-svg-icons";
-import { formatDistanceToNow, parseISO, format, set } from "date-fns";
+import { formatDistanceToNow, parseISO, format } from "date-fns";
+import { useSelector } from "react-redux";
 
 export default function Post(props) {
   const [userData, setUserData] = useState({});
@@ -16,6 +17,7 @@ export default function Post(props) {
   const buttonRef = useRef(null);
   const [isLiked, setIsLiked] = useState(false);
   const [isReposted, setIsReposted] = useState(false);
+  const user = useSelector((state) => state.user.user);
   const [likedPosts, setLikedPosts] = useState(
     JSON.parse(localStorage.getItem("likes")) || []
   );
@@ -34,7 +36,6 @@ export default function Post(props) {
       setIsReposted(false);
     }
   }, []);
-
   useEffect(() => {
     fetch(`http://localhost:8000/api/v1/user/username/${props.username}`, {
       method: "GET",
@@ -128,15 +129,18 @@ export default function Post(props) {
 
             {showOptions && (
               <div className="flex flex-col bg-gray-300 text-black p-2 absolute rounded right-5 ">
-                <div className="transition-colors duration-300 hover:bg-gray-200">
-                  <button
-                    id="showboxOptionButton"
-                    onClick={() => props.onDelete(props.post_id)}
-                  >
-                    Delete Post
-                  </button>
+                <div className="transition-colors duration-300 hover:bg-gray-200 ">
+                  {user.username === props.username && (
+                    <button
+                      id="showboxOptionButton"
+                      className=" border-b border-black"
+                      onClick={() => props.onDelete(props.post_id)}
+                    >
+                      Delete Post
+                    </button>
+                  )}
                 </div>
-                <div className="border-t border-black transition-colors duration-300 hover:bg-gray-200">
+                <div className="transition-colors duration-300 hover:bg-gray-200">
                   <a href={`http://localhost:3000/profile/${props.username}`}>
                     View Profile
                   </a>

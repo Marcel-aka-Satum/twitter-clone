@@ -39,13 +39,15 @@ def get_feed_by_name(feed_type: str, db: Session = Depends(get_db)):
 
 
 # add a post to a feed
-@router.patch("/feed/{feed_id}/{post_id}", response_model=schemas.FeedOut)
+@router.patch(
+    "/feed/{feed_id}/{post_id}", response_model=schemas.FeedOut, tags=["feed"]
+)
 def add_post_to_feed(feed_id: int, post_id: int, db: Session = Depends(get_db)):
     feed = crud.add_to_feed(db, feed_id, post_id)
     return feed
 
 
-@router.get("/feed/{feed_id}/posts", response_model=list[PostOut])
+@router.get("/feed/{feed_id}/posts", response_model=list[PostOut], tags=["feed"])
 def get_posts_from_feed(feed_id: int, db: Session = Depends(get_db)):
     feed = db.query(models.Feed).filter(models.Feed.id == feed_id).first()
     if feed is None:

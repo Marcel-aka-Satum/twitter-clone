@@ -8,6 +8,7 @@ export default function ProfileBanner({
   bannerUrl,
   usersProfile,
   onVisibilityChange,
+  isFollowing,
 }) {
   const [visible, setVisible] = useState({
     posts: true,
@@ -15,7 +16,6 @@ export default function ProfileBanner({
     reposts: false,
     likes: false,
   });
-
   const handleVisibility = (e) => {
     const name = e.target.innerText.toLowerCase();
     const newVisible = {
@@ -29,6 +29,11 @@ export default function ProfileBanner({
     setVisible(newVisible);
     onVisibilityChange(newVisible);
   };
+
+  const handleFollow = () => {
+    console.log("Follow");
+  };
+
   return (
     <div>
       <img
@@ -55,6 +60,25 @@ export default function ProfileBanner({
             >
               Edit Profile
             </a>
+          </div>
+        )}
+        {isFollowing ? (
+          <div className="flex items-center">
+            <button
+              className="bg-black text-white rounded-full px-4 py-2 flex-shrink-0 ml-4"
+              onClick={handleFollow}
+            >
+              Unfollow
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center">
+            <button
+              className="bg-black text-white rounded-full px-4 py-2 flex-shrink-0 ml-4"
+              onClick={handleFollow}
+            >
+              Follow
+            </button>
           </div>
         )}
       </div>

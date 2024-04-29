@@ -12,7 +12,7 @@ import {
   likePost,
 } from "../features/Post/postSlice";
 
-export default function Profilefeed({ username }) {
+export default function Profilefeed({ username, authenticated_user }) {
   const userDataLocalStorage = JSON.parse(localStorage.getItem("user"));
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
@@ -21,6 +21,9 @@ export default function Profilefeed({ username }) {
   const userReplies = useSelector((state) => state.post.comments);
   const userReposts = useSelector((state) => state.post.reposts);
   const userLikes = useSelector((state) => state.post.likedPosts);
+  const authenticatedUserFollowers = useSelector(
+    (state) => state.user.user_followers
+  );
 
   const [visible, setVisible] = useState({
     posts: true,
@@ -55,9 +58,13 @@ export default function Profilefeed({ username }) {
   if (!user) {
     return <div>Loading...</div>;
   }
+
   return (
     <div>
       <ProfileBanner
+        isFollowing={authenticatedUserFollowers.some(
+          (follow) => follow.username === username
+        )}
         username={username}
         avatarUrl={user.avatar}
         nickname={user.nickname}

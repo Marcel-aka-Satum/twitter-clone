@@ -113,6 +113,7 @@ def create_user(db: Session, user: schemas.UserInDB):
         username=user.username,
         nickname=user.username,
         avatar="static/images/defaultAvatar.jpg",
+        banner="static/images/defaultBanner.jpg",
     )
     db.add(db_user)
     db.commit()

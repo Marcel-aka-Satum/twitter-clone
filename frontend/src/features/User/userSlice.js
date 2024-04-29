@@ -41,7 +41,6 @@ export const userSlice = createSlice({
     builder
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.user = action.payload;
-        console.log(action.payload);
         localStorage.setItem("user", JSON.stringify(action.payload));
       })
       .addCase(fetchUser.rejected, (state, action) => {

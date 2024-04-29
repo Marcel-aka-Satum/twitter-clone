@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchUserByUserName } from "../features/User/userSlice";
 import { fetchUserPostsByUsername } from "../features/Post/postSlice";
 
-export default function Profilefeed({ username, description }) {
+export default function Profilefeed({ username, usersProfile }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const error = useSelector((state) => state.user.error);
@@ -32,6 +32,7 @@ export default function Profilefeed({ username, description }) {
         nickname={user.nickname}
         description={user.description}
         bannerUrl={user.banner}
+        usersProfile={usersProfile}
       />
       {userPosts &&
         user &&

@@ -116,6 +116,12 @@ const Register = () => {
             <button className="bg-white text-blue-500 p-2 border rounded mt-5">
               Register
             </button>
+            <p className="text-black">
+              Already have an account?{" "}
+              <a className="text-blue-500" href="/login">
+                Log in
+              </a>
+            </p>
           </form>
         </div>
       </div>

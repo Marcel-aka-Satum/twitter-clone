@@ -128,24 +128,37 @@ export default function Post(props) {
             </button>
 
             {showOptions && (
-              <div className="flex flex-col bg-gray-300 text-black p-2 absolute rounded right-5 ">
-                <div className="transition-colors duration-300 hover:bg-gray-200 ">
+              <>
+                <div className="flex flex-col bg-gray-300 text-black p-2 absolute rounded right-5 ">
                   {user.username === props.username && (
-                    <button
-                      id="showboxOptionButton"
-                      className=" border-b border-black"
-                      onClick={() => props.onDelete(props.post_id)}
-                    >
-                      Delete Post
-                    </button>
+                    <div className="transition-colors duration-300 hover:bg-gray-200 ">
+                      <button
+                        id="showboxOptionButton"
+                        className=" border-b border-black"
+                        onClick={() => props.onDelete(props.post_id)}
+                      >
+                        Delete Post
+                      </button>
+                    </div>
                   )}
+                  {user.username !== props.username && !props.isFollowing && (
+                    <div className="transition-colors duration-300 hover:bg-gray-200">
+                      <button
+                        id="showboxOptionButton"
+                        className=" border-b border-black"
+                        onClick={() => props.onFollow(props.username)}
+                      >
+                        Follow
+                      </button>
+                    </div>
+                  )}
+                  <div className="transition-colors duration-300 hover:bg-gray-200">
+                    <a href={`http://localhost:3000/profile/${props.username}`}>
+                      View Profile
+                    </a>
+                  </div>
                 </div>
-                <div className="transition-colors duration-300 hover:bg-gray-200">
-                  <a href={`http://localhost:3000/profile/${props.username}`}>
-                    View Profile
-                  </a>
-                </div>
-              </div>
+              </>
             )}
           </div>
 

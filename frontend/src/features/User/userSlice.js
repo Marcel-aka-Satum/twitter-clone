@@ -7,6 +7,7 @@ export const userSlice = createSlice({
     authenticated: false,
     error: null,
     reposted: false,
+    user_followers: [],
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -71,12 +72,20 @@ export const userSlice = createSlice({
       .addCase(fetchUserLikes.rejected, (state, action) => {
         state.error = action.error.message;
       });
-    builder.addCase(fetchUserReposts.fulfilled, (state, action) => {
-      localStorage.setItem("reposts", JSON.stringify(action.payload));
-    });
-    builder.addCase(fetchUserReposts.rejected, (state, action) => {
-      state.error = action.error.message;
-    });
+    builder
+      .addCase(fetchUserReposts.fulfilled, (state, action) => {
+        localStorage.setItem("reposts", JSON.stringify(action.payload));
+      })
+      .addCase(fetchUserReposts.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(fetchUserFollowers.fulfilled, (state, action) => {
+        state.user_followers = action.payload;
+      })
+      .addCase(fetchUserFollowers.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
   },
 });
 
@@ -156,6 +165,18 @@ export const patchUser = createAsyncThunk(
     });
     const payloadData = await response.json();
     return payloadData;
+  }
+);
+
+export const fetchUserFollowers = createAsyncThunk(
+  "user/fetchUserFollowers",
+  async () => {
+    const response = await fetch("http://localhost:8000/api/v1/followers", {
+      method: "GET",
+      credentials: "include",
+    });
+    const data = await response.json();
+    return data;
   }
 );
 

@@ -5,6 +5,7 @@ import {
   validateUser,
   fetchUserLikes,
   fetchUserReposts,
+  fetchUserFollowers,
 } from "../features/User/userSlice";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -20,6 +21,7 @@ export default function ProtectedRoute() {
         dispatch(fetchUser());
         dispatch(fetchUserLikes());
         dispatch(fetchUserReposts());
+        dispatch(fetchUserFollowers());
       }
     });
   }, []);

@@ -7,6 +7,9 @@ import {
   fetchUserPostsByUsername,
   fetchUserRepostsByUsername,
   fetchUserLikedPosts,
+  deleteUserPost,
+  repostPost,
+  likePost,
 } from "../features/Post/postSlice";
 
 export default function Profilefeed({ username }) {
@@ -34,8 +37,17 @@ export default function Profilefeed({ username }) {
     dispatch(fetchUserLikedPosts(username));
   }, []);
 
-  const handleDelete = () => {};
-  const handleLike = () => {};
+  const handleDelete = (post_id) => {
+    dispatch(deleteUserPost(post_id));
+  };
+
+  const handleRepost = (post_id) => {
+    dispatch(repostPost({ post_id: post_id }));
+  };
+
+  const handleLike = (post_id) => {
+    dispatch(likePost(post_id));
+  };
 
   if (error) {
     return <div>{error}</div>;
@@ -43,7 +55,6 @@ export default function Profilefeed({ username }) {
   if (!user) {
     return <div>Loading...</div>;
   }
-  console.log(visible);
   return (
     <div>
       <ProfileBanner
@@ -67,6 +78,7 @@ export default function Profilefeed({ username }) {
             key={post.id}
             amountOfComments={post.amountOfComments}
             amountOfLikes={post.amountOfLikes}
+            amountOfReposts={post.amountOfReposts}
             username={post.username}
             nickname={user.nickname}
             post_id={post.id}
@@ -76,7 +88,8 @@ export default function Profilefeed({ username }) {
             files={post.files}
             avatarUrl={user.avatar}
             onDelete={() => handleDelete(post.id)}
-            likePost={() => handleLike(post.id)}
+            handleLike={() => handleLike(post.id)}
+            onRepost={() => handleRepost(post.id)}
           />
         ))}
 
@@ -88,6 +101,7 @@ export default function Profilefeed({ username }) {
             key={post.id}
             amountOfComments={post.amountOfComments}
             amountOfLikes={post.amountOfLikes}
+            amountOfReposts={post.amountOfReposts}
             username={post.username}
             nickname={user.nickname}
             post_id={post.id}
@@ -97,7 +111,8 @@ export default function Profilefeed({ username }) {
             files={post.files}
             avatarUrl={user.avatar}
             onDelete={() => handleDelete(post.id)}
-            likePost={() => handleLike(post.id)}
+            handleLike={() => handleLike(post.id)}
+            onRepost={() => handleRepost(post.id)}
           />
         ))}
 
@@ -109,6 +124,7 @@ export default function Profilefeed({ username }) {
             key={post.id}
             amountOfComments={post.amountOfComments}
             amountOfLikes={post.amountOfLikes}
+            amountOfReposts={post.amountOfReposts}
             username={post.username}
             nickname={user.nickname}
             post_id={post.id}
@@ -118,7 +134,8 @@ export default function Profilefeed({ username }) {
             files={post.files}
             avatarUrl={user.avatar}
             onDelete={() => handleDelete(post.id)}
-            likePost={() => handleLike(post.id)}
+            handleLike={() => handleLike(post.id)}
+            onRepost={() => handleRepost(post.id)}
           />
         ))}
 
@@ -130,6 +147,7 @@ export default function Profilefeed({ username }) {
             key={post.id}
             amountOfComments={post.amountOfComments}
             amountOfLikes={post.amountOfLikes}
+            amountOfReposts={post.amountOfReposts}
             username={post.username}
             nickname={user.nickname}
             post_id={post.id}
@@ -139,7 +157,8 @@ export default function Profilefeed({ username }) {
             files={post.files}
             avatarUrl={user.avatar}
             onDelete={() => handleDelete(post.id)}
-            likePost={() => handleLike(post.id)}
+            handleLike={() => handleLike(post.id)}
+            onRepost={() => handleRepost(post.id)}
           />
         ))}
     </div>

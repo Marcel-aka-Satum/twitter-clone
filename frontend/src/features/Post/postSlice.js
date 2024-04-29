@@ -107,6 +107,22 @@ export const postSlice = createSlice({
         if (state.post.id === action.payload.id) {
           state.post = action.payload;
         }
+
+        // Check if the post is already in likedPosts
+        const isAlreadyLiked = state.likedPosts.some(
+          (post) => post.id === action.payload.id
+        );
+
+        if (isAlreadyLiked) {
+          // If it is, filter it out
+          state.likedPosts = state.likedPosts.filter(
+            (post) => post.id !== action.payload.id
+          );
+        } else {
+          // If it's not, add it to likedPosts
+          state.likedPosts = [...state.likedPosts, action.payload];
+        }
+
         state.comments = state.comments.map((comment) => {
           if (comment.id === action.payload.id) {
             return {
@@ -135,6 +151,7 @@ export const postSlice = createSlice({
         if (state.post.id === action.payload.id) {
           state.post = action.payload;
         }
+
         state.comments = state.comments.map((comment) => {
           if (comment.id === action.payload.id) {
             return {

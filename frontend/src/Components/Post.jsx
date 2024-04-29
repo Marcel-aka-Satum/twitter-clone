@@ -36,7 +36,6 @@ export default function Post(props) {
       setIsReposted(false);
     }
   }, []);
-  console.log(user);
   useEffect(() => {
     fetch(`http://localhost:8000/api/v1/user/username/${props.username}`, {
       method: "GET",

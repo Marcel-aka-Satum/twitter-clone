@@ -17,6 +17,13 @@ liked_post = Table(
     Column("post_id", Integer, ForeignKey("posts.id")),
 )
 
+follows = Table(
+    "user_follows",
+    Base.metadata,
+    Column("follower_id", Integer, ForeignKey("users.id")),
+    Column("followed_id", Integer, ForeignKey("users.id")),
+)
+
 
 class User(Base):
     __tablename__ = "users"
@@ -30,6 +37,15 @@ class User(Base):
     banner: str = Column(String, unique=False)
     is_active: bool = Column(Boolean, default=True)
     description: str = Column(String, unique=False)
+
+    followers: Mapped[list["User"]] = relationship(
+        "User",
+        secondary=follows,
+        primaryjoin=id == follows.c.followed_id,
+        secondaryjoin=id == follows.c.follower_id,
+        backref="followed_by",
+        foreign_keys=[follows.c.followed_id, follows.c.follower_id],
+    )
 
     likes: Mapped[list["Post"]] = relationship(
         "Post", secondary=liked_post, backref="users_liked_by"

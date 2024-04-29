@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchUser, validateUser } from "../features/User/userSlice";
+import {
+  fetchUser,
+  validateUser,
+  fetchUserLikes,
+  fetchUserReposts,
+} from "../features/User/userSlice";
 import { Navigate, Outlet } from "react-router-dom";
 
 export default function ProtectedRoute() {
@@ -13,6 +18,8 @@ export default function ProtectedRoute() {
       setLoading(false);
       if (validateUser.fulfilled.match(action)) {
         dispatch(fetchUser());
+        dispatch(fetchUserLikes());
+        dispatch(fetchUserReposts());
       }
     });
   }, []);

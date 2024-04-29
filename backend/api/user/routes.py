@@ -92,7 +92,7 @@ def like_post(request: Request, post_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/user", response_model=schemas.UserOut, tags=["user"])
-def read_user(request: Request, user_id: int, db: Session = Depends(get_db)):
+def read_user(request: Request, db: Session = Depends(get_db)):
     token = request.cookies.get("access_token")
     if not token:
         raise HTTPException(status_code=401, detail="Token is missing")
@@ -138,3 +138,47 @@ async def create_upload_file(
             file_object.write(await file.read())
         return {"info": f"file '{file.filename}' saved at '{file_location}'"}
     raise HTTPException(status_code=401, detail="User not found to upload any file")
+
+
+@router.get("/user/likes", response_model=list[int], tags=["user"])
+async def get_user_likes(request: Request, db: Session = Depends(get_db)):
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(status_code=401, detail="Token is missing")
+    try:
+        decoded_token = jwt.decode(
+            token,
+            "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",  # SECRET_KEY
+            algorithms=["HS256"],  # ALGORITHM
+        )
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token invalid")
+    except DecodeError:
+        raise HTTPException(status_code=401, detail="Token is not a valid JWT")
+    username = decoded_token.get("username")
+    db_user = crud.get_user_by_username(db, username)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return [like.id for like in db_user.likes]
+
+
+@router.get("/user/reposts", response_model=list[int], tags=["user"])
+async def get_user_reposts(request: Request, db: Session = Depends(get_db)):
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(status_code=401, detail="Token is missing")
+    try:
+        decoded_token = jwt.decode(
+            token,
+            "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",  # SECRET_KEY
+            algorithms=["HS256"],  # ALGORITHM
+        )
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token invalid")
+    except DecodeError:
+        raise HTTPException(status_code=401, detail="Token is not a valid JWT")
+    username = decoded_token.get("username")
+    db_user = crud.get_user_by_username(db, username)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return [repost.id for repost in db_user.reposting]

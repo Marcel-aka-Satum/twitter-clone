@@ -172,6 +172,7 @@ export default function Settings() {
             value={nickName}
             onChange={(e) => setNickName(e.target.value)}
             className="px-2 py-1 rounded-md"
+            placeholder="Enter your nickname"
           />
         </label>
         <label className="flex flex-col">
@@ -180,6 +181,7 @@ export default function Settings() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="px-2 py-1 rounded-md"
+            placeholder="Enter your email"
           />
         </label>
         <label className="flex flex-col">
@@ -188,6 +190,7 @@ export default function Settings() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="px-2 py-1 rounded-md"
+            placeholder="Enter your password"
           />
         </label>
         <label className="flex flex-col">
@@ -196,6 +199,7 @@ export default function Settings() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             className="px-2 py-1 rounded-md"
+            placeholder="Confirm your password"
           />
         </label>
         <label className="flex flex-col">

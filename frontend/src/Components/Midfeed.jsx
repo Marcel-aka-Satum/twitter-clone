@@ -17,9 +17,6 @@ export default function Midfeed() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (userDataLocalStorage) {
-      dispatch(fetchUserPosts(userDataLocalStorage.id));
-    }
     dispatch(fetchUser());
     dispatch(validateUser());
     dispatch(fetchPostsGlobal());

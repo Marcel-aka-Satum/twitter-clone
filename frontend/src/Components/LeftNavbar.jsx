@@ -13,6 +13,7 @@ export default function LeftNavbar() {
       window.location.href = "/";
     }
   };
+  const userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
 
   return (
     <div className="relative ">
@@ -46,7 +47,10 @@ export default function LeftNavbar() {
             <i className="fas fa-square-twitter fa-2x mr-2"></i>
             <span>Twitter</span>
           </Link>
-          <Link to="/User" className="flex items-center mb-4">
+          <Link
+            to={`/profile/${userDataLocalStorage.username}`}
+            className="flex items-center mb-4"
+          >
             <i className="fas fa-user fa-2x mr-2"></i>
             <span>User</span>
           </Link>

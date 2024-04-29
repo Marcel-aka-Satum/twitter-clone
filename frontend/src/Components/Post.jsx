@@ -10,13 +10,39 @@ import {
 import { formatDistanceToNow, parseISO, format, set } from "date-fns";
 
 export default function Post(props) {
-  const likedPosts = JSON.parse(localStorage.getItem("liked_posts")) || {};
-  const owner_id = props.owner_id;
   const [userData, setUserData] = useState({});
   const [showOptions, setShowOptions] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const buttonRef = useRef(null);
   const [isLiked, setIsLiked] = useState(false);
+  const [isReposted, setIsReposted] = useState(false);
+  const [likedPosts, setLikedPosts] = useState(
+    JSON.parse(localStorage.getItem("likes")) || []
+  );
+  const [repostedPosts, setRepostedPosts] = useState(
+    JSON.parse(localStorage.getItem("reposts")) || []
+  );
+  useEffect(() => {
+    if (likedPosts.includes(props.post_id)) {
+      setIsLiked(true);
+    } else {
+      setIsLiked(false);
+    }
+    if (repostedPosts.includes(props.post_id)) {
+      setIsReposted(true);
+    } else {
+      setIsReposted(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetch(`http://localhost:8000/api/v1/user/username/${props.username}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((data) => setUserData(data))
+      .catch((error) => console.error("Error:", error));
+  }, []);
 
   function formatTimePosted(timePosted) {
     if (!timePosted) {
@@ -58,26 +84,12 @@ export default function Post(props) {
       });
   };
 
-  useEffect(() => {
-    if (owner_id === undefined) return;
-    fetch(`http://localhost:8000/api/v1/user/${owner_id}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((data) => setUserData(data))
-      .catch((error) => console.error("Error:", error));
-  }, []);
-
   const persistLikeState = () => {
-    // Update the liked state for the current post
-    if (likedPosts[props.post_id]) {
-      likedPosts[props.post_id] = false;
-    } else {
-      likedPosts[props.post_id] = true;
-    }
-    // Save the updated liked posts back to local storage
-    localStorage.setItem("liked_posts", JSON.stringify(likedPosts));
-    setIsLiked(likedPosts[props.post_id]);
+    setIsLiked(!isLiked);
+  };
+
+  const persistRepostState = () => {
+    setIsReposted(!isReposted);
   };
 
   return (
@@ -164,34 +176,27 @@ export default function Post(props) {
               {props.amountOfComments}
             </a>
             <button
-              onClick={() => props.onRepost(props.username, props.post_id)}
+              style={{ color: isReposted && "#f33098" }}
+              onClick={() => {
+                props.onRepost(props.username, props.post_id);
+                persistRepostState();
+              }}
             >
               <FontAwesomeIcon icon={faRetweet} className="cursor-pointer" />{" "}
               {props.amountOfReposts}
             </button>
-            {likedPosts[props.post_id] ? (
-              <button
-                style={{ color: "#f33098" }}
-                onClick={() => {
-                  props.handleLike();
-                  persistLikeState();
-                }}
-              >
-                <FontAwesomeIcon icon={faHeart} className="cursor-pointer" />{" "}
-                {props.amountOfLikes}
-              </button>
-            ) : (
-              <button
-                style={{ color: "white" }}
-                onClick={() => {
-                  props.handleLike();
-                  persistLikeState();
-                }}
-              >
-                <FontAwesomeIcon icon={faHeart} className="cursor-pointer" />{" "}
-                {props.amountOfLikes}
-              </button>
-            )}
+
+            <button
+              style={{ color: isLiked && "#f33098" }}
+              onClick={() => {
+                props.handleLike();
+                persistLikeState();
+              }}
+            >
+              <FontAwesomeIcon icon={faHeart} className="cursor-pointer" />{" "}
+              {props.amountOfLikes}
+            </button>
+
             <div>
               <button onClick={() => sharePost(props)}>
                 <FontAwesomeIcon

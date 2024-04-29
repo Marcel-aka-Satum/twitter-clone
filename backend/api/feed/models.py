@@ -1,5 +1,14 @@
-from sqlalchemy import Column, Integer, ForeignKey, ARRAY, String
+from sqlalchemy import Column, Integer, String, Table, ForeignKey
 from database.database import Base
+from sqlalchemy.orm import relationship, Mapped
+
+
+posts_feed = Table(
+    "posts_feed",
+    Base.metadata,
+    Column("feed_id", Integer, ForeignKey("feed.id")),
+    Column("post_id", Integer, ForeignKey("posts.id")),
+)
 
 
 class Feed(Base):
@@ -12,4 +21,6 @@ class Feed(Base):
 
     id: int = Column(Integer, primary_key=True, index=True, autoincrement=True)
     type: str = Column(String(50))
-    post_ids: list[int] = Column(ARRAY(Integer), default=[])
+    posts: Mapped[list["Post"]] = relationship(
+        "Post", secondary=posts_feed, backref="feeds"
+    )

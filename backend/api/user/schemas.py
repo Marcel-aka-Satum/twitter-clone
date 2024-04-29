@@ -18,6 +18,9 @@ class UserOut(User):
     banner: Optional[str]
     description: Optional[str]
 
+    class Config:
+        orm_mode = True
+
 
 class UserPatch(BaseModel):
     username: Optional[str] = None

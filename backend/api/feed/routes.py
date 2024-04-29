@@ -4,6 +4,9 @@ from sqlalchemy.orm import Session
 from . import schemas
 from . import models
 
+from ..post.schemas import PostOut
+from . import crud
+
 router = APIRouter()
 
 
@@ -36,12 +39,32 @@ def get_feed_by_name(feed_type: str, db: Session = Depends(get_db)):
 
 
 # add a post to a feed
-@router.patch("/feed/{feed_id}", response_model=schemas.FeedOut)
+@router.patch("/feed/{feed_id}/{post_id}", response_model=schemas.FeedOut)
 def add_post_to_feed(feed_id: int, post_id: int, db: Session = Depends(get_db)):
+    feed = crud.add_to_feed(db, feed_id, post_id)
+    return feed
+
+
+@router.get("/feed/{feed_id}/posts", response_model=list[PostOut])
+def get_posts_from_feed(feed_id: int, db: Session = Depends(get_db)):
     feed = db.query(models.Feed).filter(models.Feed.id == feed_id).first()
     if feed is None:
         raise HTTPException(status_code=404, detail="Feed not found")
-    feed.post_ids = feed.post_ids + [post_id]
-    db.commit()
-    db.refresh(feed)
-    return feed
+    serialized_posts = []
+    for post in feed.posts:
+        serialized_posts.append(
+            PostOut(
+                id=post.id,
+                message=post.message,
+                owner_id=post.owner_id,
+                created_on=post.created_on,
+                files=post.files,
+                username=post.user.username,
+                amountOfComments=len(post.comments),
+                amountOfReposts=len(post.reposted_by),
+                amountOfLikes=len(post.users_liked_by),
+                published=post.published,
+                scheduled_for=post.scheduled_for,
+            )
+        )
+    return serialized_posts

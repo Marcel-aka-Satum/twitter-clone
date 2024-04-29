@@ -1,18 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ProfileBanner, Post } from "./import";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserByUserName } from "../features/User/userSlice";
-import { fetchUserPostsByUsername } from "../features/Post/postSlice";
+import {
+  fetchUserCommentByUsername,
+  fetchUserPostsByUsername,
+} from "../features/Post/postSlice";
 
-export default function Profilefeed({ username, usersProfile }) {
+export default function Profilefeed({ username }) {
+  const userDataLocalStorage = JSON.parse(localStorage.getItem("user"));
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const error = useSelector((state) => state.user.error);
   const userPosts = useSelector((state) => state.post.posts);
+  const userReplies = useSelector((state) => state.post.comments);
+  const [visible, setVisible] = useState({
+    posts: true,
+    replies: false,
+    media: false,
+    likes: false,
+  });
 
   useEffect(() => {
     dispatch(fetchUserByUserName(username));
     dispatch(fetchUserPostsByUsername(username));
+    dispatch(fetchUserCommentByUsername(username));
   }, []);
 
   const handleDelete = () => {};
@@ -24,6 +36,7 @@ export default function Profilefeed({ username, usersProfile }) {
   if (!user) {
     return <div>Loading...</div>;
   }
+  console.log(visible);
   return (
     <div>
       <ProfileBanner
@@ -32,11 +45,38 @@ export default function Profilefeed({ username, usersProfile }) {
         nickname={user.nickname}
         description={user.description}
         bannerUrl={user.banner}
-        usersProfile={usersProfile}
+        onVisibilityChange={(newVisible) => {
+          setVisible(newVisible);
+        }}
+        usersProfile={
+          true ? userDataLocalStorage.username === user.username : false
+        }
       />
-      {userPosts &&
+      {visible.posts &&
+        userPosts &&
         user &&
         userPosts.map((post) => (
+          <Post
+            key={post.id}
+            amountOfComments={post.amountOfComments}
+            amountOfLikes={post.amountOfLikes}
+            username={post.username}
+            nickname={user.nickname}
+            post_id={post.id}
+            timePosted={post.created_on}
+            message={post.message}
+            owner_id={post.owner_id}
+            files={post.files}
+            avatarUrl={user.avatar}
+            onDelete={() => handleDelete(post.id)}
+            likePost={() => handleLike(post.id)}
+          />
+        ))}
+
+      {visible.replies &&
+        userReplies &&
+        user &&
+        userReplies.map((post) => (
           <Post
             key={post.id}
             amountOfComments={post.amountOfComments}

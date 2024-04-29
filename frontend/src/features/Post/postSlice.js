@@ -157,6 +157,14 @@ export const postSlice = createSlice({
         state.error = action.error.message;
         state.reposted = false;
       });
+    builder
+      .addCase(fetchUserCommentByUsername.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.comments = action.payload;
+      })
+      .addCase(fetchUserCommentByUsername.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
   },
 });
 
@@ -195,6 +203,17 @@ export const repostPost = createAsyncThunk(
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+    return data;
+  }
+);
+
+export const fetchUserCommentByUsername = createAsyncThunk(
+  "user/fetchUserCommentByUsername",
+  async (username) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/user/comments/${username}`
+    );
+    const data = await response.json();
     return data;
   }
 );

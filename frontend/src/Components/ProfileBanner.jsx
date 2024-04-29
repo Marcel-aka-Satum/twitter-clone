@@ -7,24 +7,27 @@ export default function ProfileBanner({
   nickname,
   bannerUrl,
   usersProfile,
+  onVisibilityChange,
 }) {
   const [visible, setVisible] = useState({
     posts: true,
     replies: false,
-    media: false,
+    reposts: false,
     likes: false,
   });
 
   const handleVisibility = (e) => {
     const name = e.target.innerText.toLowerCase();
-    setVisible({
+    const newVisible = {
       ...visible,
       posts: false,
       replies: false,
-      media: false,
+      reposts: false,
       likes: false,
       [name]: true,
-    });
+    };
+    setVisible(newVisible);
+    onVisibilityChange(newVisible);
   };
   return (
     <div>
@@ -75,8 +78,8 @@ export default function ProfileBanner({
           )}
         </button>
         <button className="px-2 py-1" onClick={handleVisibility}>
-          Media
-          {visible.media && (
+          Reposts
+          {visible.reposts && (
             <div className="w-14 h-1 bg-blue-500 rounded-full"></div>
           )}
         </button>

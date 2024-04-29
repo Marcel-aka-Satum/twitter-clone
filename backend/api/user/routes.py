@@ -182,3 +182,30 @@ async def get_user_reposts(request: Request, db: Session = Depends(get_db)):
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return [repost.id for repost in db_user.reposting]
+
+
+@router.get("/user/comments/{username}", response_model=list[PostOut], tags=["user"])
+async def get_user_comments(username: str, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_username(db, username)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    serialized_comments = []
+    for post in db_user.posts:
+        for comment in post.comments:
+            if comment.owner_id == db_user.id:
+                serialized_comments.append(
+                    PostOut(
+                        id=comment.id,
+                        message=comment.message,
+                        owner_id=comment.owner_id,
+                        created_on=comment.created_on,
+                        files=comment.files,
+                        username=comment.user.username,
+                        amountOfComments=len(comment.comments),
+                        amountOfLikes=len(comment.users_liked_by),
+                        amountOfReposts=len(comment.reposted_by),
+                        published=comment.published,
+                    )
+                )
+
+    return serialized_comments

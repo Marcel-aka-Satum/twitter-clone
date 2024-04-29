@@ -6,6 +6,7 @@ import os
 from datetime import datetime
 from .models import Post
 from database.database import SessionLocal
+from ..feed.crud import add_to_feed
 
 
 def get_user_posts(user: User) -> list[models.Post]:
@@ -55,6 +56,7 @@ async def create_post(
         db.commit()
         db.refresh(db_post)
         if files is None:
+            add_to_feed(db, 1, db_post.id)
             return db_post
 
         # Save images to the images folder
@@ -70,6 +72,8 @@ async def create_post(
         db_post.files = arrListNames
         db.commit()
         db.refresh(db_post)
+        add_to_feed(db, 1, db_post.id)
+
         return db_post
     return {"error": "User does not exist cannot make a post"}
 

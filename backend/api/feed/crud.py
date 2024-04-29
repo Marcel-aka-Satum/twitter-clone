@@ -11,6 +11,8 @@ def get_feed_by_type(db: Session, feed_type: str) -> models.Feed:
 def add_to_feed(db: Session, feed_id: int, post_id: int) -> models.Feed:
     feed = db.query(models.Feed).filter_by(id=feed_id).first()
     post = db.query(model_post).filter_by(id=post_id).first()
+    if not feed or not post:
+        return None
     if post in feed.posts:
         return feed
     feed.posts.append(post)

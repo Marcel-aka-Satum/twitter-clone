@@ -10,10 +10,12 @@ import {
   likePost,
   repostPost,
 } from "../features/Post/postSlice";
+import { fetchPostsGlobal } from "../features/Feed/feedSlice";
 
 export default function Midfeed() {
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
   let posts = useSelector((state) => state.post.posts);
+  let globalPosts = useSelector((state) => state.feed.posts);
   const dispatch = useDispatch();
   const { colorMode, toggleColorMode } = useColorMode();
 
@@ -37,6 +39,7 @@ export default function Midfeed() {
       dispatch(fetchUserPosts(userDataLocalStorage.id));
     }
     dispatch(validateUser());
+    dispatch(fetchPostsGlobal());
   }, []);
 
   const handleDelete = (post_id) => {
@@ -50,7 +53,7 @@ export default function Midfeed() {
   const handleLike = (post_id) => {
     dispatch(likePost(post_id));
   };
-
+  console.log(globalPosts);
   return (
     <div className="overflow-auto min-w-[300px]">
       <div className="flex border-t border-gray-500 items-center justify-center mb-4 text-gray-500 ">
@@ -62,27 +65,27 @@ export default function Midfeed() {
       <TextArea isComment={false} />
 
       <div className="space-y-4">
-        {posts &&
+        {globalPosts &&
           (() => {
             let postsReversed = [];
-            for (let i = posts.length - 1; i >= 0; i--) {
+            for (let i = globalPosts.length - 1; i >= 0; i--) {
               postsReversed.push(
                 <Post
-                  key={posts[i].id}
-                  nickname={posts[i].nickname}
-                  username={posts[i].username}
-                  amountOfComments={posts[i].amountOfComments}
-                  amountOfLikes={posts[i].amountOfLikes}
-                  amountOfReposts={posts[i].amountOfReposts}
-                  post_id={posts[i].id}
-                  timePosted={posts[i].created_on}
-                  message={posts[i].message}
-                  owner_id={posts[i].owner_id}
-                  files={posts[i].files}
+                  key={globalPosts[i].id}
+                  nickname={globalPosts[i].nickname}
+                  username={globalPosts[i].username}
+                  amountOfComments={globalPosts[i].amountOfComments}
+                  amountOfLikes={globalPosts[i].amountOfLikes}
+                  amountOfReposts={globalPosts[i].amountOfReposts}
+                  post_id={globalPosts[i].id}
+                  timePosted={globalPosts[i].created_on}
+                  message={globalPosts[i].message}
+                  owner_id={globalPosts[i].owner_id}
+                  files={globalPosts[i].files}
                   avatarUrl={userDataLocalStorage.avatar}
-                  handleLike={() => handleLike(posts[i].id)}
-                  onRepost={() => handleRepost(posts[i].id)}
-                  onDelete={() => handleDelete(posts[i].id)}
+                  handleLike={() => handleLike(globalPosts[i].id)}
+                  onRepost={() => handleRepost(globalPosts[i].id)}
+                  onDelete={() => handleDelete(globalPosts[i].id)}
                 />
               );
             }

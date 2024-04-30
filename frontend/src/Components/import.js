@@ -14,6 +14,7 @@ import MidFeedStatus from "./MidFeedStatus";
 import TextArea from "./TextArea";
 import Profilefeed from "./Profilefeed";
 import ProfileBanner from "./ProfileBanner";
+import BoxFollowers from "./BoxFollowers";
 
 export {
   Home,
@@ -32,4 +33,5 @@ export {
   TextArea,
   Profilefeed,
   ProfileBanner,
+  BoxFollowers,
 };

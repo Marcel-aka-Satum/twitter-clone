@@ -7,6 +7,7 @@ import base64
 from fastapi import HTTPException
 from ..post.crud import get_post_by_id
 from ..post.schemas import PostOut
+from sqlalchemy import select
 
 
 def is_password_strong(psswd):
@@ -161,3 +162,13 @@ def follow_user(db: Session, user_db: models.User, user_to_follow: models.User):
     db.commit()
     db.refresh(user_db)
     return user_to_follow
+
+
+def get_user_following(db: Session, user_db: models.User):
+    stmt = select(models.follows).where(models.follows.c.follower_id == user_db.id)
+    results = db.execute(stmt)
+    followers_ids = []
+    for row in results:
+        followers_ids.append(row[1])
+    results = db.query(models.User).filter(models.User.id.in_(followers_ids)).all()
+    return results

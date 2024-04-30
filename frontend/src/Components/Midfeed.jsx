@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
 import { Post, TextArea } from "./import";
 import { useSelector, useDispatch } from "react-redux";
-import { validateUser, fetchUser } from "../features/User/userSlice";
 import {
-  fetchUserPosts,
+  validateUser,
+  fetchUser,
+  followUser,
+} from "../features/User/userSlice";
+import {
   deleteUserPost,
   likePost,
   repostPost,
@@ -12,10 +15,10 @@ import { fetchPostsGlobal } from "../features/Feed/feedSlice";
 
 export default function Midfeed() {
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
-  let posts = useSelector((state) => state.post.posts);
   let globalPosts = useSelector((state) => state.feed.posts);
+  let userFollowers = useSelector((state) => state.user.user_followers);
+  let user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(fetchUser());
     dispatch(validateUser());
@@ -34,6 +37,10 @@ export default function Midfeed() {
     dispatch(likePost(post_id));
   };
 
+  const handleFollow = (username) => {
+    dispatch(followUser(username));
+  };
+
   return (
     <div className="min-w-[300px]">
       <div className="flex border-t border-gray-500 items-center justify-center mb-4 text-gray-500 border-b">
@@ -50,9 +57,13 @@ export default function Midfeed() {
           (() => {
             let postsReversed = [];
             for (let i = globalPosts.length - 1; i >= 0; i--) {
+              let isFollowing = userFollowers.some(
+                (user) => user.username === globalPosts[i].username
+              );
               postsReversed.push(
                 <Post
                   key={globalPosts[i].id}
+                  isFollowing={isFollowing}
                   nickname={globalPosts[i].nickname}
                   username={globalPosts[i].username}
                   amountOfComments={globalPosts[i].amountOfComments}
@@ -67,6 +78,7 @@ export default function Midfeed() {
                   handleLike={() => handleLike(globalPosts[i].id)}
                   onRepost={() => handleRepost(globalPosts[i].id)}
                   onDelete={() => handleDelete(globalPosts[i].id)}
+                  onFollow={(username) => handleFollow(username)}
                 />
               );
             }

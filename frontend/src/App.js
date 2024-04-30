@@ -10,6 +10,7 @@ import {
   StatusPost,
 } from "./Components/import";
 import "react-widgets/styles.css";
+import { useSelector } from "react-redux";
 
 function App() {
   return (

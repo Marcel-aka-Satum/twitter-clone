@@ -178,7 +178,6 @@ export const postSlice = createSlice({
       });
     builder
       .addCase(fetchUserCommentByUsername.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.comments = action.payload;
       })
       .addCase(fetchUserCommentByUsername.rejected, (state, action) => {

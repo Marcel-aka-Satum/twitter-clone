@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { followUser } from "../features/User/userSlice";
+import { useDispatch } from "react-redux";
 
 export default function ProfileBanner({
   username,
@@ -8,7 +11,14 @@ export default function ProfileBanner({
   bannerUrl,
   usersProfile,
   onVisibilityChange,
+  isFollowing,
 }) {
+  const dispatch = useDispatch();
+  const authenticated_user = useSelector(
+    (state) => state.user.authenticated_user
+  );
+  const followers = useSelector((state) => state.user.user_followers);
+
   const [visible, setVisible] = useState({
     posts: true,
     replies: false,
@@ -29,6 +39,13 @@ export default function ProfileBanner({
     setVisible(newVisible);
     onVisibilityChange(newVisible);
   };
+
+  useEffect(() => {}, [followers]);
+
+  const handleFollow = () => {
+    dispatch(followUser(username));
+  };
+
   return (
     <div>
       <img
@@ -55,6 +72,28 @@ export default function ProfileBanner({
             >
               Edit Profile
             </a>
+          </div>
+        )}
+
+        {isFollowing && (
+          <div className="flex items-center">
+            <button
+              className="bg-gray-500 text-white rounded-full px-4 py-2 flex-shrink-0 ml-4"
+              onClick={handleFollow}
+            >
+              Unfollow
+            </button>
+          </div>
+        )}
+
+        {!isFollowing && authenticated_user.username !== username && (
+          <div className="flex items-center">
+            <button
+              className="bg-gray-500 text-white rounded-full px-4 py-2 flex-shrink-0 ml-4"
+              onClick={handleFollow}
+            >
+              Follow
+            </button>
           </div>
         )}
       </div>

@@ -1,16 +1,18 @@
 import { useParams } from "react-router-dom";
 import { LeftNavbar, RightNavbar, Profilefeed } from "../import";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function Profile() {
   const { username } = useParams();
-  const [isUsersProfile, setIsUsersProfile] = React.useState(false);
+  const [isUsersProfile, setIsUsersProfile] = useState(false);
   const currentUser = useSelector((state) => state.user.user);
+  const [authenticatedUser, setAuthenticatedUser] = useState(null);
 
   useEffect(() => {
     if (currentUser && currentUser.username === username) {
       setIsUsersProfile(true);
+      setAuthenticatedUser(currentUser);
     }
   }, []);
 

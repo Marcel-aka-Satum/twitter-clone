@@ -7,6 +7,8 @@ export const userSlice = createSlice({
     authenticated: false,
     error: null,
     reposted: false,
+    user_followers: [],
+    authenticated_user: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -50,9 +52,11 @@ export const userSlice = createSlice({
     builder
       .addCase(validateUser.fulfilled, (state, action) => {
         state.authenticated = true;
+        state.authenticated_user = action.payload;
       })
       .addCase(validateUser.rejected, (state, action) => {
         state.authenticated = false;
+        state.authenticated_user = null;
         localStorage.removeItem("user");
       });
 
@@ -71,12 +75,39 @@ export const userSlice = createSlice({
       .addCase(fetchUserLikes.rejected, (state, action) => {
         state.error = action.error.message;
       });
-    builder.addCase(fetchUserReposts.fulfilled, (state, action) => {
-      localStorage.setItem("reposts", JSON.stringify(action.payload));
-    });
-    builder.addCase(fetchUserReposts.rejected, (state, action) => {
-      state.error = action.error.message;
-    });
+    builder
+      .addCase(fetchUserReposts.fulfilled, (state, action) => {
+        localStorage.setItem("reposts", JSON.stringify(action.payload));
+      })
+      .addCase(fetchUserReposts.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(fetchUserFollowers.fulfilled, (state, action) => {
+        state.user_followers = action.payload;
+      })
+      .addCase(fetchUserFollowers.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(followUser.fulfilled, (state, action) => {
+        if (
+          state.user_followers.some(
+            (user) => user.username === action.payload.username
+          )
+        ) {
+          // If the user is already a follower, remove them
+          state.user_followers = state.user_followers.filter(
+            (user) => user.username !== action.payload.username
+          );
+        } else {
+          // If the user is not a follower, add them
+          state.user_followers.push(action.payload);
+        }
+      })
+      .addCase(followUser.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
   },
 });
 
@@ -143,6 +174,21 @@ export const registerAsync = createAsyncThunk(
   }
 );
 
+export const followUser = createAsyncThunk(
+  "user/followUser",
+  async (username) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/user/follow/${username}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    return data;
+  }
+);
+
 export const patchUser = createAsyncThunk(
   "user/patchUser",
   async ({ data }) => {
@@ -156,6 +202,18 @@ export const patchUser = createAsyncThunk(
     });
     const payloadData = await response.json();
     return payloadData;
+  }
+);
+
+export const fetchUserFollowers = createAsyncThunk(
+  "user/fetchUserFollowers",
+  async () => {
+    const response = await fetch("http://localhost:8000/api/v1/followers", {
+      method: "GET",
+      credentials: "include",
+    });
+    const data = await response.json();
+    return data;
   }
 );
 

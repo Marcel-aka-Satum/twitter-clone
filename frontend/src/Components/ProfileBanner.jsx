@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { followUser } from "../features/User/userSlice";
+import { useDispatch } from "react-redux";
 
 export default function ProfileBanner({
   username,
@@ -11,9 +13,11 @@ export default function ProfileBanner({
   onVisibilityChange,
   isFollowing,
 }) {
+  const dispatch = useDispatch();
   const authenticated_user = useSelector(
     (state) => state.user.authenticated_user
   );
+  const followers = useSelector((state) => state.user.user_followers);
 
   const [visible, setVisible] = useState({
     posts: true,
@@ -36,7 +40,12 @@ export default function ProfileBanner({
     onVisibilityChange(newVisible);
   };
 
-  const handleFollow = () => {};
+  useEffect(() => {}, [followers]);
+
+  const handleFollow = () => {
+    dispatch(followUser(username));
+  };
+
   return (
     <div>
       <img

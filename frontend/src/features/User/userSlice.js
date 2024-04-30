@@ -89,6 +89,25 @@ export const userSlice = createSlice({
       .addCase(fetchUserFollowers.rejected, (state, action) => {
         state.error = action.error.message;
       });
+    builder
+      .addCase(followUser.fulfilled, (state, action) => {
+        if (
+          state.user_followers.some(
+            (user) => user.username === action.payload.username
+          )
+        ) {
+          // If the user is already a follower, remove them
+          state.user_followers = state.user_followers.filter(
+            (user) => user.username !== action.payload.username
+          );
+        } else {
+          // If the user is not a follower, add them
+          state.user_followers.push(action.payload);
+        }
+      })
+      .addCase(followUser.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
   },
 });
 
@@ -152,6 +171,21 @@ export const registerAsync = createAsyncThunk(
         password: password,
       }),
     });
+  }
+);
+
+export const followUser = createAsyncThunk(
+  "user/followUser",
+  async (username) => {
+    const response = await fetch(
+      `http://localhost:8000/api/v1/user/follow/${username}`,
+      {
+        method: "PATCH",
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    return data;
   }
 );
 

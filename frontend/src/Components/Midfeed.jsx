@@ -1,12 +1,15 @@
 import React, { useEffect } from "react";
 import { Post, TextArea } from "./import";
 import { useSelector, useDispatch } from "react-redux";
-import { validateUser, fetchUser } from "../features/User/userSlice";
+import {
+  validateUser,
+  fetchUser,
+  followUser,
+} from "../features/User/userSlice";
 import {
   deleteUserPost,
   likePost,
   repostPost,
-  followUser,
 } from "../features/Post/postSlice";
 import { fetchPostsGlobal } from "../features/Feed/feedSlice";
 

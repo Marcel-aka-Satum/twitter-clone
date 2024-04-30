@@ -156,9 +156,8 @@ def update_user(db: Session, user_db: models.User, user_info: schemas.UserPatch)
 def follow_user(db: Session, user_db: models.User, user_to_follow: models.User):
     if user_to_follow in user_db.followers:
         user_db.followers.remove(user_to_follow)
-        user_to_follow.followers.remove(user_db)
     else:
         user_db.followers.append(user_to_follow)
     db.commit()
     db.refresh(user_db)
-    return user_db
+    return user_to_follow

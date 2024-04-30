@@ -198,12 +198,6 @@ export const postSlice = createSlice({
       .addCase(fetchUserLikedPosts.rejected, (state, action) => {
         state.error = action.error.message;
       });
-    builder.addCase(followUser.fulfilled, (state, action) => {
-      //followed user
-    });
-    builder.addCase(followUser.rejected, (state, action) => {
-      state.error = action.error.message;
-    });
   },
 });
 
@@ -314,21 +308,6 @@ export const fetchUserRepostsByUsername = createAsyncThunk(
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return data;
-  }
-);
-
-export const followUser = createAsyncThunk(
-  "user/followUser",
-  async (username) => {
-    const response = await fetch(
-      `http://localhost:8000/api/v1/user/follow/${username}`,
-      {
-        method: "PATCH",
-        credentials: "include",
-      }
-    );
-    const data = await response.json();
     return data;
   }
 );

@@ -1,6 +1,7 @@
-from sqlalchemy import Boolean, Column, Integer, String, Table, ForeignKey
+from sqlalchemy import Boolean, Column, Integer, String, Table, ForeignKey, DateTime
 from sqlalchemy.orm import relationship, Mapped
 from database.database import Base
+from sqlalchemy.sql import func
 
 
 user_repost = Table(
@@ -37,6 +38,7 @@ class User(Base):
     banner: str = Column(String, unique=False)
     is_active: bool = Column(Boolean, default=True)
     description: str = Column(String, unique=False)
+    created_on: DateTime = Column(DateTime, server_default=func.now())
 
     followers: Mapped[list["User"]] = relationship(
         "User",

@@ -8,6 +8,7 @@ from fastapi import HTTPException
 from ..post.crud import get_post_by_id
 from ..post.schemas import PostOut
 from sqlalchemy import select
+from datetime import datetime
 
 
 def is_password_strong(psswd):
@@ -115,6 +116,7 @@ def create_user(db: Session, user: schemas.UserInDB):
         nickname=user.username,
         avatar="static/images/defaultAvatar.jpg",
         banner="static/images/defaultBanner.jpg",
+        created_on=datetime.now(),
     )
     db.add(db_user)
     db.commit()

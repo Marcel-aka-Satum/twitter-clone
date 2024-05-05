@@ -304,3 +304,25 @@ async def get_user_followers(request: Request, db: Session = Depends(get_db)):
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user.followers
+
+
+@router.get(
+    "/following/{username}", response_model=list[schemas.UserOut], tags=["user"]
+)
+async def get_user_followers(
+    request: Request, username: str, db: Session = Depends(get_db)
+):
+    db_user = crud.get_user_by_username(db, username)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user.followers
+
+
+@router.get(
+    "/followers/{username}", response_model=list[schemas.UserOut], tags=["user"]
+)
+async def get_user_following(username: str, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_username(db, username)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return crud.get_user_following(db=db, user_db=db_user)

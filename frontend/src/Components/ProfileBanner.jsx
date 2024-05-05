@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { followUser } from "../features/User/userSlice";
 import { useDispatch } from "react-redux";
+import { BoxFollowers } from "./import";
+import { set } from "date-fns";
 
 export default function ProfileBanner({
   username,
@@ -17,7 +19,13 @@ export default function ProfileBanner({
   const authenticated_user = useSelector(
     (state) => state.user.authenticated_user
   );
-  const followers = useSelector((state) => state.user.user_followers);
+  const userFollowers = useSelector((state) => state.user.user_followers);
+  const [following, setFollowing] = useState(0);
+  const [followers, setFollowers] = useState(0);
+  const [arrFollowing, setArrFollowing] = useState([]);
+  const [arrFollowers, setArrFollowers] = useState([]);
+  const [showBoxFollowing, setShowBoxFollowing] = useState(false);
+  const [showBoxFollowers, setShowBoxFollowers] = useState(false);
 
   const [visible, setVisible] = useState({
     posts: true,
@@ -40,10 +48,42 @@ export default function ProfileBanner({
     onVisibilityChange(newVisible);
   };
 
-  useEffect(() => {}, [followers]);
+  useEffect(() => {}, [userFollowers]);
+
+  useEffect(() => {
+    const response = fetch(
+      `http://localhost:8000/api/v1/following/${username}`
+    );
+    response
+      .then((res) => res.json())
+      .then((data) => {
+        setFollowing(data.length);
+        setArrFollowing(data);
+      });
+  }, []);
+
+  useEffect(() => {
+    const response = fetch(
+      `http://localhost:8000/api/v1/followers/${username}`
+    );
+    response
+      .then((res) => res.json())
+      .then((data) => {
+        setFollowers(data.length);
+        setArrFollowers(data);
+      });
+  }, []);
 
   const handleFollow = () => {
     dispatch(followUser(username));
+  };
+
+  const showFollowings = () => {
+    setShowBoxFollowing(!showBoxFollowing);
+  };
+
+  const showFollowers = () => {
+    setShowBoxFollowers(!showBoxFollowers);
   };
 
   return (
@@ -53,6 +93,18 @@ export default function ProfileBanner({
         alt="User Banner"
         className="w-full h-48"
       />
+      {showBoxFollowing && (
+        <BoxFollowers
+          setShowBoxFollowing={setShowBoxFollowing}
+          arrFollowing={arrFollowing}
+        />
+      )}
+      {showBoxFollowers && (
+        <BoxFollowers
+          setShowBoxFollowing={setShowBoxFollowers}
+          arrFollowing={arrFollowers}
+        />
+      )}
 
       <div className="flex justify-between w-full px-4">
         <div>
@@ -63,6 +115,10 @@ export default function ProfileBanner({
           />
           <h2 className="-mt-8 text-xl font-bold">{nickname}</h2>
           <h2 className="text-xl font-bold">@{username}</h2>
+          <button className="onhover:" onClick={showFollowings}>
+            {following} Following
+          </button>{" "}
+          <button onClick={showFollowers}>{followers} Followers</button>
         </div>
         {usersProfile && (
           <div className="flex items-center">

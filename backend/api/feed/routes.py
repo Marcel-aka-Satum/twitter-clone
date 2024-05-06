@@ -13,11 +13,7 @@ router = APIRouter()
 # create a new feed
 @router.post("/feed", response_model=schemas.Feed, tags=["feed"])
 def create_feed(type: str, db: Session = Depends(get_db)):
-    new_feed = models.Feed(type=type)
-    db.add(new_feed)
-    db.commit()
-    db.refresh(new_feed)
-    return new_feed
+    return crud.create_feed(db, type)
 
 
 # get a feed by id

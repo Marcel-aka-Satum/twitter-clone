@@ -8,6 +8,7 @@ This project is a clone of Twitter, built using modern technologies like React, 
 - **FastAPI**: A modern, fast (high-performance), web framework for building APIs with Python 3.6+ based on standard Python type hints.
 - **JWT Authentication**: JSON Web Tokens are used for securely transmitting information between parties as a JSON object.
 - **TailwindCSS**: A utility-first CSS framework packed with classes like flex, pt-4, text-center and rotate-90 that can be composed to build any design, directly in your markup.
+- **Postgresql**: PostgreSQL is an advanced, enterprise-class open-source relational database that supports both SQL (relational) and JSON (non-relational) querying.
 
 ## Getting Started
 
@@ -24,8 +25,18 @@ To get a local copy up and running follow these simple steps.
 1. Clone the repo
 2. Install NPM packages (npm install in /frontend directory)
 3. Install Python dependencies (pip install -r requirements.txt in /backend directory)
-4. After installing start the backend (python main.py in /backend DIR)
-5. After installing start the frontend (npm start in /frontedn DIR)
+5. Create a postgresql database and a user in postgres if u haven't done it (remember the credentials + db_name u will need it in the next step)
+6. Setup the ENV variables (see ENV below)
+7. After installing start the backend (uvicorn main:app --reload cd in /backend DIR)
+8. After installing start the frontend (npm start in cd in /frontend DIR)
+
+ ##ENV
+ BACKEND: Create a .env in /backend DIR and add these variables
+DB_USER=place here ur postgres username
+DB_PSSWD=place here ur postgres psswd
+DB_HOST=place here ur postgres host (probably LOCALHOST if u run it locally)
+DB_NAME=place here ur postgres db_name
+ 
 
 ## Usage
 

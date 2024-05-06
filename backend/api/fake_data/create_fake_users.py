@@ -1,4 +1,6 @@
-from faker import faker
+from api.user import crud
+from api.user import schemas
+from database.database import SessionLocal
 
 users = [
     {
@@ -10,8 +12,8 @@ users = [
     {
         "username": "user2",
         "email": "user2@example.com",
-        "password": "Password2#",
-        "confirm_password": "Password2#",
+        "password": "Jan12345!",
+        "confirm_password": "Jan12345!",
     },
     {
         "username": "user3",
@@ -62,3 +64,10 @@ users = [
         "confirm_password": "Password10#",
     },
 ]
+
+
+def create_all_fake_users():
+    db = SessionLocal()
+    for user in users:
+        serialized_user = schemas.UserInDB(**user)
+        crud.create_user(db, serialized_user)

@@ -10,7 +10,6 @@ import {
   StatusPost,
 } from "./Components/import";
 import "react-widgets/styles.css";
-import { useSelector } from "react-redux";
 
 function App() {
   return (
@@ -24,7 +23,6 @@ function App() {
           <Route path="/profile/:username" element={<Profile />} />
           <Route path="/:username/status/:postid" element={<StatusPost />} />
         </Route>
-
         {/* The Register and Login components are public routes. */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />

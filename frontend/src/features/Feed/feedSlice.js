@@ -19,7 +19,7 @@ const feedSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchPostsGlobal.fulfilled, (state, action) => {
-      state.posts = action.payload;
+      state.posts = Array.isArray(action.payload) ? action.payload : [];
     });
     builder.addCase(fetchPostsGlobal.rejected, (state, action) => {
       state.error = action.error.message;

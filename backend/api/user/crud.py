@@ -8,11 +8,12 @@ from fastapi import HTTPException
 from ..post.crud import get_post_by_id
 from ..post.schemas import PostOut
 from sqlalchemy import select
+from datetime import datetime
 
 
 def is_password_strong(psswd):
     # Check for uppercase, lowercase, number, and special character
-    regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$"
+    regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,20}$"
     return bool(re.match(regex, psswd))
 
 
@@ -107,6 +108,14 @@ def create_user(db: Session, user: schemas.UserInDB):
     if not is_valid_email(user.email):
         raise HTTPException(status_code=400, detail="Email is invalid")
 
+    user_db = get_user_by_username(db, user.username)
+    if user_db:
+        raise HTTPException(status_code=400, detail="Username already registered")
+
+    user_db = get_user_by_email(db, user.email)
+    if user_db:
+        raise HTTPException(status_code=400, detail="Email already registered")
+
     hashed_password = get_password_hash(user.password)
     db_user = models.User(
         email=user.email,
@@ -115,6 +124,7 @@ def create_user(db: Session, user: schemas.UserInDB):
         nickname=user.username,
         avatar="static/images/defaultAvatar.jpg",
         banner="static/images/defaultBanner.jpg",
+        created_on=datetime.now(),
     )
     db.add(db_user)
     db.commit()

@@ -11,6 +11,7 @@ import time
 from fastapi.staticfiles import StaticFiles
 from apscheduler.schedulers.background import BackgroundScheduler
 from api.post.crud import publish_scheduled_posts
+from api.fake_data.create_fake_users import create_all_fake_users
 
 
 create_all_tables()
@@ -48,7 +49,10 @@ async def add_process_time_header(request: Request, call_next):
 
 
 if __name__ == "__main__":
+    # Start the background scheduler for publishing scheduled posts
     scheduler = BackgroundScheduler()
     scheduler.add_job(publish_scheduled_posts, "interval", seconds=10)
     scheduler.start()
+    # Create fake users for testing
+    # create_all_fake_users()
     uvicorn.run(app, host="0.0.0.0", port=8000)

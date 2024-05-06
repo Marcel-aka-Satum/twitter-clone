@@ -25,6 +25,7 @@ To get a local copy up and running follow these simple steps.
 1. Clone the repo
 2. Install NPM packages (npm install in /frontend directory)
 3. Install Python dependencies (pip install -r requirements.txt in /backend directory)
+pairbranch
 4. Create a postgresql database and a user in postgres if u haven't done it (remember the credentials + db_name u will need it in the next step)
 5. Setup the ENV variables (see ENV below)
 6. After installing start the backend (uvicorn main:app --reload cd in /backend DIR)
@@ -35,11 +36,21 @@ To get a local copy up and running follow these simple steps.
 BACKEND:Create a .env in /backend DIR and add these variables
 
 ```
+5. Create a postgresql database and a user in postgres if u haven't done it (remember the credentials + db_name u will need it in the next step)
+6. Setup the ENV variables (see ENV below)
+7. After installing start the backend (uvicorn main:app --reload cd in /backend DIR)
+8. After installing start the frontend (npm start in cd in /frontend DIR)
+
+ ##ENV
+ BACKEND: Create a .env in /backend DIR and add these variables
 DB_USER=place here ur postgres username
 DB_PSSWD=place here ur postgres psswd
 DB_HOST=place here ur postgres host (probably LOCALHOST if u run it locally)
 DB_NAME=place here ur postgres db_name
+pairbranch
 ```
+ 
+
 
 ## Usage
 

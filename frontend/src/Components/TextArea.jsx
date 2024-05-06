@@ -26,6 +26,7 @@ export default function TextArea({ post_id, isComment }) {
   const [selectedTime, setSelectedTime] = useState(null);
   const [requestedDate, setRequestedDate] = useState(null);
   const [humanReadableDate, setHumanReadableDate] = useState(null);
+  const [emptyMessage, setEmptyMessage] = useState(false);
   let scheduled = useSelector((state) => state.user.scheduled);
   let scheduledError = useSelector((state) => state.user.scheduledError);
 
@@ -63,6 +64,11 @@ export default function TextArea({ post_id, isComment }) {
   };
 
   const handleSubmit = () => {
+    if (message === "") {
+      setEmptyMessage(true);
+      return;
+    }
+    setEmptyMessage(false);
     const date = new Date().toISOString();
     const formData = new FormData();
     formData.append("message", message);
@@ -130,6 +136,7 @@ export default function TextArea({ post_id, isComment }) {
       </div>
 
       <div className="text-white p-4 grow">
+        {emptyMessage && <p className="text-red-500">Post cannot be empty</p>}
         {scheduled && (
           <p className="text-green-500">Post has been succesfully scheduled!</p>
         )}

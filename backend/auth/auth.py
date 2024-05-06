@@ -4,6 +4,9 @@ from datetime import datetime, timedelta
 from jose import jwt
 from typing import Optional
 from api.user import crud
+from fastapi import HTTPException
+from jwt import DecodeError
+import jwt
 
 
 # to get a string like this run:
@@ -52,3 +55,19 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+
+def authenticate_token(token: str):
+    if not token:
+        raise HTTPException(status_code=401, detail="Token is missing")
+    try:
+        decoded_token = jwt.decode(
+            token,
+            "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",  # SECRET_KEY
+            algorithms=["HS256"],  # ALGORITHM
+        )
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token invalid")
+    except DecodeError:
+        raise HTTPException(status_code=401, detail="Token is not a valid JWT")
+    return decoded_token

@@ -29,7 +29,7 @@ def publish_scheduled_posts():
     db.commit()
 
 
-async def create_post(
+def create_post(
     db: Session,
     message: str,
     owner_id: str,
@@ -67,7 +67,7 @@ async def create_post(
             # Create directory if it doesn't exist
             os.makedirs(os.path.dirname(file_location), exist_ok=True)
             with open(file_location, "wb+") as file_object:
-                file_object.write(await file.read())
+                file_object.write(file.read())
 
         db_post.files = arrListNames
         db.commit()

@@ -37,7 +37,9 @@ async def create_post(
                     status_code=400, detail="File size must be less than 5MB"
                 )
 
-    db_post = crud.create_post(db, message, owner_id, created_on, files, scheduled_time)
+    db_post = await crud.create_post(
+        db, message, owner_id, created_on, files, scheduled_time
+    )
     db_post_serialized = schemas.PostOut(
         id=db_post.id,
         message=db_post.message,

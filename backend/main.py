@@ -55,7 +55,7 @@ if __name__ == "__main__":
     # Create the global feed for all posts
     create_global_feed()
 
-    # Create fake users for testing (run this only once then comment out)
+    # Create fake users for testing (run this only once then comment out when running the app again otherwise u will get an error)
     # create_all_fake_users()
 
     uvicorn.run(app, host="0.0.0.0", port=8000)

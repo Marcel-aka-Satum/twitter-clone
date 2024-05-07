@@ -4,6 +4,7 @@ This project is built with FastAPI and uses a PostgreSQL database.
 
 ![dbArchitecture](../readme_images/backend.png)
 ![docs](../readme_images/backend2.png)
+![pgAdmin4](../readme_images/backend3.png)
 
 ## Installation
 

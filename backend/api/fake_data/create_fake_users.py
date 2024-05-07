@@ -14,8 +14,8 @@ users = [
     {
         "username": "user2",
         "email": "user2@example.com",
-        "password": "Jan12345!",
-        "confirm_password": "Jan12345!",
+        "password": "Password2#",
+        "confirm_password": "Password2#",
     },
     {
         "username": "user3",
@@ -53,49 +53,49 @@ posts = [
     {
         "message": "Hello, World! This is my first post!",
         "owner_id": 1,
-        "created_on": "2023-01-01 00:00:00",
+        "created_on": "2024-01-01 00:00:00",
         "files": None,
         "scheduled_time": None,
     },
     {
         "message": "Just finished a great book! #booklover",
         "owner_id": 2,
-        "created_on": "2023-02-01 00:00:00",
+        "created_on": "2024-02-01 00:00:00",
         "files": None,
         "scheduled_time": None,
     },
     {
         "message": "Enjoying a beautiful sunset. #nature",
         "owner_id": 3,
-        "created_on": "2023-03-01 00:00:00",
+        "created_on": "2024-03-01 00:00:00",
         "files": None,
         "scheduled_time": None,
     },
     {
         "message": "Excited for the weekend! #TGIF",
         "owner_id": 4,
-        "created_on": "2023-04-01 00:00:00",
+        "created_on": "2024-04-01 00:00:00",
         "files": None,
         "scheduled_time": None,
     },
     {
         "message": "Working on a new project. #coding",
         "owner_id": 5,
-        "created_on": "2023-05-01 00:00:00",
+        "created_on": "2024-05-01 00:00:00",
         "files": None,
         "scheduled_time": None,
     },
     {
         "message": "Morning run to start the day. #fitness",
         "owner_id": 6,
-        "created_on": "2023-06-01 00:00:00",
+        "created_on": "2024-05-07 11:44:00",
         "files": None,
         "scheduled_time": None,
     },
     {
         "message": "Trying out a new recipe. #foodie",
         "owner_id": 7,
-        "created_on": "2023-07-01 00:00:00",
+        "created_on": "2024-05-07 08:30:00",
         "files": None,
         "scheduled_time": None,
     },
@@ -109,11 +109,10 @@ def create_global_feed():
 
 def create_all_fake_users():
     db = SessionLocal()
-    create_global_feed()
 
-    # for user in users:
-    #     serialized_user = schemas.UserInDB(**user)
-    #     crud.create_user(db, serialized_user)
+    for user in users:
+        serialized_user = schemas.UserInDB(**user)
+        crud.create_user(db, serialized_user)
 
     for post in posts:
         post_crud.create_post(

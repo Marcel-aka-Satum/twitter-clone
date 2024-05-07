@@ -2,7 +2,5 @@
 .vscode/
 **/__pycache__/
 **/.env
-**/images
 backend/__pycache__/main.cpython-310.pyc
 frontend/package-lock.json
-backend/static/

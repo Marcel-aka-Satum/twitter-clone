@@ -9,8 +9,8 @@ class Post(Base):
 
     id: int = Column(Integer, primary_key=True, index=True, autoincrement=True)
     message: str = Column(String(300))
-    created_on = Column(DateTime(timezone=True), server_default=func.now())
-    scheduled_for = Column(DateTime(timezone=True), nullable=True)
+    created_on: DateTime = Column(DateTime(timezone=True), server_default=func.now())
+    scheduled_for: DateTime = Column(DateTime(timezone=True), nullable=True)
     owner_id: int = Column(Integer, ForeignKey("users.id"))
     files = Column(ARRAY(String))
     user: Mapped["User"] = relationship("User", back_populates="posts", uselist=False)

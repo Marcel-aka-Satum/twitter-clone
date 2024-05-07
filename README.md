@@ -2,6 +2,9 @@
 
 This project is a clone of Twitter, built using modern technologies like React, FastAPI, JWT Authentication, and TailwindCSS.
 
+![Home](./readme_images/image2.png) ![SchedulingPosts](./readme_images/image.png)
+![Profilepage](./readme_images/image3.png) ![Followers](./readme_images/image4.png)
+
 ## Technologies Used
 
 - **React**: A JavaScript library for building user interfaces.
@@ -25,7 +28,6 @@ To get a local copy up and running follow these simple steps.
 1. Clone the repo
 2. Install NPM packages (npm install in /frontend directory)
 3. Install Python dependencies (pip install -r requirements.txt in /backend directory)
-   pairbranch
 4. Create a postgresql database and a user in postgres if u haven't done it (remember the credentials + db_name u will need it in the next step)
 5. Setup the ENV variables (see ENV below)
 6. After installing start the backend (uvicorn main:app --reload cd in /backend DIR)

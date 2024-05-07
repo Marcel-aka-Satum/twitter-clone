@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Post, TextArea } from "./import";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -17,7 +17,8 @@ export default function Midfeed() {
   let userDataLocalStorage = JSON.parse(window.localStorage.getItem("user"));
   let globalPosts = useSelector((state) => state.feed.posts);
   let userFollowers = useSelector((state) => state.user.user_followers);
-  let user = useSelector((state) => state.user.user);
+  const [numPostsToShow, setNumPostsToShow] = useState(6);
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchUser());
@@ -56,7 +57,11 @@ export default function Midfeed() {
         {globalPosts &&
           (() => {
             let postsReversed = [];
-            for (let i = globalPosts.length - 1; i >= 0; i--) {
+            for (
+              let i = globalPosts.length - 1;
+              i >= 0 && i >= globalPosts.length - numPostsToShow;
+              i--
+            ) {
               let isFollowing = userFollowers.some(
                 (user) => user.username === globalPosts[i].username
               );
@@ -82,7 +87,19 @@ export default function Midfeed() {
                 />
               );
             }
-            return postsReversed;
+            return (
+              <>
+                {postsReversed}
+                {globalPosts.length > numPostsToShow && (
+                  <button
+                    className="bg-blue-500 text-white rounded-full py-2 px-4 mx-auto block"
+                    onClick={() => setNumPostsToShow(numPostsToShow + 6)}
+                  >
+                    Load More
+                  </button>
+                )}
+              </>
+            );
           })()}
       </div>
     </div>
